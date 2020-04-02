@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from config import config
 from image_tools import ImageFunctions
 from RobotWare import RAPID
@@ -164,7 +163,6 @@ while norbert.is_running():
         norbert.stop_RAPID()
         norbert.motors_off()
 
-=======
 import config
 import ImageFunctions
 import RAPID
@@ -330,4 +328,3 @@ while norbert.is_running():
         norbert.stop_RAPID()
         norbert.motors_off()
 
->>>>>>> b2f87d2e2efd67bde85ee950538ba845082b1690

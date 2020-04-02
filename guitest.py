@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import wx
 from PIL import Image
 
@@ -56,7 +55,6 @@ def main():
     app.MainLoop()
 
 if __name__ == '__main__':
-=======
 import wx
 from PIL import Image
 
@@ -107,5 +105,4 @@ def main():
     app.MainLoop()
 
 if __name__ == '__main__':
->>>>>>> b2f87d2e2efd67bde85ee950538ba845082b1690
     main()

@@ -3,18 +3,18 @@ import configparser
 
 
 def pixel_to_mm(gripper_height, puck):
-<<<<<<< HEAD
+
     """Converts coordinates in image from pixels to millimeters.
     This depends on the height the image is taken from"""
-=======
+
     """Converts coordinates in image from pixels to millimeters. This depends on the height the image is taken from"""
->>>>>>> b2f87d2e2efd67bde85ee950538ba845082b1690
+
     mm_width = 1 * (gripper_height + 70)  # 1 = Conversion number between camera height and FOV
     # Previous conversion number was 0.95
     pixel_to_mm = mm_width / 1280  # mm_width / px_width
 
     # Convert all positions from pixels to millimeters:
-<<<<<<< HEAD
+
     puck.set_position(position=[x * pixel_to_mm for x in puck.position])
 
 
@@ -24,7 +24,7 @@ def transform_position(gripper_rot, puck):
 
     # Perform transformations to match RAPID: x -> y, y -> x, x -> -x, y -> -y
     puck.set_position(position=[-puck.position[1], -puck.position[0]])
-=======
+
     puck.set_position(puckpos=[x * pixel_to_mm for x in puck.pos])
 
 
@@ -34,7 +34,7 @@ def transform_position(gripper_rot, puck):
 
     # Perform transformations to match RAPID: x -> y, y -> x, x -> -x, y -> -y
     puck.set_position(puckpos=[-puck.pos[1], -puck.pos[0]])
->>>>>>> b2f87d2e2efd67bde85ee950538ba845082b1690
+
 
     # Convert from quaternion to Euler angle (we only need z-axis)
     rotation_z_radians = quaternion_to_euler(gripper_rot)
@@ -44,19 +44,19 @@ def transform_position(gripper_rot, puck):
     # TODO: Rotate all points in dict, not list:
     """Rotate all points found by the QR scanner.
     Also, adjust the angle of all pucks by using the orientation of the gripper:"""
-<<<<<<< HEAD
+
     puck.set_position(position=
                       [puck.position[0] * math.cos(rotation_z_radians) + puck.position[1] * math.sin(rotation_z_radians),
                        -puck.position[0] * math.sin(rotation_z_radians) + puck.position[1] * math.cos(rotation_z_radians)])
 
     puck.set_angle(angle=puck.angle - rotation_z_degrees)
-=======
+
     puck.set_position(puckpos=
                       [puck.pos[0] * math.cos(rotation_z_radians) + puck.pos[1] * math.sin(rotation_z_radians),
                        -puck.pos[0] * math.sin(rotation_z_radians) + puck.pos[1] * math.cos(rotation_z_radians)])
 
     puck.set_angle(puckang=puck.ang - rotation_z_degrees)
->>>>>>> b2f87d2e2efd67bde85ee950538ba845082b1690
+
 
 
 def get_camera_position(trans, rot):
@@ -82,11 +82,11 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False)
     # Transform position depending on how the gripper is rotated
     transform_position(gripper_rot=gripper_rot, puck=puck)
 
-<<<<<<< HEAD
+
     # Compensate for overshoot in 2D image_tools
-=======
+
     # Compensate for overshoot in 2D image
->>>>>>> b2f87d2e2efd67bde85ee950538ba845082b1690
+
     overshoot_comp(gripper_height=gripper_height, puck=puck)
 
     # TODO: Fix camera compensation
@@ -95,11 +95,11 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False)
         camera_compensation(gripper_height=gripper_height, puck=puck)
 
     # Add the offset from camera to gripper
-<<<<<<< HEAD
+
     puck.set_position(position=[puck.position[0] + cam_pos[0], puck.position[1] + cam_pos[1]])
-=======
+
     puck.set_position(puckpos=[puck.pos[0] + cam_pos[0], puck.pos[1] + cam_pos[1]])
->>>>>>> b2f87d2e2efd67bde85ee950538ba845082b1690
+
 
 
 def quaternion_to_euler(quaternion):
@@ -114,15 +114,13 @@ def quaternion_to_euler(quaternion):
 
 def overshoot_comp(gripper_height, puck):
     """Compensate for the overshoot phenomenon which occurs when trying to pinpoint
-<<<<<<< HEAD
     the location of a 3D object in a 2D image_tools"""
     adjustment = [x * 30 / (gripper_height + 70) for x in puck.position]
     puck.set_position(position=list(map(lambda x, y: x - y, puck.position, adjustment)))
-=======
-    the location of a 3D object in a 2D image"""
+
     adjustment = [x * 30 / (gripper_height + 70) for x in puck.pos]
     puck.set_position(puckpos=list(map(lambda x, y: x - y, puck.pos, adjustment)))
->>>>>>> b2f87d2e2efd67bde85ee950538ba845082b1690
+
 
 
 def camera_compensation(gripper_height, puck):
@@ -137,9 +135,9 @@ def camera_compensation(gripper_height, puck):
     slope_y = float(config['SLOPE']['slopey'])
     comp_x = slope_x * camera_height
     comp_y = slope_y * camera_height
-<<<<<<< HEAD
+
     puck.set_position(position=[puck.position[0] - comp_x, puck.position[1] - comp_y])
-=======
+
     puck.set_position(puckpos=[puck.pos[0] - comp_x, puck.pos[1] - comp_y])
 
->>>>>>> b2f87d2e2efd67bde85ee950538ba845082b1690
+
