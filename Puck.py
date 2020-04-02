@@ -7,7 +7,6 @@ class Puck:
     puck position
     puck angle
     puck height
-    TEST
     """
 
     def __init__(self, number, position, angle, height=0):

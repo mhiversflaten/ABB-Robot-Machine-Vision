@@ -33,6 +33,9 @@ release = '0.0.1'
 extensions = [
 ]
 
+# Our project uses 'index.rst', not 'contents.rst' which is default
+master_doc = 'index'
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
