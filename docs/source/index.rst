@@ -14,8 +14,8 @@ Here is some text explaining some very complicated stuff::
    print('hello')
    >> hello
 
-Guide
-^^^^^
+Test
+^^^^
 
 .. toctree::
    :maxdepth: 2
