@@ -163,3 +163,5 @@ while norbert.is_running():
         norbert.stop_RAPID()
         norbert.motors_off()
 
+
+"testing string"
