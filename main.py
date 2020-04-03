@@ -14,7 +14,7 @@ puck_to_RAPID = 0
 
 # Initialize robot communication, start motors, and execute RAPID program
 norbert = RAPID.RAPID()
-norbert.request_rmmp()
+norbert.request_mastership()
 norbert.start_RAPID()  # NB! Starts RAPID execution from main
 norbert.wait_for_rapid()
 

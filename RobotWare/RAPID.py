@@ -80,7 +80,8 @@ class RAPID:
             [str(s) for s in trans]) + "],[0, 1, 0, 0],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,9E+9,9E+9]]")
 
     def wait_for_rapid(self):
-        # Wait for RAPID to finish some instruction
+        """Waits for robot to complete RAPID instructions until 'ready_flag' in RAPID is set to 'TRUE'.
+        """
         while self.get_rapid_variable('ready_flag') == "FALSE" and self.is_running():
             time.sleep(0.1)
         self.set_rapid_variable('ready_flag', "FALSE")
@@ -96,8 +97,13 @@ class RAPID:
         else:
             print('Could not reset program pointer to main')
 
-    def request_rmmp(self, timeout=5):
-        t1 = time.time()
+    def request_mastership(self):
+        resp = self.session.post(self.base_url + '/rw/mastership', auth=self.digest_auth)
+
+    def release_mastership(self):
+        resp = self.session.post(self.base_url + '/rw/mastership?action=release', auth=self.digest_auth)
+
+    def request_rmmp(self):
         resp = self.session.post(self.base_url + '/users/rmmp', auth=self.digest_auth, data={'privilege': 'modify'})
 
     def cancel_rmmp(self):

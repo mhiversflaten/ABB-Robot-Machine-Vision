@@ -5,7 +5,7 @@ from image_tools import ImageFunctions
 import configparser
 
 norbert = RAPID.RAPID()  # Initialize robot communication
-norbert.request_rmmp()  # Request mastership
+norbert.request_mastership()  # Request mastership
 norbert.start_RAPID()  # NB! Starts RAPID execution from main
 norbert.wait_for_rapid()
 

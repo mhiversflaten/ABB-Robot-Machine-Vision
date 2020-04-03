@@ -7,7 +7,7 @@ from image_tools import ImageFunctions
 from RobotWare import RAPID
 
 norbert = RAPID.RAPID()
-norbert.request_rmmp()
+norbert.request_mastership()
 norbert.start_RAPID()  # NB! Starts RAPID execution from main
 norbert.wait_for_rapid()
 norbert.stop_RAPID()
