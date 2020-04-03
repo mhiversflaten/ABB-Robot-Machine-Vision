@@ -21,19 +21,19 @@ RobotWare
 
     .. py:method:: set_speed_ratio(self, speed_ratio)
 
-        Set the speed ratio of the robot. Mastership is required.
+        :py:synopsis:`Set the speed ratio of the robot. Mastership is required.`
         speed_ratio: desired speed ratio in percent [1-100].
 
     .. py:method:: is_running(self)
 
-        Uses :py:func:`get_execution_state` if RAPID execution is running or stopped.
+        :py:synopsis:`Uses` :py:func:`get_execution_state` :py:synopsis:`if RAPID execution is running or stopped.`
         Returns True if running and False if stopped.
 
     .. py:method:: get_execution_state(self)
 
-        Returns RAPID execution state ('running' / 'stopped')
+        :py:synopsis:`Returns RAPID execution state ('running' / 'stopped')`
 
-    .. py:classmethod:: get_execution_state(self)
+    .. py:method:: get_execution_state(self)
 
         Testing difference
 
