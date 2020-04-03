@@ -58,7 +58,7 @@ RobotWare
         Set the value [int] for a speeddata variable in RAPID. Mastership is required.
 
         :param str var: Name of variable as declared in RAPID.
-        :param int speeddata: Desired speeddata value [int].
+        :param int speeddata: Desired speeddata value.
 
     .. py:method:: set_speed_ratio(self, speed_ratio)
 
@@ -67,12 +67,13 @@ RobotWare
 
     .. py:method:: is_running(self)
 
-        Uses :py:func:`get_execution_state` :py:synopsis:if RAPID execution is running or stopped.
+        Uses :py:func:`get_execution_state` to check if RAPID execution is running or stopped.
         Returns True if running and False if stopped.
 
     .. py:method:: get_execution_state(self)
 
-        Returns RAPID execution state ('running' / 'stopped')
+        Polls the RAPID execution state.
+        :return: 'running' or 'stopped'
 
     .. py:method:: get_execution_state(self)
         :classmethod:
