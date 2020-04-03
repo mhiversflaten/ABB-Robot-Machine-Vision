@@ -58,7 +58,7 @@ RobotWare
         Set the value [int] for a speeddata variable in RAPID. Mastership is required.
 
         :param str var: Name of variable as declared in RAPID.
-        :param intspeeddata: Desired speeddata value [int].
+        :param int speeddata: Desired speeddata value [int].
 
     .. py:method:: set_speed_ratio(self, speed_ratio)
 
