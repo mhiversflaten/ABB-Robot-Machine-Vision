@@ -39,7 +39,7 @@ RobotWare
 
     .. py:method:: start_RAPID(self)
 
-        Resets RAPID program pointer to main procedure, and :warning:`starts RAPID execution`.
+        Resets RAPID program pointer to main procedure, and starts RAPID execution.
         Prints a message to the console stating whether or not the request was successful.
 
     .. py:method:: stop_RAPID(self)
@@ -47,11 +47,75 @@ RobotWare
         Stops RAPID execution.
         Prints a message to the console stating whether or not the request was successful.
 
+    .. py:method:: get_rapid_variable(self, var)
+
+        Get the raw value of any variable in RAPID.
+
+        :return: A number if RAPID variable is 'num'
+        :rtype: int/double
+        :return: A string if RAPID variable is not 'num'
+
+    .. py:method:: set_rapid_variable(self, var, value)
+
+        Sets the value of any variable in RAPID.
+        Unless the variable is 'num', value has to be a string.
+
+        :param str var: Name of variable as declared in RAPID
+        :param value: Desired variable value
+        :type value: int, double or str
+
+    .. py:method:: set_robtarget_variables(self, var, trans)
+
+        Sets the translational data of a robtarget variable in RAPID.
+
+        :param str var: Name of robtarget variable as declared in RAPID
+        :param int[] trans: Translational data [x,y,z]
+
+    .. py:method:: get_robtarget_variables(self, var)
+
+        Gets translational and rotational data of a robtarget variable in RAPID
+
+        :param str var: Name of robtarget variable as declared in RAPID
+
+        :return: Translational data of robtarget [x,y,z]
+        :return: Rotational data of robtarget (Quaternion: [w,x,y,z])
+        See quaternion_to_euler.
+
+    .. py:method:: get_gripper_position(self)
+
+        Gets translational and rotational of the UiS tool 'tGripper'
+        with respect to the work object 'wobjTableN'.
+
+        :return: Translational data of gripper [x,y,z]
+        :return: Rotational data of gripper (Quaternion: [w,x,y,z]).
+        See quaternion_to_euler
+
+    .. py:method:: get_gripper_height(self)
+
+        Uses :py:func:`get_gripper_position` to get the height of the UiS tool
+        'tGripper' above the work object 'wobjTableN'.
+
+    .. py:method:: set_rapid_array(self, var, value)
+
+        Sets the values of a num array variable in RAPID.
+        The length of the num array must match the length of the array from Python.
+
+        :param str var: Name of variable as declared in RAPID.
+        :param int[] value: Array to be sent to RAPID.
+
+    .. py:method:: wait_for_rapid(self, var='ready_flag')
+
+        Polls a boolean variable in RAPID every 0.1 seconds.
+        When the variable is TRUE, Python resets it and continues.
+
+        :param str var: Name of boolean variable as declared in RAPID.
+
     .. py:method:: set_zonedata(self, var, zonedata)
 
         Set the value for a zonedata variable in RAPID. Mastership is required.
-        var: name of variable as declared in RAPID.
-        zonedata: desired zonedata value [int].
+
+        :param str var: Name of variable as declared in RAPID.
+        :param int zonedata: desired zonedata value.
 
     .. py:method:: set_speeddata(self, var, speeddata)
 
@@ -73,12 +137,9 @@ RobotWare
     .. py:method:: get_execution_state(self)
 
         Polls the RAPID execution state.
+
         :return: 'running' or 'stopped'
 
-    .. py:method:: get_execution_state(self)
-        :classmethod:
-
-        Testing difference
 
 
 

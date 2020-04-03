@@ -79,12 +79,12 @@ class RAPID:
         self.set_rapid_variable(var, "[[" + ','.join(
             [str(s) for s in trans]) + "],[0, 1, 0, 0],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,9E+9,9E+9]]")
 
-    def wait_for_rapid(self):
+    def wait_for_rapid(self, var='ready_flag'):
         """Waits for robot to complete RAPID instructions until 'ready_flag' in RAPID is set to 'TRUE'.
         """
-        while self.get_rapid_variable('ready_flag') == "FALSE" and self.is_running():
+        while self.get_rapid_variable(var) == "FALSE" and self.is_running():
             time.sleep(0.1)
-        self.set_rapid_variable('ready_flag', "FALSE")
+        self.set_rapid_variable(var, "FALSE")
 
     def set_rapid_array(self, var, value):
         self.set_rapid_variable(var, "[" + ','.join([str(s) for s in value]) + "]")
