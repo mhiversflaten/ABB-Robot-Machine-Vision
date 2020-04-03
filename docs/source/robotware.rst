@@ -9,9 +9,9 @@ RobotWare
 
 .. py:function:: set_speeddata(self, var, speeddata)
 
-    |Set the value [int] for a speeddata variable in RAPID. Mastership is required.
-    |var: name of variable as declared in RAPID.
-    |speeddata: desired speeddata value [int].
+    Set the value [int] for a speeddata variable in RAPID. Mastership is required.\
+    var: name of variable as declared in RAPID.\
+    speeddata: desired speeddata value [int].
 
 .. py:function:: set_speed_ratio(self, speed_ratio)
 
@@ -20,7 +20,7 @@ RobotWare
 
 .. py:function:: is_running(self)
 
-    Uses get_execution_state if RAPID execution is running or stopped.
+    Uses :py:func:`get_execution_state` if RAPID execution is running or stopped.
     Returns True if running and False if stopped.
 
 .. py:function:: get_execution_state(self)
