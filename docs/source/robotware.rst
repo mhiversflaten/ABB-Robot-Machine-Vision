@@ -1,6 +1,12 @@
 RobotWare
 =========
 
+.. py:class:: RAPID(base_url, username, password)
+
+    .. py:module:: motors_on(self)
+
+        Turns the robot's motors on.
+
 .. py:function:: set_zonedata(self, var, zonedata)
 
     Set the value for a zonedata variable in RAPID. Mastership is required.
