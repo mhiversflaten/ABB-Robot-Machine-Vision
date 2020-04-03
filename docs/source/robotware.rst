@@ -34,6 +34,7 @@ RobotWare
         :py:synopsis:`Returns RAPID execution state ('running' / 'stopped')`
 
     .. py:method:: get_execution_state(self)
+        :classmethod:
 
         Testing difference
 
