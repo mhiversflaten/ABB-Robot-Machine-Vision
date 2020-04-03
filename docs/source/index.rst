@@ -20,6 +20,7 @@ Test
 .. toctree::
    :maxdepth: 2
 
+   robotware
    license
    help
 

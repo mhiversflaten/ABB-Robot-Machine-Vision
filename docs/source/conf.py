@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'test-project'
+project = 'ABB-Klosser'
 copyright = '2020, Markus Iversflaten & Ole Christian Handegård'
 author = 'Markus Iversflaten & Ole Christian Handegård'
 
