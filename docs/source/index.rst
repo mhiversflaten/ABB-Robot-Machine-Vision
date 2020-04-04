@@ -23,7 +23,7 @@ Test
    robotware
    license
    help
-
+   imagefunctions
 
 
 Indices and tables
