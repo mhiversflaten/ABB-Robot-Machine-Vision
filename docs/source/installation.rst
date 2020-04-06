@@ -13,5 +13,7 @@ Get the source code
 ^^^^^^^^^^^^^^^^^^^
 
 | ABB-Klosser is on GitHub, and the public repository can be cloned:
-| ``git clone https://github.com/prinsWindy/ABB-Klosser.git``
+.. code-block:: console
+
+    git clone https://github.com/prinsWindy/ABB-Klosser.git
 
