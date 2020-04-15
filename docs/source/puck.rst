@@ -3,4 +3,6 @@ Puck Class
 
 .. _Puck:
 
-    Testing this stuff
+Section to cross reference
+--------------------------
+Testing this stuff
