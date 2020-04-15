@@ -1,8 +1,6 @@
 Puck Class
 ==========
 
-.. _Puck:
-
-Section to cross reference
---------------------------
+Puck
+----
 Testing this stuff
