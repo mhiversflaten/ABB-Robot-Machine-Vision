@@ -1,13 +1,11 @@
 Image Tools
 ===========
 
-.. _pyuEye: https://pypi.org/project/pyueye/
-.. _uEye cameras: https://en.ids-imaging.com/
-
-The image tools included in the ABB-Klosser package are mainly directed toward :ref:`uEye cameras`.
+The image tools included in the ABB-Klosser package are mainly directed toward :ref:`uEye cameras`_.
 These tools utilize IDS's Python bindings for the uEye API: pyuEye_.
 
-
+.. _pyuEye: https://pypi.org/project/pyueye/
+.. _uEye cameras: https://en.ids-imaging.com/
 
 Capturing Images and Video
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
