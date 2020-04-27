@@ -44,16 +44,22 @@ def transform_position(gripper_rot, puck):
 
 
 def get_camera_position(trans, rot):
-    """Find the offset between gripper and camera"""
+    """Uses the offset between the gripper and camera to find the camera's position"""
 
-    r = 55  # Distance between gripper and camera
-    rotation_z_radians = quaternion_to_degrees(rot)
-    # TODO: Check if angle should be - or +
-    offset_x = r * math.cos(rotation_z_radians)
-    offset_y = r * math.sin(rotation_z_radians)
+    offset_x, offset_y = gripper_camera_offset(rot=rot)
 
     camera_position = [trans[0] + offset_x, trans[1] + offset_y]  # Gripper position + offset from gripper
     return camera_position
+
+
+def gripper_camera_offset(rot):
+    r = 55  # Distance between gripper and camera
+    rotation_z_radians = quaternion_to_degrees(rot)
+
+    offset_x = r * math.cos(rotation_z_radians)
+    offset_y = r * math.sin(rotation_z_radians)
+
+    return offset_x, offset_y
 
 
 def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False):

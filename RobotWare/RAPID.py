@@ -77,10 +77,6 @@ class RAPID:
         return height
 
     def set_robtarget_variables(self, var, trans):
-        self.set_rapid_variable(var, "[[" + ','.join(
-            [str(s) for s in trans]) + "],[0,1,0,0],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,9E+9,9E+9]]")
-
-    def set_robtarget_variables_new(self, var, trans):
 
         _trans, rot = self.get_robtarget_variables(var)
 
