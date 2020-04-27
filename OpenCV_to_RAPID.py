@@ -25,7 +25,7 @@ def transform_position(gripper_rot, puck):
     puck.set_position(position=[-puck.position[1], -puck.position[0]])
 
     # Convert from quaternion to Euler angle (we only need z-axis)
-    rotation_z_radians = -quaternion_to_euler(gripper_rot)
+    rotation_z_radians = -quaternion_to_degrees(gripper_rot)
     rotation_z_degrees = math.degrees(rotation_z_radians)
     print(rotation_z_degrees)
     # TODO: Check if rotation is positive or negative for a given orientation
@@ -47,7 +47,7 @@ def get_camera_position(trans, rot):
     """Find the offset between gripper and camera"""
 
     r = 55  # Distance between gripper and camera
-    rotation_z_radians = quaternion_to_euler(rot)
+    rotation_z_radians = quaternion_to_degrees(rot)
     # TODO: Check if angle should be - or +
     offset_x = r * math.cos(rotation_z_radians)
     offset_y = r * math.sin(rotation_z_radians)
@@ -80,14 +80,32 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False)
     puck.set_position(position=[puck.position[0] + cam_pos[0], puck.position[1] + cam_pos[1]])
 
 
-def quaternion_to_euler(quaternion):
-    """Convert a Quaternion to Euler angle. We only need the rotation around the z-axis"""
+def quaternion_to_degrees(quaternion):
+    """Convert a Quaternion to a rotation about the z-axis in degrees."""
     w, x, y, z = quaternion
     t1 = +2.0 * (w * z + x * y)
     t2 = +1.0 - 2.0 * (y * y + z * z)
     rotation_z = math.atan2(t1, t2)
 
     return rotation_z
+
+
+def degrees_to_quaternion(rotation_z_degrees):
+    """Convert a rotation about the z-axis in degrees to Quaternion."""
+    roll = math.pi
+    pitch = 0
+    yaw = math.radians(rotation_z_degrees)
+
+    qw = math.cos(roll / 2) * math.cos(pitch / 2) * math.cos(yaw / 2) + math.sin(roll / 2) * math.sin(
+        pitch / 2) * math.sin(yaw / 2)
+    qx = math.sin(roll / 2) * math.cos(pitch / 2) * math.cos(yaw / 2) - math.cos(roll / 2) * math.sin(
+        pitch / 2) * math.sin(yaw / 2)
+    qy = math.cos(roll / 2) * math.sin(pitch / 2) * math.cos(yaw / 2) + math.sin(roll / 2) * math.cos(
+        pitch / 2) * math.sin(yaw / 2)
+    qz = math.cos(roll / 2) * math.cos(pitch / 2) * math.sin(yaw / 2) - math.sin(roll / 2) * math.sin(
+        pitch / 2) * math.cos(yaw / 2)
+
+    return [qw, qx, qy, qz]
 
 
 def overshoot_comp(gripper_height, puck):
@@ -101,7 +119,7 @@ def camera_compensation(gripper_height, gripper_rot, puck):
     """Compensate for an angled camera view. Different cameras will be angled differently both internally and
     externally when mounted to a surface. The slope values must first be calculated by running camera_adjustment.py.
     Works with any camera orientation."""
-    rotation_z_radians = quaternion_to_euler(gripper_rot)
+    rotation_z_radians = quaternion_to_degrees(gripper_rot)
     camera_height = gripper_height + 70
     # TODO: Run camera_adjustment several times to get an average slope value
     config = configparser.ConfigParser()
