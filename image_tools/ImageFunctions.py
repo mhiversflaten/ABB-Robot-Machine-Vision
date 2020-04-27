@@ -47,7 +47,7 @@ def capture_image(cam, gripper_height):
     img_buffer = ImageBuffer()  # Create image_tools buffer
     #ueye.is_Focus(cam.handle(), ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
     time.sleep(0.5)
-    # cam.freeze_video(True)  # Freeze video captures a single image_tools
+    cam.freeze_video(True)  # Freeze video captures a single image_tools
 
     nRet = ueye.is_WaitForNextImage(cam.handle(), 1000, img_buffer.mem_ptr, img_buffer.mem_id)
     img_data = ImageData(cam.handle(), img_buffer)
@@ -64,6 +64,7 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False):
     temp_puck_list = []  # Temporary puck list
 
     trans, rot = robot.get_gripper_position()
+    print(rot)
     gripper_height = robot.get_gripper_height()
 
     cam_pos = OpenCV_to_RAPID.get_camera_position(trans=trans, rot=rot)

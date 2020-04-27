@@ -77,7 +77,7 @@ class RAPID:
 
     def set_robtarget_variables(self, var, trans):
         self.set_rapid_variable(var, "[[" + ','.join(
-            [str(s) for s in trans]) + "],[0, 1, 0, 0],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,9E+9,9E+9]]")
+            [str(s) for s in trans]) + "],[0,1,0,0],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,9E+9,9E+9]]")
 
     def wait_for_rapid(self, var='ready_flag'):
         """Waits for robot to complete RAPID instructions until 'ready_flag' in RAPID is set to 'TRUE'.

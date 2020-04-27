@@ -5,8 +5,8 @@ import random
 import threading
 
 # Show video feed in separate thread
-cam_thread = threading.Thread(target=ImageFunctions.showVideo, args=(config.cam,), daemon=True)
-cam_thread.start()
+#cam_thread = threading.Thread(target=ImageFunctions.showVideo, args=(config.cam,), daemon=True)
+#cam_thread.start()
 
 
 robtarget_pucks = []
@@ -87,7 +87,7 @@ while norbert.is_running():
             norbert.wait_for_rapid()
 
             # Set a random target to place the puck in
-            random_target = [random.randint(-50, 150), random.randint(-150, 150), 0]
+            random_target = [random.randint(-50, 150), random.randint(-200, -50), 0]  # Had (-150, 150)
             norbert.set_robtarget_variables("randomTarget", random_target)
 
             # Capture images until a puck is found

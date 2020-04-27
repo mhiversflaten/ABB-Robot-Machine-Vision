@@ -3,7 +3,6 @@ import configparser
 
 
 def pixel_to_mm(gripper_height, puck):
-
     """Converts coordinates in image from pixels to millimeters.
     This depends on the height the image is taken from"""
 
@@ -19,26 +18,16 @@ def pixel_to_mm(gripper_height, puck):
 
 
 def transform_position(gripper_rot, puck):
-    """Transform coordinate system given by image_tools in OpenCV to coordinate system of work object in RAPID.
+    """Transform coordinate system given by image in OpenCV to coordinate system of work object in RAPID.
     Swap x & y coordinates and rotate by the same amount that the camera has been rotated."""
 
     # Perform transformations to match RAPID: x -> y, y -> x, x -> -x, y -> -y
     puck.set_position(position=[-puck.position[1], -puck.position[0]])
 
-    puck.set_position(puckpos=[x * pixel_to_mm for x in puck.pos])
-
-
-def transform_position(gripper_rot, puck):
-    """Transform coordinate system given by image in OpenCV to coordinate system of work object in RAPID.
-    Swap x & y coordinates and rotate by the same amount that the camera has been rotated."""
-
-    # Perform transformations to match RAPID: x -> y, y -> x, x -> -x, y -> -y
-    puck.set_position(puckpos=[-puck.pos[1], -puck.pos[0]])
-
-
     # Convert from quaternion to Euler angle (we only need z-axis)
-    rotation_z_radians = quaternion_to_euler(gripper_rot)
-    rotation_z_degrees = -math.degrees(rotation_z_radians)
+    rotation_z_radians = -quaternion_to_euler(gripper_rot)
+    rotation_z_degrees = math.degrees(rotation_z_radians)
+    print(rotation_z_degrees)
     # TODO: Check if rotation is positive or negative for a given orientation
 
     # TODO: Rotate all points in dict, not list:
@@ -46,17 +35,12 @@ def transform_position(gripper_rot, puck):
     Also, adjust the angle of all pucks by using the orientation of the gripper:"""
 
     puck.set_position(position=
-                      [puck.position[0] * math.cos(rotation_z_radians) + puck.position[1] * math.sin(rotation_z_radians),
-                       -puck.position[0] * math.sin(rotation_z_radians) + puck.position[1] * math.cos(rotation_z_radians)])
+                      [puck.position[0] * math.cos(rotation_z_radians) + puck.position[1] * math.sin(
+                          rotation_z_radians),
+                       -puck.position[0] * math.sin(rotation_z_radians) + puck.position[1] * math.cos(
+                           rotation_z_radians)])
 
     puck.set_angle(angle=puck.angle - rotation_z_degrees)
-
-    puck.set_position(puckpos=
-                      [puck.pos[0] * math.cos(rotation_z_radians) + puck.pos[1] * math.sin(rotation_z_radians),
-                       -puck.pos[0] * math.sin(rotation_z_radians) + puck.pos[1] * math.cos(rotation_z_radians)])
-
-    puck.set_angle(puckang=puck.ang - rotation_z_degrees)
-
 
 
 def get_camera_position(trans, rot):
@@ -82,9 +66,6 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False)
     # Transform position depending on how the gripper is rotated
     transform_position(gripper_rot=gripper_rot, puck=puck)
 
-
-    # Compensate for overshoot in 2D image_tools
-
     # Compensate for overshoot in 2D image
 
     overshoot_comp(gripper_height=gripper_height, puck=puck)
@@ -92,14 +73,11 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False)
     # TODO: Fix camera compensation
     # Compensate for possibly angled camera
     if not cam_comp:
-        camera_compensation(gripper_height=gripper_height, puck=puck)
+        camera_compensation(gripper_height=gripper_height, gripper_rot=gripper_rot, puck=puck)
 
     # Add the offset from camera to gripper
 
     puck.set_position(position=[puck.position[0] + cam_pos[0], puck.position[1] + cam_pos[1]])
-
-    puck.set_position(puckpos=[puck.pos[0] + cam_pos[0], puck.pos[1] + cam_pos[1]])
-
 
 
 def quaternion_to_euler(quaternion):
@@ -114,30 +92,28 @@ def quaternion_to_euler(quaternion):
 
 def overshoot_comp(gripper_height, puck):
     """Compensate for the overshoot phenomenon which occurs when trying to pinpoint
-    the location of a 3D object in a 2D image_tools"""
+    the location of a 3D object in a 2D image"""
     adjustment = [x * 30 / (gripper_height + 70) for x in puck.position]
     puck.set_position(position=list(map(lambda x, y: x - y, puck.position, adjustment)))
 
-    adjustment = [x * 30 / (gripper_height + 70) for x in puck.pos]
-    puck.set_position(puckpos=list(map(lambda x, y: x - y, puck.pos, adjustment)))
 
-
-
-def camera_compensation(gripper_height, puck):
+def camera_compensation(gripper_height, gripper_rot, puck):
     """Compensate for an angled camera view. Different cameras will be angled differently both internally and
-    externally when mounted to a surface. The slope values must first be calculated by running camera_adjustment.py"""
+    externally when mounted to a surface. The slope values must first be calculated by running camera_adjustment.py.
+    Works with any camera orientation."""
+    rotation_z_radians = quaternion_to_euler(gripper_rot)
     camera_height = gripper_height + 70
     # TODO: Run camera_adjustment several times to get an average slope value
     config = configparser.ConfigParser()
-    config.read('cam_adjustments.ini')
+    config.read('image_tools/cam_adjustments.ini')
 
     slope_x = float(config['SLOPE']['slopex'])
     slope_y = float(config['SLOPE']['slopey'])
     comp_x = slope_x * camera_height
     comp_y = slope_y * camera_height
 
-    puck.set_position(position=[puck.position[0] - comp_x, puck.position[1] - comp_y])
-
-    puck.set_position(puckpos=[puck.pos[0] - comp_x, puck.pos[1] - comp_y])
-
-
+    # Decompose comp_x and comp_y if camera was rotated
+    puck.set_position(position=
+                      [puck.position[0] - comp_x * math.cos(rotation_z_radians) + comp_y * math.sin(rotation_z_radians),
+                       puck.position[1] - comp_y * math.cos(rotation_z_radians) - comp_x * math.sin(
+                           rotation_z_radians)])
