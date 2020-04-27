@@ -23,6 +23,9 @@ class Puck:
 
         return self.number == other.number
 
+    def __str__(self):
+        return 'puck #' + str(self.number)
+
     def set_position(self, position):
         try:
             position = list(position)

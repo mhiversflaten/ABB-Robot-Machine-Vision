@@ -145,7 +145,6 @@ class RAPID:
     def stop_RAPID(self):
         payload = {'stopmode': 'stop', 'usetsp': 'normal'}
         resp = self.session.post(self.base_url + "/rw/rapid/execution?action=stop", auth=self.digest_auth, data=payload)
-        print(resp)
         if resp.status_code == 204:
             print('RAPID execution stopped')
         else:

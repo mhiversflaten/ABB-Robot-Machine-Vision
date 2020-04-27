@@ -10,26 +10,6 @@ import OpenCV_to_RAPID
 # TODO: Extend the program with threading, this will allow the camera to always stay active
 #  and could give a live feed of what the camera sees while still maintaining control over robot.
 
-
-def overviewImage():
-    """Get the location and orientation of all pucks in the scene
-    by grabbing several images with different threshold values."""
-
-    while config.cap.isOpened():
-        ret, frame = config.cap.read()  # Read image_tools to np.array
-        if ret:
-            # Extracts position, orientation, which pucks were detected, and image_tools with marked QR codes:
-            if is_blurry(img=frame, threshold=80):
-                return "failed"
-            else:
-                pos, img = QR_Scanner(img=frame)
-                if not config.puckdict:
-                    continue
-                print("success")
-                return "success"
-            # break
-
-
 def capture_image(cam, gripper_height):
     camera_height = gripper_height + 70  # Camera is placed 70mm above gripper
     # TODO: Find a curve that correlates distance from subject and focus value
@@ -81,7 +61,7 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False):
             puck_list.remove(puck)
 
     for puck in puck_list:
-        OpenCV_to_RAPID.create_robtarget(gripper_height=gripper_height, gripper_rot=rot, cam_pos=cam_pos, puck=puck,
+        puck = OpenCV_to_RAPID.create_robtarget(gripper_height=gripper_height, gripper_rot=rot, cam_pos=cam_pos, puck=puck,
                                          cam_comp=cam_comp)
         robtarget_pucks.append(puck)
 
@@ -100,13 +80,3 @@ def showVideo(cam):
         img_data.unlock()
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
-
-
-def is_blurry(img, threshold):
-    laplacian_variance = cv2.Laplacian(img, cv2.CV_64F).var()
-    print("Blur", laplacian_variance)
-    if laplacian_variance > threshold:
-        return False
-    else:
-        return True
-

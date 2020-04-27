@@ -79,6 +79,8 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False)
 
     puck.set_position(position=[puck.position[0] + cam_pos[0], puck.position[1] + cam_pos[1]])
 
+    return puck
+
 
 def quaternion_to_euler(quaternion):
     """Convert a Quaternion to Euler angle. We only need the rotation around the z-axis"""
