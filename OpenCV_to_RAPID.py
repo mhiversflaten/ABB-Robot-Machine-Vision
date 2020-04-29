@@ -27,7 +27,6 @@ def transform_position(gripper_rot, puck):
     # Convert from quaternion to Euler angle (we only need z-axis)
     rotation_z_radians = -quaternion_to_degrees(gripper_rot)
     rotation_z_degrees = math.degrees(rotation_z_radians)
-    print(rotation_z_degrees)
     # TODO: Check if rotation is positive or negative for a given orientation
 
     # TODO: Rotate all points in dict, not list:
@@ -66,14 +65,12 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False)
     """Combine all known offsets to make a robtarget on the work object"""
 
     # Converts puck position from pixels to millimeters
-
     pixel_to_mm(gripper_height=gripper_height, puck=puck)
 
     # Transform position depending on how the gripper is rotated
     transform_position(gripper_rot=gripper_rot, puck=puck)
 
     # Compensate for overshoot in 2D image
-
     overshoot_comp(gripper_height=gripper_height, puck=puck)
 
     # TODO: Fix camera compensation
@@ -82,7 +79,6 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False)
         camera_compensation(gripper_height=gripper_height, gripper_rot=gripper_rot, puck=puck)
 
     # Add the offset from camera to gripper
-
     puck.set_position(position=[puck.position[0] + cam_pos[0], puck.position[1] + cam_pos[1]])
 
     return puck

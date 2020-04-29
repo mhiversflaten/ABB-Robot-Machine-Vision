@@ -6,8 +6,8 @@ import random
 import threading
 
 # Show video feed in separate thread
-#cam_thread = threading.Thread(target=ImageFunctions.showVideo, args=(config.cam,), daemon=True)
-#cam_thread.start()
+# cam_thread = threading.Thread(target=ImageFunctions.showVideo, args=(config.cam,), daemon=True)
+# cam_thread.start()
 
 
 robtarget_pucks = []
@@ -44,10 +44,14 @@ while norbert.is_running():
         while not robtarget_pucks and i < 2:
             robtarget_pucks = ImageFunctions.findPucks(config.cam, norbert, robtarget_pucks)
             i += 1
+        print(robtarget_pucks)
 
         if not robtarget_pucks:
             print('Could not find any pucks! Check exposure and focus values before trying again.')
             continue
+
+        # Sort pucks in ascending order
+        robtarget_pucks.sort(key=lambda x: x.number)
 
         print("Found pucks: ", end='')
         print(*robtarget_pucks, sep=', ')
@@ -70,8 +74,13 @@ while norbert.is_running():
 
         robtarget_pucks.remove(puck_to_RAPID)
 
-        userinput = int(input('Where should the puck be moved to?\n'
-                              'Enter a list [x,y] or leave blank to move to middle of work area: '))
+        print('\nWhere should the puck be moved to? \n Enter x, y and z coordinates, '
+              'or leave empty to move to middle of work area.\n')
+
+        x = input("x: ")
+        y = input("y: ")
+        z = input("z: ")
+        norbert.set_robtarget_variables("put_puck_target", [x, y, z])
 
         norbert.wait_for_rapid()
 
@@ -82,8 +91,14 @@ while norbert.is_running():
                 puck_to_RAPID = puck
                 break
 
+        rot = OpenCV_to_RAPID.z_degrees_to_quaternion(0)
+        norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
+
         norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
         norbert.set_rapid_variable("image_processed", "TRUE")
+
+        robtarget_pucks.remove(puck_to_RAPID)
+        print(robtarget_pucks)
 
     if userinput == 3:
         print("Stack pucks")
@@ -123,7 +138,6 @@ while norbert.is_running():
                     break
 
             norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
-            norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_rapid_variable("image_processed", "TRUE")
 
             robtarget_pucks.remove(puck_to_RAPID)
@@ -160,7 +174,7 @@ while norbert.is_running():
 
             # Things that should only happen in one of the two loops should use an incremented variable and modulus
             if i % 2 == 0:
-                angle = random.randint(-135, 135)
+                angle = random.randint(-100, 100)
             rot = OpenCV_to_RAPID.z_degrees_to_quaternion(angle)
 
             norbert.set_robtarget_rotation_quaternion("puck_target", rot)
@@ -181,7 +195,6 @@ while norbert.is_running():
         targets = [[100, 100, 100], [-100, 100, 100], [-100, -100, 100], [100, -100, 100]]
         while True:
             for i in range(len(targets)):
-
                 norbert.set_robtarget_variables('gripper_target', targets[i])
                 norbert.set_rapid_variable('WPW', 100)
                 norbert.wait_for_rapid()
@@ -228,7 +241,7 @@ while norbert.is_running():
         norbert.set_rapid_variable("image_processed", "TRUE")
 
     elif userinput == 6:
-        camera_correction.find_correct_exposure(config.cam)
+        camera_correction.find_correct_exposure(config.cam, norbert)
 
     elif userinput == 7:
         camera_correction.camera_adjustment(config.cam, norbert)
@@ -237,5 +250,3 @@ while norbert.is_running():
         print("Exiting Python program and turning off robot motors")
         norbert.stop_RAPID()
         norbert.motors_off()
-
-

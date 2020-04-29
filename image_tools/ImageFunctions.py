@@ -44,7 +44,6 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False):
     temp_puck_list = []  # Temporary puck list
 
     trans, rot = robot.get_gripper_position()
-    print(rot)
     gripper_height = robot.get_gripper_height()
 
     cam_pos = OpenCV_to_RAPID.get_camera_position(trans=trans, rot=rot)

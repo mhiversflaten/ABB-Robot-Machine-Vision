@@ -8,12 +8,15 @@ import os
 
 
 def camera_adjustment(cam, robot):
+    print("---Running camera_adjustment---")
 
-    abspath = os.path.abspath("cam_adjustments.ini")
+    abspath = os.path.abspath("image_tools/cam_adjustments.ini")
 
     adjustment_file = open('camera_adjustment_XS.txt', 'w')
 
-    if robot.is_running():
+    i = 0
+    while robot.is_running() and i < 25:
+        i += 1
         robot.set_rapid_variable("WPW", 5)  # Start camera adjustment procedure in RAPID
 
         robot.wait_for_rapid()
@@ -22,6 +25,7 @@ def camera_adjustment(cam, robot):
 
         while not robtarget_pucks:
             ImageFunctions.findPucks(cam, robot, robtarget_pucks, cam_comp=True)
+        print("xyz:", robtarget_pucks[0].get_xyz())
 
         robot.set_robtarget_variables("puck_target", robtarget_pucks[0].get_xyz())
         robot.set_rapid_variable("image_processed", "TRUE")
@@ -88,8 +92,10 @@ def camera_adjustment(cam, robot):
     cfgfile.close()
 
 
-def find_correct_exposure(cam):
-    abspath = os.path.abspath("cam_adjustments.ini")
+def find_correct_exposure(cam, robot):
+    robot.set_rapid_variable("WPW", 10)
+
+    abspath = os.path.abspath("image_tools/cam_adjustments.ini")
 
     # List with exposure values
     exposure_values = []
@@ -107,7 +113,7 @@ def find_correct_exposure(cam):
         # time.sleep(0.05)
         img = ImageFunctions.capture_image(cam=cam, gripper_height=500)
         puck_list = QR_Scanner(img)
-        print(puck_list)
+        print("Found puck:", puck_list)
         # Checking exposure
         d = ueye.DOUBLE()
         retVal = ueye.is_Exposure(cam.handle(), ueye.IS_EXPOSURE_CMD_GET_EXPOSURE, d, 8)

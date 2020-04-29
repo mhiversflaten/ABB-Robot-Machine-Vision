@@ -79,9 +79,12 @@ class RAPID:
     def set_robtarget_variables(self, var, trans):
 
         _trans, rot = self.get_robtarget_variables(var)
-
-        self.set_rapid_variable(var, "[[" + ','.join(
-            [str(s) for s in trans]) + "],[" + ','.join(str(s) for s in rot) + "],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,"
+        if rot == [0, 0, 0, 0]:  # If the target has no previously defined orientation
+            self.set_rapid_variable(var, "[[" + ','.join(
+                [str(s) for s in trans]) + "],[0,1,0,0],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,9E+9,9E+9]]")
+        else:
+            self.set_rapid_variable(var, "[[" + ','.join(
+                [str(s) for s in trans]) + "],[" + ','.join(str(s) for s in rot) + "],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,"
                                                                                "9E+9,9E+9]]")
 
     def set_robtarget_rotation_z_degrees(self, var, rotation_z_degrees):
