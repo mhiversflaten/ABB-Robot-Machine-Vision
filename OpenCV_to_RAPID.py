@@ -6,11 +6,18 @@ def pixel_to_mm(gripper_height, puck):
     """Converts coordinates in image from pixels to millimeters.
     This depends on the height the image is taken from"""
 
-    """Converts coordinates in image from pixels to millimeters. This depends on the height the image is taken from"""
+    # As a good approximation we can say that: sensor width / FOV width = focal length / working distance
 
-    mm_width = 1 * (gripper_height + 70)  # 1 = Conversion number between camera height and FOV
-    # Previous conversion number was 0.95
-    pixel_to_mm = mm_width / 1280  # mm_width / px_width
+    # parameters from the XS camera
+    focal_length = 3.7  # mm (+ / - 5 percent)
+    sensor_width = 3.6288
+    # sensor_height = 2.7216 (not used here)
+
+    fov_width = ((gripper_height + 70) / focal_length) * sensor_width
+
+    mm_width = 1 * (gripper_height + 70)  # Previous conversion before asking IDS for actual formula
+
+    pixel_to_mm = fov_width / 1280  # mm_width / px_width
 
     # Convert all positions from pixels to millimeters:
 
