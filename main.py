@@ -112,6 +112,8 @@ while norbert.is_running():
         print("Repeatability test started")
         # TODO: Change WPW and randomTarget only every other loop
 
+        i = 0
+        angle = 0
         # After two loops, the puck is picked up and placed at a random location
         while norbert.is_running():
 
@@ -129,17 +131,21 @@ while norbert.is_running():
 
             # Extract puck from list and send its position to RAPID
             puck_to_RAPID = robtarget_pucks[0]
-            # TODO: Fix rotation! Make sure units are specified; both for Quaternions and Euler angles
-            rot = 40
-            rot = OpenCV_to_RAPID.degrees_to_quaternion(40)
 
-            norbert.set_robtarget_rotation("puck_target", rot)
+            # TODO: Fix rotation! Make sure units are specified; both for Quaternions and Euler angles
+            if i % 2 == 0:
+                angle = random.randint(-135, 135)
+            rot = OpenCV_to_RAPID.z_degrees_to_quaternion(angle)
+
+            norbert.set_robtarget_rotation_quaternion("puck_target", rot)
             norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
             norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_rapid_variable("image_processed", "TRUE")
 
             # Remove the used puck from the list so it can be added once again next loop
             robtarget_pucks.remove(puck_to_RAPID)
+
+            i += 1
 
     elif userinput == 105:
         new_speed = int(input("Enter new speed data:\n"))

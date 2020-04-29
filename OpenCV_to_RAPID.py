@@ -98,7 +98,7 @@ def quaternion_to_degrees(quaternion):
     return rotation_z
 
 
-def degrees_to_quaternion(rotation_z_degrees):
+def z_degrees_to_quaternion(rotation_z_degrees):
     """Convert a rotation about the z-axis in degrees to Quaternion."""
     roll = math.pi
     pitch = 0

@@ -84,15 +84,26 @@ class RAPID:
             [str(s) for s in trans]) + "],[" + ','.join(str(s) for s in rot) + "],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,"
                                                                                "9E+9,9E+9]]")
 
-    def set_robtarget_rotation(self, var, rotation_z_degrees):
-
-        rot = OpenCV_to_RAPID.degrees_to_quaternion(rotation_z_degrees)
+    def set_robtarget_rotation_z_degrees(self, var, rotation_z_degrees):
+        """Updates the orientation of a robtarget variable in RAPID by rotation about the z-axis in degrees.
+        """
+        rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation_z_degrees)
 
         trans, _rot = self.get_robtarget_variables(var)
 
         self.set_rapid_variable(var, "[[" + ','.join(
             [str(s) for s in trans]) + "],[" + ','.join(str(s) for s in rot) + "],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,"
                                                                                "9E+9,9E+9]]")
+
+    def set_robtarget_rotation_quaternion(self, var, rotation_quaternion):
+        """Updates the orientation of a robtarget variable in RAPID by a Quaternion.
+        """
+        trans, _rot = self.get_robtarget_variables(var)
+
+        self.set_rapid_variable(var, "[[" + ','.join(
+            [str(s) for s in trans]) + "],[" + ','.join(str(s) for s in rotation_quaternion) + "],[-1,0,0,0],[9E+9,"
+                                                                                               "9E+9,9E+9,9E+9,9E+9,"
+                                                                                               "9E+9]]")
 
     def wait_for_rapid(self, var='ready_flag'):
         """Waits for robot to complete RAPID instructions until 'ready_flag' in RAPID is set to 'TRUE'.
