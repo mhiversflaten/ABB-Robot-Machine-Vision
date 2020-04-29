@@ -1,5 +1,5 @@
 from config import config
-from image_tools import ImageFunctions
+from image_tools import ImageFunctions, camera_correction
 from RobotWare import RAPID
 import OpenCV_to_RAPID
 import random
@@ -27,8 +27,11 @@ while norbert.is_running():
         2. Move puck to middle
         3. Stack pucks
         4. Rotate puck
-        5. Exit
-        6. Repeatability test""")
+        5. Repeatability test
+        6. Find correct exposure
+        7. Camera adjustment
+        8. Exit
+        """)
 
     userinput = int(input('\nWhat should RAPID do?: '))
 
@@ -127,7 +130,7 @@ while norbert.is_running():
 
             norbert.wait_for_rapid()
 
-    elif userinput == 6:
+    elif userinput == 5:
         """The repeatability test uses only one puck in the work area, which is to be found, 
         picked up, and placed at a random location. Once this is done, the robot returns to its 
         original position and repeats the process, without prior knowledge of the puck's location.
@@ -224,10 +227,15 @@ while norbert.is_running():
         robtarget_pucks.clear()
         norbert.set_rapid_variable("image_processed", "TRUE")
 
-    elif userinput == 5:
+    elif userinput == 6:
+        camera_correction.find_correct_exposure(config.cam)
+
+    elif userinput == 7:
+        camera_correction.camera_adjustment(config.cam, norbert)
+
+    elif userinput == 8:
         print("Exiting Python program and turning off robot motors")
         norbert.stop_RAPID()
         norbert.motors_off()
 
 
-"testing string"
