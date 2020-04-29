@@ -55,9 +55,32 @@ while norbert.is_running():
 
         print('Which puck should be moved? Options: "', end='')
         print(*puck_numbers, sep='", "', end='"')
-        userinput = int(input(': '))
+        pucknr = int(input(': '))
 
+        for puck in robtarget_pucks:
+            if puck.number == pucknr:
+                puck_to_RAPID = puck
+                break
 
+        norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
+        norbert.set_rapid_variable("image_processed", "TRUE")
+
+        robtarget_pucks.remove(puck_to_RAPID)
+
+        userinput = int(input('Where should the puck be moved to?\n'
+                              'Enter a list [x,y] or leave blank to move to middle of work area: '))
+
+        norbert.wait_for_rapid()
+
+        ImageFunctions.findPucks(config.cam, norbert, robtarget_pucks)
+
+        for puck in robtarget_pucks:
+            if puck.number == pucknr:
+                puck_to_RAPID = puck
+                break
+
+        norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
+        norbert.set_rapid_variable("image_processed", "TRUE")
 
     if userinput == 3:
         print("Stack pucks")
@@ -75,14 +98,12 @@ while norbert.is_running():
 
             pucknr = min(int(x.number) for x in robtarget_pucks)
 
-            for x in robtarget_pucks:
-                if x.number == pucknr:
-                    puck_to_RAPID = x
+            for puck in robtarget_pucks:
+                if puck.number == pucknr:
+                    puck_to_RAPID = puck
                     break
 
             norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
-
-            norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
             norbert.set_rapid_variable("image_processed", "TRUE")
 
             robtarget_pucks.remove(puck_to_RAPID)
@@ -93,11 +114,12 @@ while norbert.is_running():
 
             pucknr = min(int(x.number) for x in robtarget_pucks)
 
-            for x in robtarget_pucks:
-                if x.number == pucknr:
-                    puck_to_RAPID = x
+            for puck in robtarget_pucks:
+                if puck.number == pucknr:
+                    puck_to_RAPID = puck
                     break
 
+            norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_rapid_variable("image_processed", "TRUE")
 
@@ -108,7 +130,8 @@ while norbert.is_running():
     elif userinput == 6:
         """The repeatability test uses only one puck in the work area, which is to be found, 
         picked up, and placed at a random location. Once this is done, the robot returns to its 
-        original position and repeats the process, without prior knowledge of the puck's location."""
+        original position and repeats the process, without prior knowledge of the puck's location.
+        """
         print("Repeatability test started")
         # TODO: Change WPW and randomTarget only every other loop
 
@@ -132,7 +155,7 @@ while norbert.is_running():
             # Extract puck from list and send its position to RAPID
             puck_to_RAPID = robtarget_pucks[0]
 
-            # TODO: Fix rotation! Make sure units are specified; both for Quaternions and Euler angles
+            # Things that should only happen in one of the two loops should use an incremented variable and modulus
             if i % 2 == 0:
                 angle = random.randint(-135, 135)
             rot = OpenCV_to_RAPID.z_degrees_to_quaternion(angle)
@@ -163,8 +186,6 @@ while norbert.is_running():
     elif userinput == 101:
         norbert.set_speeddata('vSpeed', 300)
         norbert.set_zonedata('zZone', 200)
-
-
 
     elif userinput == 103:
         norbert.set_rapid_variable("WPW", 103)
