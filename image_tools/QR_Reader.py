@@ -9,7 +9,7 @@ def QR_Scanner(img):
 
     # TODO: Make an adaptive biletaralFilter that depends on camera_height
     blur = cv2.bilateralFilter(src=img, d=3, sigmaColor=75, sigmaSpace=75)
-    grayscale = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)  # Make grayscale image_tools for filtering and thresholding
+    grayscale = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)  # Make grayscale image for filtering and thresholding
     normalized_img = cv2.normalize(grayscale, grayscale, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=-1)
     data = decode(normalized_img)
     puck_list = []
@@ -31,7 +31,7 @@ def QR_Scanner(img):
         position = [sum(x) / len(points), sum(y) / len(points)]  # Calculate center of each QR code
 
         width, height, channels = img.shape
-        position = [position[0] - height/2, position[1] - width/2]  # Make center of image_tools (0,0)
+        position = [position[0] - height/2, position[1] - width/2]  # Make center of image (0,0)
 
         puck = str(QR_Code.data, "utf-8")  # Convert QR code data to string
         puck_number = int(''.join(filter(str.isdigit, puck)))  # Find only puck number from QR code string
