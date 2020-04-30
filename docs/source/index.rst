@@ -6,8 +6,10 @@
 Documentation for ABB Python tools UiS
 ======================================
 
-Another simple header
-=====================
+Purpose
+=======
+
+This software is mainly directed toward engineering students at the University of Stavanger.
 
 Here is some text explaining some very complicated stuff::
 
@@ -25,6 +27,7 @@ Test
    license
    help
    imagefunctions
+   puck
 
 
 Indices and tables

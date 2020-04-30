@@ -35,7 +35,7 @@ for exposure in range(exposure_low, exposure_high, increment):
     # Set new exposure
     newExposure = ueye.DOUBLE(exposure)
     ret = ueye.is_Exposure(cam.handle(), ueye.IS_EXPOSURE_CMD_SET_EXPOSURE, newExposure, ueye.sizeof(newExposure))
-    time.sleep(0.05)
+    #time.sleep(0.05)
     img = ImageFunctions.capture_image(cam=cam, gripper_height=500)
     puck_list = QR_Scanner(img)
     print(puck_list)

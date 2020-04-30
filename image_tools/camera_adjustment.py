@@ -3,6 +3,7 @@ from RobotWare import RAPID
 from config import config
 from image_tools import ImageFunctions
 import configparser
+import os
 
 norbert = RAPID.RAPID()  # Initialize robot communication
 norbert.request_mastership()  # Request mastership
@@ -38,9 +39,6 @@ while norbert.is_running():
 
     pos_low = robtarget_pucks[0].get_xyz()
     print(f'Low robtarget: ({pos_low[0]:.1f},{pos_low[1]:.1f})')
-    error_x = 150-pos_low[0]
-    error_y = 150-pos_low[1]
-    print(f"Low error: ({error_x:.1f},{error_y:.1f})")
 
     norbert.wait_for_rapid()
 
@@ -50,13 +48,11 @@ while norbert.is_running():
 
     pos_high = robtarget_pucks[0].get_xyz()
     print(f'High robtarget: ({pos_high[0]:5.1f},{pos_high[1]:5.1f})')
-    error_x = 150 - pos_high[0]
-    error_y = 150 - pos_high[1]
-    print(f"High error: ({error_x:5.1f},{error_y:5.1f})")
 
     delta_h = 500 - 60
     delta_x = pos_high[0] - pos_low[0]
     delta_y = pos_high[1] - pos_low[1]
+    print(f'Delta: ({delta_x:5.1f}, {delta_y:5.1f})')
 
     slope_x = delta_x / delta_h
     slope_y = delta_y / delta_h
@@ -67,6 +63,7 @@ while norbert.is_running():
 adjustment_file.close()
 
 contents = np.genfromtxt(r'camera_adjustment_XS.txt', delimiter=',')
+os.remove('camera_adjustment_XS.txt')
 
 sum_slope_x = 0
 sum_slope_y = 0
