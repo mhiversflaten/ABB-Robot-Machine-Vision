@@ -22,12 +22,19 @@ class RAPID:
         self.session = Session()
 
     def set_rapid_variable(self, var, value):
+        """Sets the value of any RAPID variable.
+        Unless the variable is of type 'num', 'value' has to be a string.
+        """
+
         payload = {'value': value}
         resp = self.session.post(self.base_url + '/rw/rapid/symbol/data/RAPID/T_ROB1/' + var + '?action=set',
                                  auth=self.digest_auth, data=payload)
         return resp
 
     def get_rapid_variable(self, var):
+        """Gets the raw value of any RAPID variable.
+        """
+
         resp = self.session.get(self.base_url + '/rw/rapid/symbol/data/RAPID/T_ROB1/' + var + ';value?json=1',
                                 auth=self.digest_auth)
         json_string = resp.text
@@ -36,6 +43,8 @@ class RAPID:
         return value
 
     def get_robtarget_variables(self, var):
+        """Gets both translational and rotational data from """
+
         resp = self.session.get(self.base_url + '/rw/rapid/symbol/data/RAPID/T_ROB1/' + var + ';value?json=1',
                                 auth=self.digest_auth)
         json_string = resp.text
@@ -47,9 +56,13 @@ class RAPID:
         return trans, rot
 
     def get_gripper_position(self):
+        """Gets translational and rotational of the UiS tool 'tGripper'
+        with respect to the work object 'wobjTableN'.
+        """
+
         resp = self.session.get(self.base_url +
-                                '/rw/motionsystem/mechunits/ROB_1/robtarget/?tool=tGripper&wobj=wobjTableN&coordinate=Wobj',
-                                auth=self.digest_auth)
+                            '/rw/motionsystem/mechunits/ROB_1/robtarget/?tool=tGripper&wobj=wobjTableN&coordinate=Wobj',
+                            auth=self.digest_auth)
 
         root = ET.fromstring(resp.text)
 
@@ -71,12 +84,18 @@ class RAPID:
             return trans, rot
 
     def get_gripper_height(self):
+        """Extracts only the height from gripper position.
+        (See get_gripper_position)
+        """
+
         trans, rot = self.get_gripper_position()
         height = trans[2]
 
         return height
 
-    def set_robtarget_variables(self, var, trans):
+    def set_robtarget_translation(self, var, trans):
+        """Sets the translational data of a robtarget variable in RAPID.
+        """
 
         _trans, rot = self.get_robtarget_variables(var)
         if rot == [0, 0, 0, 0]:  # If the target has no previously defined orientation
@@ -88,8 +107,10 @@ class RAPID:
                                                                                "9E+9,9E+9]]")
 
     def set_robtarget_rotation_z_degrees(self, var, rotation_z_degrees):
-        """Updates the orientation of a robtarget variable in RAPID by rotation about the z-axis in degrees.
+        """Updates the orientation of a robtarget variable
+        in RAPID by rotation about the z-axis in degrees.
         """
+
         rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation_z_degrees)
 
         trans, _rot = self.get_robtarget_variables(var)
@@ -101,6 +122,7 @@ class RAPID:
     def set_robtarget_rotation_quaternion(self, var, rotation_quaternion):
         """Updates the orientation of a robtarget variable in RAPID by a Quaternion.
         """
+
         trans, _rot = self.get_robtarget_variables(var)
 
         self.set_rapid_variable(var, "[[" + ','.join(
@@ -109,17 +131,26 @@ class RAPID:
                                                                                                "9E+9]]")
 
     def wait_for_rapid(self, var='ready_flag'):
-        """Waits for robot to complete RAPID instructions until 'ready_flag' in RAPID is set to 'TRUE'.
+        """Waits for robot to complete RAPID instructions
+        until boolean variable in RAPID is set to 'TRUE'.
+        Default variable name is 'ready_flag', but others may be used.
         """
+
         while self.get_rapid_variable(var) == "FALSE" and self.is_running():
             time.sleep(0.1)
         self.set_rapid_variable(var, "FALSE")
 
     def set_rapid_array(self, var, value):
+        """Sets the values of a RAPID array by sending a list from Python.
+        """
+
+        # TODO: Check if array must be same size in RAPID and Python
         self.set_rapid_variable(var, "[" + ','.join([str(s) for s in value]) + "]")
 
     def reset_pp(self):
-        # Resets program pointer in RAPID
+        """Resets the program pointer to main procedure in RAPID.
+        """
+
         resp = self.session.post(self.base_url + '/rw/rapid/execution?action=resetpp', auth=self.digest_auth)
         if resp.status_code == 204:
             print('Program pointer reset to main')
@@ -139,7 +170,10 @@ class RAPID:
         resp = self.session.post(self.base_url + '/users/rmmp?action=cancel', auth=self.digest_auth)
 
     def motors_on(self):
-        # Turn motors on
+        """Turns the robot's motors on.
+        Operation mode has to be AUTO.
+        """
+
         payload = {'ctrl-state': 'motoron'}
         resp = self.session.post(self.base_url + "/rw/panel/ctrlstate?action=setctrlstate",
                                  auth=self.digest_auth, data=payload)
@@ -150,7 +184,9 @@ class RAPID:
             print("Could not turn on motors. The controller might be in manual mode")
 
     def motors_off(self):
-        # Turn motors off
+        """Turns the robot's motors off.
+        """
+
         payload = {'ctrl-state': 'motoroff'}
         resp = self.session.post(self.base_url + "/rw/panel/ctrlstate?action=setctrlstate",
                                  auth=self.digest_auth, data=payload)
@@ -161,6 +197,9 @@ class RAPID:
             print("Could not turn off motors")
 
     def start_RAPID(self):
+        """Resets program pointer to main procedure in RAPID and starts RAPID execution.
+        """
+
         self.reset_pp()
         payload = {'regain': 'continue', 'execmode': 'continue', 'cycle': 'once', 'condition': 'none',
                    'stopatbp': 'disabled', 'alltaskbytsp': 'false'}
@@ -172,6 +211,9 @@ class RAPID:
             print("Could not start RAPID, maybe motors are turned off")
 
     def stop_RAPID(self):
+        """Stops RAPID execution.
+        """
+
         payload = {'stopmode': 'stop', 'usetsp': 'normal'}
         resp = self.session.post(self.base_url + "/rw/rapid/execution?action=stop", auth=self.digest_auth, data=payload)
         if resp.status_code == 204:
@@ -180,6 +222,9 @@ class RAPID:
             print('Could not stop RAPID execution')
 
     def get_execution_state(self):
+        """Gets the execution state of the controller.
+        """
+
         resp = self.session.get(self.base_url + "/rw/rapid/execution?json=1", auth=self.digest_auth)
         json_string = resp.text
         _dict = json.loads(json_string)
@@ -187,6 +232,10 @@ class RAPID:
         return data
 
     def is_running(self):
+        """Checks the execution state of the controller and
+        returns True if it is running and False if not.
+        """
+
         execution_state = self.get_execution_state()
         if execution_state == "running":
             return True
@@ -194,6 +243,9 @@ class RAPID:
             return False
 
     def set_speed_ratio(self, speed_ratio):
+        """Sets the speed ratio of the controller.
+        """
+
         payload = {'speed-ratio': speed_ratio}
         resp = self.session.post(self.base_url + "/rw/panel/speedratio?action=setspeedratio", auth=self.digest_auth,
                                  data=payload)
@@ -203,6 +255,9 @@ class RAPID:
             print('Could not set speed ratio!')
 
     def set_zonedata(self, var, zonedata):
+        """Sets the zonedata of a zonedata variable in RAPID.
+        """
+
         if zonedata not in ['fine', 0, 1, 5, 10, 20, 30, 40, 50, 60, 80, 100, 150, 200]:
             print("You have entered false zonedata! Please try again")
             return
@@ -228,6 +283,9 @@ class RAPID:
             print('Could not set zonedata! Check that the variable name is correct')
 
     def set_speeddata(self, var, speeddata):
+        """Sets the speeddata of a speeddata variable in RAPID.
+        """
+
         resp = self.set_rapid_variable(var, f'[{speeddata},500,5000,1000]')
         if resp.status_code == 204:
             print(f'Set \"{var}\" speeddata to v{speeddata}')

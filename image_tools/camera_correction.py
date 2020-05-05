@@ -27,7 +27,7 @@ def camera_adjustment(cam, robot):
             ImageFunctions.findPucks(cam, robot, robtarget_pucks, cam_comp=True)
         print("xyz:", robtarget_pucks[0].get_xyz())
 
-        robot.set_robtarget_variables("puck_target", robtarget_pucks[0].get_xyz())
+        robot.set_robtarget_translation("puck_target", robtarget_pucks[0].get_xyz())
         robot.set_rapid_variable("image_processed", "TRUE")
 
         robtarget_pucks.clear()

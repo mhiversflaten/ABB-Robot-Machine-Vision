@@ -64,7 +64,7 @@ while norbert.is_running():
                 puck_to_RAPID = puck
                 break
 
-        norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
+        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
         norbert.set_rapid_variable("image_processed", "TRUE")
 
         robtarget_pucks.remove(puck_to_RAPID)
@@ -75,7 +75,7 @@ while norbert.is_running():
         x = input("x: ")
         y = input("y: ")
         z = input("z: ")
-        norbert.set_robtarget_variables("put_puck_target", [x, y, z])
+        norbert.set_robtarget_translation("put_puck_target", [x, y, z])
 
         norbert.wait_for_rapid()
 
@@ -89,7 +89,7 @@ while norbert.is_running():
         rot = OpenCV_to_RAPID.z_degrees_to_quaternion(0)
         norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
 
-        norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
+        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
         norbert.set_rapid_variable("image_processed", "TRUE")
 
         robtarget_pucks.remove(puck_to_RAPID)
@@ -116,7 +116,7 @@ while norbert.is_running():
                     puck_to_RAPID = puck
                     break
 
-            norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
+            norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_rapid_variable("image_processed", "TRUE")
 
             robtarget_pucks.remove(puck_to_RAPID)
@@ -132,7 +132,7 @@ while norbert.is_running():
                     puck_to_RAPID = puck
                     break
 
-            norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
+            norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_rapid_variable("image_processed", "TRUE")
 
             robtarget_pucks.remove(puck_to_RAPID)
@@ -158,7 +158,7 @@ while norbert.is_running():
 
             # Set a random target to place the puck in
             random_target = [random.randint(-50, 150), random.randint(-200, -50), 0]  # Had (-150, 150)
-            norbert.set_robtarget_variables("randomTarget", random_target)
+            norbert.set_robtarget_translation("randomTarget", random_target)
 
             # Capture images until a puck is found
             while not robtarget_pucks:
@@ -174,7 +174,7 @@ while norbert.is_running():
 
             norbert.set_robtarget_rotation_quaternion("puck_target", rot)
             norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
-            norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
+            norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_rapid_variable("image_processed", "TRUE")
 
             # Remove the used puck from the list so it can be added once again next loop
@@ -190,7 +190,7 @@ while norbert.is_running():
         targets = [[100, 100, 100], [-100, 100, 100], [-100, -100, 100], [100, -100, 100]]
         while True:
             for i in range(len(targets)):
-                norbert.set_robtarget_variables('gripper_target', targets[i])
+                norbert.set_robtarget_translation('gripper_target', targets[i])
                 norbert.set_rapid_variable('WPW', 100)
                 norbert.wait_for_rapid()
 
@@ -218,7 +218,7 @@ while norbert.is_running():
                 continue
             break"""
 
-        norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
+        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
         norbert.set_rapid_variable("image_processed", "TRUE")
 
         robtarget_pucks.remove(puck_to_RAPID)
@@ -231,7 +231,7 @@ while norbert.is_running():
                 puck_to_RAPID = x
                 break
 
-        norbert.set_robtarget_variables("puck_target", puck_to_RAPID.get_xyz())
+        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
         robtarget_pucks.clear()
         norbert.set_rapid_variable("image_processed", "TRUE")
 

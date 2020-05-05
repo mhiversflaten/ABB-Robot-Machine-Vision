@@ -25,7 +25,7 @@ while norbert.is_running():
     while not robtarget_pucks:
         ImageFunctions.findPucks(cam, norbert, robtarget_pucks, cam_comp=cam_comp)
 
-    norbert.set_robtarget_variables("puck_target", robtarget_pucks[0].get_xyz())
+    norbert.set_robtarget_translation("puck_target", robtarget_pucks[0].get_xyz())
     norbert.set_rapid_variable("image_processed", "TRUE")
 
     robtarget_pucks.clear()

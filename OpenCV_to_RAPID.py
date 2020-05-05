@@ -20,7 +20,6 @@ def pixel_to_mm(gripper_height, puck):
     pixel_to_mm = fov_width / 1280  # mm_width / px_width
 
     # Convert all positions from pixels to millimeters:
-
     puck.set_position(position=[x * pixel_to_mm for x in puck.position])
 
 
