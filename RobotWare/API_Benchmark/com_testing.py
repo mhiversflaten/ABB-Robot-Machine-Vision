@@ -15,11 +15,43 @@ class UserBehavior(TaskSet):
         self.client.get('/rw/rapid/execution?json=1', auth=HTTPDigestAuth(username='Default User', password='robotics'))
 
     @task(1)
-    def startrapid(self):
+    def motorson(self):
         payload = {'ctrl-state': 'motoron'}
         self.client.post("/rw/panel/ctrlstate?action=setctrlstate",
                          auth=HTTPDigestAuth(username='Default User', password='robotics'), data=payload)
 
+    @task(1)
+    def motorsoff(self):
+        payload = {'ctrl-state': 'motoroff'}
+        self.client.post("/rw/panel/ctrlstate?action=setctrlstate",
+                         auth=HTTPDigestAuth(username='Default User', password='robotics'), data=payload)
+
+    @task(1)
+    def setrapidvariable(self):
+        # TODO: test with both a set variable and also with a random variable, see any difference in timings?
+        locustvar = "locustvar"
+        payload = {'value': 6}
+        self.client.post('/rw/rapid/symbol/data/RAPID/T_ROB1/' + locustvar + '?action=set',
+                         auth=HTTPDigestAuth(username='Default User', password='robotics'), data=payload)
+
+    @task(1)
+    def getrapidvariable(self):
+        locustvar = "locustvar"
+        payload = {'value': 6}
+        self.client.get('/rw/rapid/symbol/data/RAPID/T_ROB1/' + locustvar + ';value?json=1',
+                        auth=HTTPDigestAuth(username='Default User', password='robotics'), data=payload)
+
+    @task(1)
+    def getgripperpos(self):
+        self.client.get('/rw/motionsystem/mechunits/ROB_1/robtarget/?tool=tGripper&wobj=TableN&coordinates=Wobj',
+                        auth=HTTPDigestAuth(username='Default User', password='robotics'))
+
+    @task(1)
+    def setrobtarget(self):
+        locustvar = "locustvar"
+        payload = {'value': "[[0,0,100],[0,1,0,0],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,9E+9,9E+9]]"}
+        self.client.post('/rw/rapid/symbol/data/RAPID/T_ROB1/' + locustvar + '?action=set',
+                         auth=HTTPDigestAuth(username='Default User', password='robotics'), data=payload)
 
 class WebsiteUser(HttpLocust):
     task_set = UserBehavior
