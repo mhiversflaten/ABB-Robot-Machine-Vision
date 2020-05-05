@@ -6,9 +6,8 @@ import random
 import threading
 
 # Show video feed in separate thread
-# cam_thread = threading.Thread(target=ImageFunctions.showVideo, args=(config.cam,), daemon=True)
-# cam_thread.start()
-
+#cam_thread = threading.Thread(target=ImageFunctions.showVideo, args=(config.cam,), daemon=True)
+#cam_thread.start()
 
 robtarget_pucks = []
 puck_to_RAPID = 0
@@ -40,11 +39,7 @@ while norbert.is_running():
         norbert.set_rapid_variable("WPW", 1)
         norbert.wait_for_rapid()
 
-        i = 0
-        while not robtarget_pucks and i < 2:
-            robtarget_pucks = ImageFunctions.findPucks(config.cam, norbert, robtarget_pucks)
-            i += 1
-        print(robtarget_pucks)
+        robtarget_pucks = ImageFunctions.findPucks(config.cam, norbert, robtarget_pucks, number_of_images=5)
 
         if not robtarget_pucks:
             print('Could not find any pucks! Check exposure and focus values before trying again.')
