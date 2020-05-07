@@ -93,6 +93,8 @@ def camera_adjustment(cam, robot):
 
 
 def find_correct_exposure(cam, robot):
+    print("---Running find_correct_exposure---")
+
     robot.set_rapid_variable("WPW", 10)
 
     abspath = os.path.abspath("image_tools/cam_adjustments.ini")
