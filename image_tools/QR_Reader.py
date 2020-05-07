@@ -5,12 +5,12 @@ import Puck
 
 
 def QR_Scanner(img):
-    """Scan QR codes from image_tools. Returns position, orientation and image_tools with marked QR codes"""
+    """Scan QR codes from image. Returns position, orientation and image with marked QR codes"""
 
-    # TODO: Make an adaptive biletaralFilter that depends on camera_height
-    blur = cv2.bilateralFilter(src=img, d=3, sigmaColor=75, sigmaSpace=75)
-    grayscale = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)  # Make grayscale image for filtering and thresholding
-    normalized_img = cv2.normalize(grayscale, grayscale, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=-1)
+    # TODO: Make an adaptive bilateralFilter that depends on camera_height
+    grayscale = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # Make grayscale image for filtering and thresholding
+    blur = cv2.bilateralFilter(src=grayscale, d=3, sigmaColor=75, sigmaSpace=75)
+    normalized_img = cv2.normalize(blur, blur, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=-1)
     data = decode(normalized_img)
     puck_list = []
 
@@ -44,10 +44,10 @@ def QR_Scanner(img):
 
 
 def QR_Scanner_visualized(img):
-    """Scan QR codes from image_tools. Returns position, orientation and image_tools with marked QR codes"""
+    """Scan QR codes from image. Returns position, orientation and image with marked QR codes"""
 
     blur = cv2.bilateralFilter(src=img, d=3, sigmaColor=75, sigmaSpace=75)
-    grayscale = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)  # Make grayscale image_tools for filtering and thresholding
+    grayscale = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)  # Make grayscale image for filtering and thresholding
     normalized_img = cv2.normalize(grayscale, grayscale, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=-1)
 
     data = decode(normalized_img)

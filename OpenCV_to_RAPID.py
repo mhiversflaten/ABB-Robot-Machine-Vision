@@ -79,7 +79,6 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False)
     # Compensate for overshoot in 2D image
     overshoot_comp(gripper_height=gripper_height, puck=puck)
 
-    # TODO: Fix camera compensation
     # Compensate for possibly angled camera
     if not cam_comp:
         camera_compensation(gripper_height=gripper_height, gripper_rot=gripper_rot, puck=puck)

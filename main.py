@@ -1,13 +1,20 @@
-from config import config
+#from config import config
+import config_independent
 from image_tools import ImageFunctions, camera_correction
 from RobotWare import RAPID
 import OpenCV_to_RAPID
 import random
 import threading
 
+cam = config_independent.Camera()
+cam.init()
+cam.set_parameters()
+cam.allocate_memory()
+cam.capture_video()
+
 # Show video feed in separate thread
-#cam_thread = threading.Thread(target=ImageFunctions.showVideo, args=(config.cam,), daemon=True)
-#cam_thread.start()
+cam_thread = threading.Thread(target=ImageFunctions.showVideo, args=(cam,), daemon=True)
+cam_thread.start()
 
 robtarget_pucks = []
 puck_to_RAPID = 0
@@ -39,7 +46,7 @@ while norbert.is_running():
         norbert.set_rapid_variable("WPW", 1)
         norbert.wait_for_rapid()
 
-        robtarget_pucks = ImageFunctions.findPucks(config.cam, norbert, robtarget_pucks, number_of_images=5)
+        robtarget_pucks = ImageFunctions.findPucks(cam, norbert, robtarget_pucks, number_of_images=5)
 
         if not robtarget_pucks:
             print('Could not find any pucks! Check exposure and focus values before trying again.')
@@ -79,7 +86,7 @@ while norbert.is_running():
 
         norbert.wait_for_rapid()
 
-        ImageFunctions.findPucks(config.cam, norbert, robtarget_pucks)
+        ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
 
         for puck in robtarget_pucks:
             if puck.number == pucknr:
@@ -101,7 +108,7 @@ while norbert.is_running():
         norbert.wait_for_rapid()
 
         while not robtarget_pucks:
-            ImageFunctions.findPucks(config.cam, norbert, robtarget_pucks)
+            ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
         print("Found pucks: ", end='')
         print(*robtarget_pucks, sep=', ')
         for puck in robtarget_pucks:
@@ -123,7 +130,7 @@ while norbert.is_running():
 
             norbert.wait_for_rapid()
 
-            ImageFunctions.findPucks(config.cam, norbert, robtarget_pucks)
+            ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
 
             pucknr = min(int(x.number) for x in robtarget_pucks)
 
@@ -133,6 +140,7 @@ while norbert.is_running():
                     break
 
             norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
+            #norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
             norbert.set_rapid_variable("image_processed", "TRUE")
 
             robtarget_pucks.remove(puck_to_RAPID)
@@ -157,19 +165,20 @@ while norbert.is_running():
             norbert.wait_for_rapid()
 
             # Set a random target to place the puck in
-            random_target = [random.randint(-50, 150), random.randint(-200, -50), 0]  # Had (-150, 150)
+            # random_target = [random.randint(-50, 150), random.randint(-200, -50), 0]  # Had (-150, 150)
+            random_target = [-100, 150, 0]
             norbert.set_robtarget_translation("randomTarget", random_target)
 
             # Capture images until a puck is found
             while not robtarget_pucks:
-                robtarget_pucks = ImageFunctions.findPucks(config.cam, norbert, robtarget_pucks)
+                robtarget_pucks = ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
 
             # Extract puck from list and send its position to RAPID
             puck_to_RAPID = robtarget_pucks[0]
 
             # Things that should only happen in one of the two loops should use an incremented variable and modulus
-            if i % 2 == 0:
-                angle = random.randint(-100, 100)
+            """if i % 2 == 0:
+                angle = random.randint(-100, 100)"""
             rot = OpenCV_to_RAPID.z_degrees_to_quaternion(angle)
 
             norbert.set_robtarget_rotation_quaternion("puck_target", rot)
@@ -203,7 +212,7 @@ while norbert.is_running():
         norbert.wait_for_rapid()
 
         while not robtarget_pucks:
-            ImageFunctions.findPucks(config.cam, norbert, robtarget_pucks, 195)
+            ImageFunctions.findPucks(cam, norbert, robtarget_pucks, 195)
 
         puck_to_RAPID = robtarget_pucks[0]
         whichPuck = 3
@@ -224,7 +233,7 @@ while norbert.is_running():
         robtarget_pucks.remove(puck_to_RAPID)
 
         norbert.wait_for_rapid()
-        ImageFunctions.findPucks(config.cam, norbert, robtarget_pucks, 160)
+        ImageFunctions.findPucks(cam, norbert, robtarget_pucks, 160)
 
         for x in robtarget_pucks:
             if x.nr == whichPuck:
@@ -236,12 +245,52 @@ while norbert.is_running():
         norbert.set_rapid_variable("image_processed", "TRUE")
 
     elif userinput == 6:
-        camera_correction.find_correct_exposure(config.cam, norbert)
+        camera_correction.find_correct_exposure(cam, norbert)
 
     elif userinput == 7:
-        camera_correction.camera_adjustment(config.cam, norbert)
+        camera_correction.camera_adjustment(cam, norbert)
 
     elif userinput == 8:
         print("Exiting Python program and turning off robot motors")
         norbert.stop_RAPID()
         norbert.motors_off()
+
+    elif userinput == 9:
+        i = 0
+        angle = 0
+        # After two loops, the puck is picked up and placed at a random location
+        while norbert.is_running():
+
+            # Start Repeatability test CASE in RAPID
+            norbert.set_rapid_variable("WPW", 9)
+            norbert.wait_for_rapid()
+
+            # Set a random target to place the puck in
+            # random_target = [random.randint(-50, 150), random.randint(-200, -50), 0]  # Had (-150, 150)
+            random_target = [-100, 150, 0]
+            norbert.set_robtarget_translation("randomTarget", random_target)
+
+            # Capture images until a puck is found
+            while not robtarget_pucks:
+                robtarget_pucks = ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
+
+            # Extract puck from list and send its position to RAPID
+            puck_to_RAPID = robtarget_pucks[0]
+
+            # Things that should only happen in one of the two loops should use an incremented variable and modulus
+            """if i % 2 == 0:
+                angle = random.randint(-100, 100)"""
+            rot = OpenCV_to_RAPID.z_degrees_to_quaternion(angle)
+
+            norbert.set_robtarget_rotation_quaternion("puck_target", rot)
+            norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
+            norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
+            norbert.set_rapid_variable("image_processed", "TRUE")
+            print(puck_to_RAPID.get_xyz())
+
+            # Remove the used puck from the list so it can be added once again next loop
+            robtarget_pucks.remove(puck_to_RAPID)
+
+            i += 1
+
+cam.exit_camera()

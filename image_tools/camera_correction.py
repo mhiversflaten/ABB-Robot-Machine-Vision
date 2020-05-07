@@ -70,8 +70,13 @@ def camera_adjustment(cam, robot):
     sum_slope_x = 0
     sum_slope_y = 0
     for content in contents:
+        sum_slope_x += content[0]
+        sum_slope_y += content[1]
+
+        # TODO: Find out why absolute value was used previously:
+        """
         sum_slope_x += abs(content[0])
-        sum_slope_y += abs(content[1])
+        sum_slope_y += abs(content[1])"""
 
     average_slope_x = sum_slope_x / len(contents)
     average_slope_y = sum_slope_y / len(contents)
@@ -93,7 +98,11 @@ def camera_adjustment(cam, robot):
 
 
 def find_correct_exposure(cam, robot):
+
     print("---Running find_correct_exposure---")
+
+    # TODO: Use several pucks to determine the best exposure times.
+    #  Input amount of pucks and grade exposure values based on how many of the pucks are found each time
 
     robot.set_rapid_variable("WPW", 10)
 
@@ -111,14 +120,14 @@ def find_correct_exposure(cam, robot):
     for exposure in range(exposure_low, exposure_high, increment):
         # Set new exposure
         newExposure = ueye.DOUBLE(exposure)
-        ret = ueye.is_Exposure(cam.handle(), ueye.IS_EXPOSURE_CMD_SET_EXPOSURE, newExposure, ueye.sizeof(newExposure))
+        ret = ueye.is_Exposure(cam.hCam, ueye.IS_EXPOSURE_CMD_SET_EXPOSURE, newExposure, ueye.sizeof(newExposure))
         # time.sleep(0.05)
         img = ImageFunctions.capture_image(cam=cam, gripper_height=500)
         puck_list = QR_Scanner(img)
         print("Found puck:", puck_list)
         # Checking exposure
         d = ueye.DOUBLE()
-        retVal = ueye.is_Exposure(cam.handle(), ueye.IS_EXPOSURE_CMD_GET_EXPOSURE, d, 8)
+        retVal = ueye.is_Exposure(cam.hCam, ueye.IS_EXPOSURE_CMD_GET_EXPOSURE, d, 8)
         if retVal == ueye.IS_SUCCESS:
             print('Currently set exposure time %8.3f ms' % d)
         # Position returns as None if no QR-code is found

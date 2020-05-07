@@ -1,6 +1,5 @@
 import cv2
 from image_tools.QR_Reader import QR_Scanner
-from config import config
 from pyueye import ueye
 import time
 from image_tools.pyueye_example_utils import ImageData, ImageBuffer
@@ -23,19 +22,33 @@ def capture_image(cam, gripper_height):
         nRet = ueye.is_Focus(cam.handle(), ueye.FOC_CMD_SET_MANUAL_FOCUS,
                              config.focus_closeup, ueye.sizeof(config.focus_closeup))"""
 
-    nRet = ueye.is_Focus(cam.handle(), ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
-    time.sleep(2)
+    nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
+
+    """nRet = ueye.INT()
+    nValue = ueye.INT()
+
+    while True:
+        nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_GET_AUTOFOCUS_STATUS, nValue, ueye.sizeof(nValue))
+
+        if nValue == 2:
+            time.sleep(0.5)
+            break"""
+
+    time.sleep(2.5)
+    array = cam.get_image()
+    #cv2.imshow("test", array)
+    #cv2.waitKey(0)
 
     # autofocus_status = ueye.INT(0)
     # ueye.is_Focus(cam.handle(), ueye.FOC_CMD_GET_AUTOFOCUS_STATUS, autofocus_status, ueye.sizeof(autofocus_status))
-    img_buffer = ImageBuffer()  # Create image buffer
+    #img_buffer = ImageBuffer()  # Create image buffer
     # ueye.is_Focus(cam.handle(), ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
     # cam.freeze_video()  # Freeze video captures a single image
 
-    nRet = ueye.is_WaitForNextImage(cam.handle(), 1000, img_buffer.mem_ptr, img_buffer.mem_id)
-    img_data = ImageData(cam.handle(), img_buffer)
-    array = img_data.as_1d_image()
-    img_data.unlock()
+    #nRet = ueye.is_WaitForNextImage(cam.handle(), 1000, img_buffer.mem_ptr, img_buffer.mem_id)
+    #img_data = ImageData(cam.handle(), img_buffer)
+    #array = img_data.as_1d_image()
+    #img_data.unlock()
 
     return array
 
@@ -71,7 +84,7 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
     return robtarget_pucks
 
 
-def showVideo(cam):
+"""def showVideo(cam):
     img_buffer = ImageBuffer()
     #img_data = ImageData(cam.handle(), img_buffer)
     while True:
@@ -79,7 +92,14 @@ def showVideo(cam):
         img_data = ImageData(cam.handle(), img_buffer)
         array = img_data.as_1d_image()
         # scanned_img = QR_Scanner_visualized(array)
-        """cv2.imshow("hei", array)
-        img_data.unlock()
-        if cv2.waitKey(10) & 0xFF == ord('q'):
-            break"""
+        """
+
+
+def showVideo(cam):
+    while True:
+        array = cam.get_image()
+        cv2.circle(array, (640, 480), 5, [255,0,0], -1)
+        cv2.imshow("Continuous video display", array)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    cv2.destroyAllWindows()

@@ -14,10 +14,6 @@ nRet = ueye.is_ImageFormat(cam.handle(), ueye.IMGFRMT_CMD_SET_FORMAT, formatID, 
 
 cam.alloc()  # Allocate image memory
 cam.capture_video()
-framerate = ueye.DOUBLE(30)
-framerate_pointer = ueye.DOUBLE()
-ueye.is_SetFrameRate(cam.handle(), framerate, framerate_pointer)
-print(framerate_pointer.value)
 
 # Disable auto exposure
 dblEnable = ueye.DOUBLE(0)
