@@ -13,7 +13,11 @@ def capture_image(cam, gripper_height):
     camera_height = gripper_height + 70  # Camera is placed 70mm above gripper
     # TODO: Find a curve that correlates distance from subject and focus value
 
-    nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
+    height_above_subject = gripper_height + 70 - 30  # -30 because one puck
+
+    calculate_focus(cam, height_above_subject)
+
+    #nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
 
     # TODO: For finding focus values for the function and case 8 in main.
     # Short pause before capturing image to ensure that the camera is still and focused
@@ -32,6 +36,10 @@ def capture_image(cam, gripper_height):
 
 
 def calculate_focus(cam, height_above_subject):
+    """This characteristic belongs to the IDS XS camera with serial code 4102885308.
+    As stated by IDS themselves the characteristic is not robust and could vary between
+    different cameras."""
+
     if height_above_subject >= 357.5:
         focus_value = 204
     elif 237 <= height_above_subject < 357.5:
@@ -54,6 +62,7 @@ def calculate_focus(cam, height_above_subject):
 
     focus_UINT = ueye.UINT(focus_value)
     ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_MANUAL_FOCUS, focus_UINT, ueye.sizeof(focus_UINT))
+    time.sleep(0.3)
 
 
 def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
@@ -65,18 +74,6 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
     gripper_height = robot.get_gripper_height()
 
     cam_pos = OpenCV_to_RAPID.get_camera_position(trans=trans, rot=rot)
-
-    nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
-
-    # Short pause before capturing image to ensure that the camera is still and focused
-    time.sleep(3)
-    focus_value = ueye.UINT()
-    ueye.is_Focus(cam.hCam, ueye.FOC_CMD_GET_MANUAL_FOCUS, focus_value, ueye.sizeof(focus_value))
-    print(focus_value.value)
-
-    focus_file = open('focus_file_XS.txt', 'w')
-
-    focus_file.write(f'{gripper_height + 70:.4f},{focus_value.value:.4f}\n')
 
     for _ in range(number_of_images):
         image = capture_image(cam=cam, gripper_height=gripper_height)
