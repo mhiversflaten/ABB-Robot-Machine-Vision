@@ -71,6 +71,6 @@ def QR_Scanner_visualized(img):
         # cv2.circle(normalized_img, center=(int(height/2), int(width/2)), radius=10, color=(0,0,0), thickness=-1)
 
         # Draw circles in the middle of QR codes:
-        cv2.circle(normalized_img, center=(int(position[0]), int(position[1])), radius=10, color=(255, 0, 0), thickness=-1)
+        # cv2.circle(normalized_img, center=(int(position[0]), int(position[1])), radius=10, color=(255, 0, 0), thickness=-1)
 
     return normalized_img
