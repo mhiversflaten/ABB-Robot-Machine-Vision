@@ -6,9 +6,6 @@ from image_tools.pyueye_example_utils import ImageData, ImageBuffer
 import OpenCV_to_RAPID
 
 
-# TODO: Extend the program with threading, this will allow the camera to always stay active
-#  and could give a live feed of what the camera sees while still maintaining control over robot.
-
 def capture_image(cam, gripper_height):
     """Captures a single image through PyuEye functions. Focus is manually adjusted depending on the height
     of the camera above the subject.
@@ -22,33 +19,10 @@ def capture_image(cam, gripper_height):
         nRet = ueye.is_Focus(cam.handle(), ueye.FOC_CMD_SET_MANUAL_FOCUS,
                              config.focus_closeup, ueye.sizeof(config.focus_closeup))"""
 
-    nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
+    # nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
 
-    """nRet = ueye.INT()
-    nValue = ueye.INT()
-
-    while True:
-        nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_GET_AUTOFOCUS_STATUS, nValue, ueye.sizeof(nValue))
-
-        if nValue == 2:
-            time.sleep(0.5)
-            break"""
-
-    time.sleep(2.5)
+    # time.sleep(2.5)
     array = cam.get_image()
-    #cv2.imshow("test", array)
-    #cv2.waitKey(0)
-
-    # autofocus_status = ueye.INT(0)
-    # ueye.is_Focus(cam.handle(), ueye.FOC_CMD_GET_AUTOFOCUS_STATUS, autofocus_status, ueye.sizeof(autofocus_status))
-    #img_buffer = ImageBuffer()  # Create image buffer
-    # ueye.is_Focus(cam.handle(), ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
-    # cam.freeze_video()  # Freeze video captures a single image
-
-    #nRet = ueye.is_WaitForNextImage(cam.handle(), 1000, img_buffer.mem_ptr, img_buffer.mem_id)
-    #img_data = ImageData(cam.handle(), img_buffer)
-    #array = img_data.as_1d_image()
-    #img_data.unlock()
 
     return array
 
@@ -63,10 +37,13 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
 
     cam_pos = OpenCV_to_RAPID.get_camera_position(trans=trans, rot=rot)
 
-    time.sleep(0.5)  # Short pause before capturing image to ensure that the camera is still
+    nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
+
+    # Short pause before capturing image to ensure that the camera is still and focused
+    time.sleep(2)
+
     for _ in range(number_of_images):
         image = capture_image(cam=cam, gripper_height=gripper_height)
-        showVideo(cam)
 
         # Scan the image_tools and return all QR code positions
         temp_puck_list = QR_Scanner(image)
@@ -85,22 +62,13 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
     return robtarget_pucks
 
 
-"""def showVideo(cam):
-    img_buffer = ImageBuffer()
-    #img_data = ImageData(cam.handle(), img_buffer)
-    while True:
-        nRet = ueye.is_WaitForNextImage(cam.handle(), 1000, img_buffer.mem_ptr, img_buffer.mem_id)
-        img_data = ImageData(cam.handle(), img_buffer)
-        array = img_data.as_1d_image()
-        # scanned_img = QR_Scanner_visualized(array)
-        """
-
-
 def showVideo(cam):
     while True:
         array = cam.get_image()
         array = QR_Scanner_visualized(array)
-        #cv2.imshow("Continuous video display", array)
+        array = cv2.resize(array,(0,0),fx=0.5, fy=0.5)
+        cv2.imshow("Continuous video display", array)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cv2.destroyAllWindows()
+
