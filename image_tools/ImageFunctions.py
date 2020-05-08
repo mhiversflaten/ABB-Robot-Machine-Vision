@@ -31,6 +31,31 @@ def capture_image(cam, gripper_height):
     return array
 
 
+def calculate_focus(cam, height_above_subject):
+    if height_above_subject >= 357.5:
+        focus_value = 204
+    elif 237 <= height_above_subject < 357.5:
+        focus_value = 192
+    elif 169 <= height_above_subject < 237:
+        focus_value = 180
+    elif 131.5 <= height_above_subject < 169:
+        focus_value = 168
+    elif 101.5 <= height_above_subject < 131.5:
+        focus_value = 156
+    elif 86.5 <= height_above_subject < 101.5:
+        focus_value = 144
+    elif 72 <= height_above_subject < 86.5:
+        focus_value = 128
+    elif 42.5 <= height_above_subject < 72:
+        focus_value = 112
+    else:
+        print("Too close to subject. Focus value not found. Default value: 204")
+        focus_value = 204
+
+    focus_UINT = ueye.UINT(focus_value)
+    ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_MANUAL_FOCUS, focus_UINT, ueye.sizeof(focus_UINT))
+
+
 def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
     """Finds all pucks in the frame of the camera by capturing an image and scanning the image for QR codes.
     After the codes have been pinpointed, a series of transformations happen to finally create robtargets
@@ -51,7 +76,7 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
 
     focus_file = open('focus_file_XS.txt', 'w')
 
-    focus_file.write(f'{gripper_height+70:.4f},{focus_value.value:.4f}\n')
+    focus_file.write(f'{gripper_height + 70:.4f},{focus_value.value:.4f}\n')
 
     for _ in range(number_of_images):
         image = capture_image(cam=cam, gripper_height=gripper_height)
@@ -77,9 +102,8 @@ def showVideo(cam):
     while True:
         array = cam.get_image()
         array = QR_Scanner_visualized(array)
-        #array = cv2.resize(array,(0,0),fx=0.5, fy=0.5)
+        # array = cv2.resize(array,(0,0),fx=0.5, fy=0.5)
         cv2.imshow("Continuous video display", array)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cv2.destroyAllWindows()
-
