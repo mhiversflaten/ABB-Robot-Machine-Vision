@@ -66,6 +66,7 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
     time.sleep(0.5)  # Short pause before capturing image to ensure that the camera is still
     for _ in range(number_of_images):
         image = capture_image(cam=cam, gripper_height=gripper_height)
+        showVideo(cam)
 
         # Scan the image_tools and return all QR code positions
         temp_puck_list = QR_Scanner(image)
@@ -99,7 +100,7 @@ def showVideo(cam):
     while True:
         array = cam.get_image()
         array = QR_Scanner_visualized(array)
-        cv2.imshow("Continuous video display", array)
+        #cv2.imshow("Continuous video display", array)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cv2.destroyAllWindows()

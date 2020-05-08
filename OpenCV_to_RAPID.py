@@ -17,7 +17,7 @@ def pixel_to_mm(gripper_height, puck):
 
     mm_width = 1 * (gripper_height + 70)  # Previous conversion before asking IDS for actual formula
 
-    pixel_to_mm = fov_width / 1280  # mm_width / px_width
+    pixel_to_mm = fov_width / 2048  # mm_width / px_width
 
     # Convert all positions from pixels to millimeters:
     puck.set_position(position=[x * pixel_to_mm for x in puck.position])

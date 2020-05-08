@@ -29,8 +29,9 @@ class Camera:
             print("is_ResetToDefault ERROR")
 
     def set_parameters(self):
-        # Change image format to 1280x960
-        formatID = ueye.UINT(8)
+        # FormatID = ueye.UINT(8): Change image format to 1280x960
+        # FormatID = ueye.UINT(5): Change image format to 2048x1536
+        formatID = ueye.UINT(5)
         nRet = ueye.is_ImageFormat(self.hCam, ueye.IMGFRMT_CMD_SET_FORMAT, formatID, ueye.sizeof(formatID))
 
         # Disable auto exposure
@@ -69,6 +70,10 @@ class Camera:
                                        self.rectAOI.s32Height, self.nBitsPerPixel, self.pitch)
         if nRet != ueye.IS_SUCCESS:
             print("is_InquireImageMem ERROR")
+
+        fps = ueye.DOUBLE()
+        ueye.is_SetFrameRate(self.hCam, ueye.IS_GET_FRAMERATE, fps)
+        print(fps)
 
     def get_image(self):
         # Extract data from our image memory...
