@@ -1,5 +1,5 @@
 import cv2
-from image_tools.QR_Reader import QR_Scanner
+from image_tools.QR_Reader import QR_Scanner, QR_Scanner_visualized
 from pyueye import ueye
 import time
 from image_tools.pyueye_example_utils import ImageData, ImageBuffer
@@ -98,7 +98,7 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
 def showVideo(cam):
     while True:
         array = cam.get_image()
-        cv2.circle(array, (640, 480), 5, [255,0,0], -1)
+        array = QR_Scanner_visualized(array)
         cv2.imshow("Continuous video display", array)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
