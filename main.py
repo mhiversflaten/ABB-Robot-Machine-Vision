@@ -108,7 +108,7 @@ while norbert.is_running():
         norbert.wait_for_rapid()
 
         while not robtarget_pucks:
-            ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
+            ImageFunctions.findPucks(cam, norbert, robtarget_pucks, number_of_images=5)
         print("Found pucks: ", end='')
         print(*robtarget_pucks, sep=', ')
         for puck in robtarget_pucks:
@@ -157,6 +157,7 @@ while norbert.is_running():
 
         i = 0
         angle = 0
+        number_of_images = 0
         # After two loops, the puck is picked up and placed at a random location
         while norbert.is_running():
 
@@ -169,9 +170,16 @@ while norbert.is_running():
             random_target = [-100, 150, 0]
             norbert.set_robtarget_translation("randomTarget", random_target)
 
+            # Capture 5 images if overview, 1 image if close-up
+            if i % 2 == 0:
+                number_of_images = 5
+            else:
+                number_of_images = 1
+
             # Capture images until a puck is found
             while not robtarget_pucks:
-                robtarget_pucks = ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
+                robtarget_pucks = ImageFunctions.findPucks(
+                    cam, norbert, robtarget_pucks, number_of_images=number_of_images)
 
             # Extract puck from list and send its position to RAPID
             puck_to_RAPID = robtarget_pucks[0]
