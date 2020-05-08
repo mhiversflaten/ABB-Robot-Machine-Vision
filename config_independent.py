@@ -31,7 +31,7 @@ class Camera:
     def set_parameters(self):
         # FormatID = ueye.UINT(8): Change image format to 1280x960
         # FormatID = ueye.UINT(5): Change image format to 2048x1536
-        formatID = ueye.UINT(5)
+        formatID = ueye.UINT(8)
         nRet = ueye.is_ImageFormat(self.hCam, ueye.IMGFRMT_CMD_SET_FORMAT, formatID, ueye.sizeof(formatID))
 
         # Disable auto exposure

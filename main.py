@@ -36,7 +36,8 @@ while norbert.is_running():
         5. Repeatability test
         6. Find correct exposure
         7. Camera adjustment
-        8. Exit
+        8. Focus testing
+        9. Exit
         """)
 
     userinput = int(input('\nWhat should RAPID do?: '))
@@ -157,7 +158,7 @@ while norbert.is_running():
 
         i = 0
         angle = 0
-        number_of_images = 0
+        number_of_images = 1
         # After two loops, the puck is picked up and placed at a random location
         while norbert.is_running():
 
@@ -166,15 +167,15 @@ while norbert.is_running():
             norbert.wait_for_rapid()
 
             # Set a random target to place the puck in
-            # random_target = [random.randint(-50, 150), random.randint(-200, -50), 0]  # Had (-150, 150)
-            random_target = [-100, 150, 0]
+            random_target = [random.randint(-50, 150), 0, 0] #  random.randint(-150, 150), 0]  # Had (-150, 150)
+            # random_target = [-100, 150, 0]
             norbert.set_robtarget_translation("randomTarget", random_target)
 
             # Capture 5 images if overview, 1 image if close-up
-            if i % 2 == 0:
+            """if i % 2 == 0:
                 number_of_images = 5
             else:
-                number_of_images = 1
+                number_of_images = 1"""
 
             # Capture images until a puck is found
             while not robtarget_pucks:
@@ -189,6 +190,7 @@ while norbert.is_running():
                 angle = random.randint(-100, 100)"""
             rot = OpenCV_to_RAPID.z_degrees_to_quaternion(angle)
 
+            norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
             norbert.set_robtarget_rotation_quaternion("puck_target", rot)
             norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
             norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
@@ -259,6 +261,24 @@ while norbert.is_running():
         camera_correction.camera_adjustment(cam, norbert)
 
     elif userinput == 8:
+        i = 0
+        updated_z = 560
+        while norbert.is_running() and updated_z > -50:
+            updated_z = 550 - i*15
+            i += 1
+            # Start focus values test in RAPID
+            norbert.set_robtarget_translation("focustarget", [0, 0, updated_z])
+            norbert.set_rapid_variable("WPW", 7)
+            norbert.wait_for_rapid()
+
+            gripper_height = norbert.get_gripper_height()
+            # Capture image
+            ImageFunctions.capture_image(cam, gripper_height)
+
+
+
+
+    elif userinput == 9:
         print("Exiting Python program and turning off robot motors")
         norbert.stop_RAPID()
         norbert.motors_off()

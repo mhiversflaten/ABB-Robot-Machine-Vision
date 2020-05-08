@@ -12,16 +12,20 @@ def capture_image(cam, gripper_height):
     """
     camera_height = gripper_height + 70  # Camera is placed 70mm above gripper
     # TODO: Find a curve that correlates distance from subject and focus value
-    """if camera_height > 300:
-        nRet = ueye.is_Focus(cam.handle(), ueye.FOC_CMD_SET_MANUAL_FOCUS,
-                             config.focus_overview, ueye.sizeof(config.focus_overview))
-    else:
-        nRet = ueye.is_Focus(cam.handle(), ueye.FOC_CMD_SET_MANUAL_FOCUS,
-                             config.focus_closeup, ueye.sizeof(config.focus_closeup))"""
 
-    # nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
+    nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
 
-    # time.sleep(2.5)
+    # TODO: For finding focus values for the function and case 8 in main.
+    # Short pause before capturing image to ensure that the camera is still and focused
+    """time.sleep(3)
+    focus_value = ueye.UINT()
+    ueye.is_Focus(cam.hCam, ueye.FOC_CMD_GET_MANUAL_FOCUS, focus_value, ueye.sizeof(focus_value))
+    print(focus_value.value)
+
+    focus_file = open('focus_file_XS.txt', 'a')
+
+    focus_file.write("Camera Height: {0}, Focus Value: {1}\n".format(camera_height, focus_value.value))"""
+
     array = cam.get_image()
 
     return array
@@ -40,7 +44,14 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
     nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
 
     # Short pause before capturing image to ensure that the camera is still and focused
-    time.sleep(2)
+    time.sleep(3)
+    focus_value = ueye.UINT()
+    ueye.is_Focus(cam.hCam, ueye.FOC_CMD_GET_MANUAL_FOCUS, focus_value, ueye.sizeof(focus_value))
+    print(focus_value.value)
+
+    focus_file = open('focus_file_XS.txt', 'w')
+
+    focus_file.write(f'{gripper_height+70:.4f},{focus_value.value:.4f}\n')
 
     for _ in range(number_of_images):
         image = capture_image(cam=cam, gripper_height=gripper_height)
@@ -66,7 +77,7 @@ def showVideo(cam):
     while True:
         array = cam.get_image()
         array = QR_Scanner_visualized(array)
-        array = cv2.resize(array,(0,0),fx=0.5, fy=0.5)
+        #array = cv2.resize(array,(0,0),fx=0.5, fy=0.5)
         cv2.imshow("Continuous video display", array)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

@@ -1,0 +1,41 @@
+
+Camera Height: 620, Focus Value: 204
+Camera Height: 604, Focus Value: 204
+Camera Height: 590, Focus Value: 204
+Camera Height: 575, Focus Value: 204
+Camera Height: 559, Focus Value: 204
+Camera Height: 545, Focus Value: 204
+Camera Height: 530, Focus Value: 204
+Camera Height: 515, Focus Value: 204
+Camera Height: 500, Focus Value: 204
+Camera Height: 485, Focus Value: 204
+Camera Height: 469, Focus Value: 204
+Camera Height: 455, Focus Value: 204
+Camera Height: 440, Focus Value: 204
+Camera Height: 425, Focus Value: 204
+Camera Height: 409, Focus Value: 204
+Camera Height: 395, Focus Value: 204
+Camera Height: 380, Focus Value: 204
+Camera Height: 365, Focus Value: 204
+Camera Height: 350, Focus Value: 192
+Camera Height: 335, Focus Value: 192
+Camera Height: 319, Focus Value: 192
+Camera Height: 304, Focus Value: 192
+Camera Height: 290, Focus Value: 192
+Camera Height: 275, Focus Value: 192
+Camera Height: 260, Focus Value: 192
+Camera Height: 245, Focus Value: 192
+Camera Height: 229, Focus Value: 180
+Camera Height: 214, Focus Value: 180
+Camera Height: 199, Focus Value: 180
+Camera Height: 184, Focus Value: 180
+Camera Height: 154, Focus Value: 168
+Camera Height: 139, Focus Value: 168
+Camera Height: 124, Focus Value: 156
+Camera Height: 109, Focus Value: 156
+Camera Height: 94, Focus Value: 144
+Camera Height: 79, Focus Value: 128
+Camera Height: 65, Focus Value: 112
+Camera Height: 50, Focus Value: 112
+
+
