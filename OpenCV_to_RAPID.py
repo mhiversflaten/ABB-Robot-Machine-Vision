@@ -130,14 +130,16 @@ def camera_compensation(gripper_height, gripper_rot, puck):
     Works with any camera orientation."""
     rotation_z_radians = quaternion_to_degrees(gripper_rot)
     camera_height = gripper_height + 70
-    # TODO: Run camera_adjustment several times to get an average slope value
+    working_distance = camera_height - (puck.height + 30)
+    # TODO: Check if camera height should be used or if camera height - puck height should be used.
+    #  There might be overshoot involved
     config = configparser.ConfigParser()
     config.read('image_tools/cam_adjustments.ini')
 
     slope_x = float(config['SLOPE']['slopex'])
     slope_y = float(config['SLOPE']['slopey'])
-    comp_x = slope_x * camera_height
-    comp_y = slope_y * camera_height
+    comp_x = slope_x * working_distance
+    comp_y = slope_y * working_distance
 
     # Decompose comp_x and comp_y if camera was rotated
     puck.set_position(position=
