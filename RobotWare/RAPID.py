@@ -17,9 +17,9 @@ class RAPID:
         self.base_url = base_url
         self.username = username
         self.password = password
-        self.digest_auth = HTTPDigestAuth(self.username, self.password)
         # create persistent HTTP communication
         self.session = Session()
+        self.session.auth = HTTPDigestAuth(self.username, self.password)
 
     def set_rapid_variable(self, var, value):
         """Sets the value of any RAPID variable.
@@ -28,15 +28,14 @@ class RAPID:
 
         payload = {'value': value}
         resp = self.session.post(self.base_url + '/rw/rapid/symbol/data/RAPID/T_ROB1/' + var + '?action=set',
-                                 auth=self.digest_auth, data=payload)
+                                 data=payload)
         return resp
 
     def get_rapid_variable(self, var):
         """Gets the raw value of any RAPID variable.
         """
 
-        resp = self.session.get(self.base_url + '/rw/rapid/symbol/data/RAPID/T_ROB1/' + var + ';value?json=1',
-                                auth=self.digest_auth)
+        resp = self.session.get(self.base_url + '/rw/rapid/symbol/data/RAPID/T_ROB1/' + var + ';value?json=1')
         json_string = resp.text
         _dict = json.loads(json_string)
         value = _dict["_embedded"]["_state"][0]["value"]
@@ -45,8 +44,7 @@ class RAPID:
     def get_robtarget_variables(self, var):
         """Gets both translational and rotational data from """
 
-        resp = self.session.get(self.base_url + '/rw/rapid/symbol/data/RAPID/T_ROB1/' + var + ';value?json=1',
-                                auth=self.digest_auth)
+        resp = self.session.get(self.base_url + '/rw/rapid/symbol/data/RAPID/T_ROB1/' + var + ';value?json=1')
         json_string = resp.text
         _dict = json.loads(json_string)
         data = _dict["_embedded"]["_state"][0]["value"]
@@ -61,8 +59,7 @@ class RAPID:
         """
 
         resp = self.session.get(self.base_url +
-                            '/rw/motionsystem/mechunits/ROB_1/robtarget/?tool=tGripper&wobj=wobjTableN&coordinate=Wobj',
-                            auth=self.digest_auth)
+                            '/rw/motionsystem/mechunits/ROB_1/robtarget/?tool=tGripper&wobj=wobjTableN&coordinate=Wobj')
 
         root = ET.fromstring(resp.text)
 
@@ -151,23 +148,23 @@ class RAPID:
         """Resets the program pointer to main procedure in RAPID.
         """
 
-        resp = self.session.post(self.base_url + '/rw/rapid/execution?action=resetpp', auth=self.digest_auth)
+        resp = self.session.post(self.base_url + '/rw/rapid/execution?action=resetpp')
         if resp.status_code == 204:
             print('Program pointer reset to main')
         else:
             print('Could not reset program pointer to main')
 
     def request_mastership(self):
-        resp = self.session.post(self.base_url + '/rw/mastership', auth=self.digest_auth)
+        resp = self.session.post(self.base_url + '/rw/mastership')
 
     def release_mastership(self):
-        resp = self.session.post(self.base_url + '/rw/mastership?action=release', auth=self.digest_auth)
+        resp = self.session.post(self.base_url + '/rw/mastership?action=release')
 
     def request_rmmp(self):
-        resp = self.session.post(self.base_url + '/users/rmmp', auth=self.digest_auth, data={'privilege': 'modify'})
+        resp = self.session.post(self.base_url + '/users/rmmp', data={'privilege': 'modify'})
 
     def cancel_rmmp(self):
-        resp = self.session.post(self.base_url + '/users/rmmp?action=cancel', auth=self.digest_auth)
+        resp = self.session.post(self.base_url + '/users/rmmp?action=cancel')
 
     def motors_on(self):
         """Turns the robot's motors on.
@@ -175,8 +172,7 @@ class RAPID:
         """
 
         payload = {'ctrl-state': 'motoron'}
-        resp = self.session.post(self.base_url + "/rw/panel/ctrlstate?action=setctrlstate",
-                                 auth=self.digest_auth, data=payload)
+        resp = self.session.post(self.base_url + "/rw/panel/ctrlstate?action=setctrlstate", data=payload)
 
         if resp.status_code == 204:
             print("Robot motors turned on")
@@ -188,8 +184,7 @@ class RAPID:
         """
 
         payload = {'ctrl-state': 'motoroff'}
-        resp = self.session.post(self.base_url + "/rw/panel/ctrlstate?action=setctrlstate",
-                                 auth=self.digest_auth, data=payload)
+        resp = self.session.post(self.base_url + "/rw/panel/ctrlstate?action=setctrlstate", data=payload)
 
         if resp.status_code == 204:
             print("Robot motors turned off")
@@ -203,8 +198,7 @@ class RAPID:
         self.reset_pp()
         payload = {'regain': 'continue', 'execmode': 'continue', 'cycle': 'once', 'condition': 'none',
                    'stopatbp': 'disabled', 'alltaskbytsp': 'false'}
-        resp = self.session.post(self.base_url + "/rw/rapid/execution?action=start",
-                                 auth=self.digest_auth, data=payload)
+        resp = self.session.post(self.base_url + "/rw/rapid/execution?action=start", data=payload)
         if resp.status_code == 204:
             print("RAPID execution started")
         else:
@@ -215,7 +209,7 @@ class RAPID:
         """
 
         payload = {'stopmode': 'stop', 'usetsp': 'normal'}
-        resp = self.session.post(self.base_url + "/rw/rapid/execution?action=stop", auth=self.digest_auth, data=payload)
+        resp = self.session.post(self.base_url + "/rw/rapid/execution?action=stop", data=payload)
         if resp.status_code == 204:
             print('RAPID execution stopped')
         else:
@@ -225,7 +219,7 @@ class RAPID:
         """Gets the execution state of the controller.
         """
 
-        resp = self.session.get(self.base_url + "/rw/rapid/execution?json=1", auth=self.digest_auth)
+        resp = self.session.get(self.base_url + "/rw/rapid/execution?json=1")
         json_string = resp.text
         _dict = json.loads(json_string)
         data = _dict["_embedded"]["_state"][0]["ctrlexecstate"]
@@ -247,7 +241,7 @@ class RAPID:
         """
 
         payload = {'speed-ratio': speed_ratio}
-        resp = self.session.post(self.base_url + "/rw/panel/speedratio?action=setspeedratio", auth=self.digest_auth,
+        resp = self.session.post(self.base_url + "/rw/panel/speedratio?action=setspeedratio",
                                  data=payload)
         if resp.status_code == 204:
             print(f'Set speed ratio to {speed_ratio}%')

@@ -4,7 +4,7 @@ class Puck:
 
     contains:
     puck number
-    puck position
+    puck position (x,y)
     puck angle
     puck height
     """

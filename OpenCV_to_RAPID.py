@@ -127,10 +127,12 @@ def overshoot_comp(gripper_height, puck):
 def camera_compensation(gripper_height, gripper_rot, puck):
     """Compensate for an angled camera view. Different cameras will be angled differently both internally and
     externally when mounted to a surface. The slope values must first be calculated by running camera_adjustment.py.
-    Works with any camera orientation."""
+    Works with any camera orientation.
+    """
+
     rotation_z_radians = quaternion_to_degrees(gripper_rot)
     camera_height = gripper_height + 70
-    # TODO: Run camera_adjustment several times to get an average slope value
+
     config = configparser.ConfigParser()
     config.read('image_tools/cam_adjustments.ini')
 
