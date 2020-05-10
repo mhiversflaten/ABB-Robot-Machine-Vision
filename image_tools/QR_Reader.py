@@ -58,7 +58,7 @@ def QR_Scanner_visualized(img):
 
     for QR_Code in sorted_data:  # Go through all QR codes
         polygon = np.int32([QR_Code.polygon])  # Convert from int64 to int32, polylines only accepts int32
-        normalized_img = cv2.cvtColor(normalized_img, cv2.COLOR_GRAY2BGR)
+        #normalized_img = cv2.cvtColor(normalized_img, cv2.COLOR_GRAY2BGR)
         cv2.polylines(normalized_img, polygon, True, color=(0, 0, 255), thickness=10)  # Draw lines around QR-codes
 
         points = polygon[0]  # Extract corner points
