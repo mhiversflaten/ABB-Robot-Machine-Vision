@@ -108,6 +108,7 @@ while norbert.is_running():
         norbert.set_rapid_variable("WPW", 3)
         norbert.wait_for_rapid()
 
+        angle = 0
         while not robtarget_pucks:
             ImageFunctions.findPucks(cam, norbert, robtarget_pucks, number_of_images=5)
         print("Found pucks: ", end='')
@@ -124,6 +125,11 @@ while norbert.is_running():
                     puck_to_RAPID = puck
                     break
 
+            rot = OpenCV_to_RAPID.z_degrees_to_quaternion(angle)
+
+            norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
+            norbert.set_robtarget_rotation_quaternion("puck_target", rot)
+            norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
             norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_rapid_variable("image_processed", "TRUE")
 
@@ -140,8 +146,12 @@ while norbert.is_running():
                     puck_to_RAPID = puck
                     break
 
+            rot = OpenCV_to_RAPID.z_degrees_to_quaternion(angle)
+
+            norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
+            norbert.set_robtarget_rotation_quaternion("puck_target", rot)
+            norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
             norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
-            #norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
             norbert.set_rapid_variable("image_processed", "TRUE")
 
             robtarget_pucks.remove(puck_to_RAPID)
