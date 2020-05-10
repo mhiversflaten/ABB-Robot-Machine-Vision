@@ -131,7 +131,9 @@ while norbert.is_running():
 
             norbert.wait_for_rapid()
 
-            ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
+            # Capture images until the puck is found again in the close-up image
+            while not any(pucknr == x for x in robtarget_pucks):
+                ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
 
             pucknr = min(int(x.number) for x in robtarget_pucks)
 
