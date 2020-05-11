@@ -5,7 +5,6 @@ import configparser
 
 number_of_loops = 0
 
-
 class Camera:
 
     def __init__(self):

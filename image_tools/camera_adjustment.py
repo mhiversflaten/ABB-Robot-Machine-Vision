@@ -1,11 +1,11 @@
 import numpy as np
-from RobotWare import RAPID
+from RobotWebServices import RWS
 from config import config
 from image_tools import ImageFunctions
 import configparser
 import os
 
-norbert = RAPID.RAPID()  # Initialize robot communication
+norbert = RWS.RWS()  # Initialize robot communication
 norbert.request_mastership()  # Request mastership
 norbert.start_RAPID()  # NB! Starts RAPID execution from main
 norbert.wait_for_rapid()

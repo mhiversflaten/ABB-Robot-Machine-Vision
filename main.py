@@ -1,7 +1,7 @@
 #from config import config
 import config_independent
 from image_tools import ImageFunctions, camera_correction
-from RobotWare import RAPID
+from RobotWebServices import RWS
 import OpenCV_to_RAPID
 import random
 import threading
@@ -20,7 +20,7 @@ robtarget_pucks = []
 puck_to_RAPID = 0
 
 # Initialize robot communication, start motors, and execute RAPID program
-norbert = RAPID.RAPID()
+norbert = RWS.RWS()
 norbert.request_mastership()
 norbert.start_RAPID()  # NB! Starts RAPID execution from main
 norbert.wait_for_rapid()
@@ -41,6 +41,15 @@ while norbert.is_running():
         """)
 
     userinput = int(input('\nWhat should RAPID do?: '))
+
+    if userinput == 10000:
+        from image_tools import QR_Reader
+        import cv2
+        gripper_height = norbert.get_gripper_height()
+        img = ImageFunctions.capture_image(cam, gripper_height)
+        img = QR_Reader.QR_Scanner_visualized(img)
+        cv2.imwrite('Scanned_puck.png', img)
+
 
     if userinput == 1:
         print("Pick and place a single puck")

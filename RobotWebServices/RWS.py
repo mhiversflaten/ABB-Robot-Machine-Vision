@@ -10,8 +10,8 @@ import json
 namespace = '{http://www.w3.org/1999/xhtml}'
 
 
-class RAPID:
-    """Class for communicating with RobotWare through Robot Web Services (Rest API)"""
+class RWS:
+    """Class for communicating with RobotWebServices through Robot Web Services (Rest API)"""
 
     def __init__(self, base_url='http://152.94.0.38', username='Default User', password='robotics'):
         self.base_url = base_url

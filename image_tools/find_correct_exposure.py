@@ -3,9 +3,9 @@ from image_tools.QR_Reader import QR_Scanner
 from pyueye import ueye
 from numpy import median
 from image_tools import ImageFunctions
-from RobotWare import RAPID
+from RobotWebServices import RWS
 
-norbert = RAPID.RAPID()
+norbert = RWS.RWS()
 norbert.request_mastership()
 norbert.start_RAPID()  # NB! Starts RAPID execution from main
 norbert.wait_for_rapid()

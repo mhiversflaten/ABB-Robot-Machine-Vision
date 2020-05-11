@@ -28,4 +28,4 @@ class WebsiteUser(HttpLocust):
     wait_time = constant(2)
 
 
-"""locust -f RobotWare/API_Benchmark/com_testing.py"""
+"""locust -f RobotWebServices/API_Benchmark/com_testing.py"""

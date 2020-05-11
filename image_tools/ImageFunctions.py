@@ -40,7 +40,8 @@ def capture_image(cam, gripper_height):
 def calculate_focus(cam, height_above_subject):
     """This characteristic belongs to the IDS XS camera with serial code 4102885308.
     As stated by IDS themselves the characteristic is not robust and could vary between
-    different cameras."""
+    different cameras.
+    """
 
     if height_above_subject >= 357.5:
         focus_value = 204
@@ -70,7 +71,8 @@ def calculate_focus(cam, height_above_subject):
 def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
     """Finds all pucks in the frame of the camera by capturing an image and scanning the image for QR codes.
     After the codes have been pinpointed, a series of transformations happen to finally create robtargets
-    which can be sent to RobotWare."""
+    which can be sent to RobotWebServices.
+    """
 
     trans, rot = robot.get_gripper_position()
     gripper_height = robot.get_gripper_height()
