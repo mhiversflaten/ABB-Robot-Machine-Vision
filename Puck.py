@@ -9,7 +9,7 @@ class Puck:
     puck height
     """
 
-    def __init__(self, number, position, angle, height=0):
+    def __init__(self, number, position, angle, height=30):
         self.number = number
         self.set_number(number)
         self.set_position(position)
@@ -62,4 +62,4 @@ class Puck:
             print("Puck number has to be an integer")
 
     def get_xyz(self):
-        return self.position + [self.height]
+        return self.position + [self.height - 30]

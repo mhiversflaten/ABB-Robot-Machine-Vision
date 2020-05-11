@@ -1,9 +1,11 @@
 import cv2
+import config_independent
 from image_tools.QR_Reader import QR_Scanner, QR_Scanner_visualized
 from pyueye import ueye
 import time
 from image_tools.pyueye_example_utils import ImageData, ImageBuffer
 import OpenCV_to_RAPID
+
 
 
 def capture_image(cam, gripper_height):
@@ -99,6 +101,18 @@ def showVideo(cam):
     while True:
         array = cam.get_image()
         array = QR_Scanner_visualized(array)
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        bottomLeftCornerOfText = (10, 50)
+        fontScale = 1
+        fontColor = (255, 255, 255)
+        lineType = 2
+
+        cv2.putText(array, 'Number of loops: ' + str(config_independent.number_of_loops),
+                    bottomLeftCornerOfText,
+                    font,
+                    fontScale,
+                    fontColor,
+                    lineType)
         # array = cv2.resize(array,(0,0),fx=0.5, fy=0.5)
         cv2.imshow("Continuous video display", array)
         if cv2.waitKey(1) & 0xFF == ord('q'):

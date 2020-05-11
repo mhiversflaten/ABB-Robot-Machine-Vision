@@ -1,6 +1,9 @@
 from pyueye import ueye
 import numpy as np
 import cv2
+import configparser
+
+number_of_loops = 0
 
 
 class Camera:
@@ -38,6 +41,16 @@ class Camera:
         dblEnable = ueye.DOUBLE(0)
         dblDummy = ueye.DOUBLE(0)
         ueye.is_SetAutoParameter(self.hCam, ueye.IS_SET_ENABLE_AUTO_SENSOR_GAIN_SHUTTER, dblEnable, dblDummy)
+
+        # Read exposure value from .ini-file
+        config = configparser.ConfigParser()
+        config.read('image_tools/cam_adjustments.ini')
+
+        exposure = float(config['EXPOSURE']['exposure'])
+
+        newExposure = ueye.DOUBLE(exposure)
+        # Set camera exposure
+        ret = ueye.is_Exposure(self.hCam, ueye.IS_EXPOSURE_CMD_SET_EXPOSURE, newExposure, ueye.sizeof(newExposure))
 
         # Disable autofocus
         ueye.is_Focus(self.hCam, ueye.FOC_CMD_SET_DISABLE_AUTOFOCUS, None, 0)

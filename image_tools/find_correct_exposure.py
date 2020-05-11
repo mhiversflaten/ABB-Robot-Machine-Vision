@@ -1,5 +1,4 @@
 import configparser
-import time
 from image_tools.QR_Reader import QR_Scanner
 from pyueye import ueye
 from numpy import median

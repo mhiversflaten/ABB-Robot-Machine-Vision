@@ -5,6 +5,7 @@ from pyueye import ueye
 from numpy import median
 from image_tools import ImageFunctions
 import os
+import sys
 
 
 def camera_adjustment(cam, robot):
@@ -99,6 +100,9 @@ def camera_adjustment(cam, robot):
 
 def find_correct_exposure(cam, robot):
 
+    if not robot.is_running():
+        sys.exit(0)
+
     print("---Running find_correct_exposure---")
 
     # TODO: Use several pucks to determine the best exposure times.
@@ -149,3 +153,4 @@ def find_correct_exposure(cam, robot):
 
     cfgfile.close()
 
+    cam.set_parameters()

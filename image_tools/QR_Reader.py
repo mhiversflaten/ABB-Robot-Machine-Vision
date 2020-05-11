@@ -1,5 +1,5 @@
 import cv2
-from pyzbar.pyzbar import decode
+from pyzbar.pyzbar import decode, ZBarSymbol
 import numpy as np
 import Puck
 
@@ -11,7 +11,7 @@ def QR_Scanner(img):
     grayscale = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # Make grayscale image for filtering and thresholding
     blur = cv2.bilateralFilter(src=grayscale, d=3, sigmaColor=75, sigmaSpace=75)
     normalized_img = cv2.normalize(blur, blur, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=-1)
-    data = decode(normalized_img)
+    data = decode(normalized_img, symbols=[ZBarSymbol.QRCODE])
     puck_list = []
 
     sorted_data = sorted(data, key=lambda x: x[0])  # Sort the QR codes in ascending order
@@ -49,8 +49,9 @@ def QR_Scanner_visualized(img):
     grayscale = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # Make grayscale image for filtering and thresholding
     blur = cv2.bilateralFilter(src=grayscale, d=3, sigmaColor=75, sigmaSpace=75)
     normalized_img = cv2.normalize(blur, blur, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=-1)
+    data = decode(normalized_img, symbols=[ZBarSymbol.QRCODE])
 
-    data = decode(normalized_img)
+    normalized_img = cv2.cvtColor(normalized_img, cv2.COLOR_GRAY2BGR)
 
     # Thresholding for greater contrast:
     #ret, threshBlur = cv2.threshold(grayscale, 50 + thresh_incr, 255, cv2.THRESH_BINARY)
@@ -58,7 +59,6 @@ def QR_Scanner_visualized(img):
 
     for QR_Code in sorted_data:  # Go through all QR codes
         polygon = np.int32([QR_Code.polygon])  # Convert from int64 to int32, polylines only accepts int32
-        #normalized_img = cv2.cvtColor(normalized_img, cv2.COLOR_GRAY2BGR)
         cv2.polylines(normalized_img, polygon, True, color=(0, 0, 255), thickness=10)  # Draw lines around QR-codes
 
         points = polygon[0]  # Extract corner points
