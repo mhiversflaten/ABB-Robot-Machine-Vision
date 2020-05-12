@@ -203,7 +203,7 @@ class RWS:
                    'stopatbp': 'disabled', 'alltaskbytsp': 'false'}
         resp = self.session.post(self.base_url + "/rw/rapid/execution?action=start", data=payload)
         if resp.status_code == 204:
-            print("RAPID execution started")
+            print("RAPID execution started from main")
         else:
             print("Could not start RAPID, maybe motors are turned off")
 

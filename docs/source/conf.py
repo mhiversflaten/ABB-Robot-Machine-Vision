@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'ABB-Klosser'
+project = 'ABB-Robot-Machine-Vision'
 copyright = '2020, Markus Iversflaten & Ole Christian Handegård'
 author = 'Markus Iversflaten & Ole Christian Handegård'
 
