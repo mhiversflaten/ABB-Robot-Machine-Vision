@@ -11,7 +11,10 @@ namespace = '{http://www.w3.org/1999/xhtml}'
 
 
 class RWS:
-    """Class for communicating with RobotWebServices through Robot Web Services (Rest API)"""
+    """Class for communicating with RobotWare through Robot Web Services (ABB's Rest API).
+    Most of the functions are mainly aimed at laboratory work at the University of Stavanger,
+    but may hopefully prove useful otherwise as well.
+    """
 
     def __init__(self, base_url='http://152.94.0.38', username='Default User', password='robotics'):
         self.base_url = base_url

@@ -13,8 +13,8 @@ This software is mainly directed toward engineering students at the University o
 
 Here is some text explaining some very complicated stuff::
 
-   print('hello')
-   >> hello
+   print('test')
+   >> test
 
 Test
 ^^^^
