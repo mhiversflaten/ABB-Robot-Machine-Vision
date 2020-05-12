@@ -2,7 +2,7 @@ Robot Web Services
 ==================
 
 Take full control of ABB robots through HTTP requests, made easy with the RWS class.
-Operating mode should be automatic.::
+Operating mode should be automatic.:
 
     >>> robot = RWS.RWS(base_url='robot_IP', username='user', password='pass')
     >>> robot.request_mastership()
