@@ -1,13 +1,19 @@
 from pyueye import ueye
 import numpy as np
-import cv2
 import configparser
 
+repeatability_test = False
 number_of_loops = 0
 
+
 class Camera:
+    """The Camera class contains methods specifically meant for the University of Stavanger.
+    These functions have only been tested on a IDS UI-1007XS-C camera, and might not work
+    correctly as intended on other models.
+    """
 
     def __init__(self):
+        # Several parameters are unused, but may be needed in the future
         self.hCam = ueye.HIDS(0)
         self.sInfo = ueye.SENSORINFO()
         self.cInfo = ueye.CAMINFO()
@@ -31,30 +37,30 @@ class Camera:
             print("is_ResetToDefault ERROR")
 
     def set_parameters(self):
-        # FormatID = ueye.UINT(8): Change image format to 1280x960
-        # FormatID = ueye.UINT(5): Change image format to 2048x1536
-        formatID = ueye.UINT(8)
+        # Change image format
+        # formatID = ueye.UINT(5)  # Change image format to 2048x1536
+        formatID = ueye.UINT(8)  # Change image format to 1280x960
         nRet = ueye.is_ImageFormat(self.hCam, ueye.IMGFRMT_CMD_SET_FORMAT, formatID, ueye.sizeof(formatID))
 
-        # Disable auto exposure
+        # Disable auto exposure...
         dblEnable = ueye.DOUBLE(0)
         dblDummy = ueye.DOUBLE(0)
         ueye.is_SetAutoParameter(self.hCam, ueye.IS_SET_ENABLE_AUTO_SENSOR_GAIN_SHUTTER, dblEnable, dblDummy)
 
-        # Read exposure value from .ini-file
+        # ...and set new exposure value from .ini-file
         config = configparser.ConfigParser()
         config.read('image_tools/cam_adjustments.ini')
-
         exposure = float(config['EXPOSURE']['exposure'])
-
         newExposure = ueye.DOUBLE(exposure)
-        # Set camera exposure
         ret = ueye.is_Exposure(self.hCam, ueye.IS_EXPOSURE_CMD_SET_EXPOSURE, newExposure, ueye.sizeof(newExposure))
 
         # Disable autofocus
         ueye.is_Focus(self.hCam, ueye.FOC_CMD_SET_DISABLE_AUTOFOCUS, None, 0)
 
     def allocate_memory(self):
+        """Allocates an image memory for an image having its dimensions
+        defined by width and height and its color depth defined by nBitsPerPixel.
+        """
         nRet = ueye.is_AOI(self.hCam, ueye.IS_AOI_IMAGE_GET_AOI, self.rectAOI, ueye.sizeof(self.rectAOI))
         if nRet != ueye.IS_SUCCESS:
             print("is_AOI ERROR")
@@ -73,6 +79,7 @@ class Camera:
                 nRet = ueye.is_SetColorMode(self.hCam, self.m_nColorMode)
 
     def capture_video(self):
+        # Activates the camera's live video mode (free run mode)
         nRet = ueye.is_CaptureVideo(self.hCam, ueye.IS_DONT_WAIT)
         if nRet != ueye.IS_SUCCESS:
             print("is_CaptureVideo ERROR")
@@ -83,10 +90,6 @@ class Camera:
         if nRet != ueye.IS_SUCCESS:
             print("is_InquireImageMem ERROR")
 
-        fps = ueye.DOUBLE()
-        ueye.is_SetFrameRate(self.hCam, ueye.IS_GET_FRAMERATE, fps)
-        print(fps)
-
     def get_image(self):
         # Extract data from our image memory...
         array = ueye.get_data(self.pcImageMemory, self.rectAOI.s32Width, self.rectAOI.s32Height,
@@ -94,8 +97,6 @@ class Camera:
 
         # ...and reshape it in an numpy array
         frame = np.reshape(array, (self.rectAOI.s32Height.value, self.rectAOI.s32Width.value, self.bytes_per_pixel))
-
-        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         return frame
 

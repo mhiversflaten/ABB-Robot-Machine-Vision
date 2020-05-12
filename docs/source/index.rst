@@ -15,12 +15,12 @@ User Guide
 .. toctree::
    :maxdepth: 2
 
+   license
    installation
    robotware
-   license
-   help
    imagefunctions
    puck
+   help
 
 
 Indices and tables
