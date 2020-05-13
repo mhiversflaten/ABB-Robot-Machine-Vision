@@ -308,7 +308,8 @@ while norbert.is_running():
         i = 0
         updated_z = 60  # Starting at gripper height
         while norbert.is_running() and updated_z < 500:
-            updated_z = 60 + i * 30
+            updated_z = 60 + i * 5
+            print(updated_z)
             i += 1
             # Start focus values test in RAPID (using focustarget because it is already in RAPID program
             norbert.set_robtarget_translation("focustarget", [0, 0, updated_z])
