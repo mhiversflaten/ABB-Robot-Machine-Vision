@@ -55,35 +55,29 @@ def calculate_focus(cam, working_distance):
     time.sleep(0.3)
 
 
-def approximate_stack(qr_width, gripper_height):
+def approximate_stack(qr_width):
 
     if qr_width >= 400:
-        focus_value = 204
-    elif 237 <= qr_width < 357.5:
-        focus_value = 192
-    elif 169 <= qr_width < 237:
-        focus_value = 180
-    elif 131.5 <= qr_width < 169:
-        focus_value = 168
-    elif 101.5 <= qr_width < 131.5:
-        focus_value = 156
-    elif 86.5 <= qr_width < 101.5:
-        focus_value = 144
-    elif 72 <= qr_width < 86.5:
-        focus_value = 128
-    elif 42.5 <= qr_width < 72:
-        focus_value = 112
+        approx_working_distance = 100
+    elif 300 <= qr_width < 400:
+        approx_working_distance = 130
+    elif 250 <= qr_width < 300:
+        approx_working_distance = 160
+    elif 210 <= qr_width < 250:
+        approx_working_distance = 190
+    elif 180 <= qr_width < 210:
+        approx_working_distance = 220
+    elif 160 <= qr_width < 180:
+        approx_working_distance = 250
+    elif 140 <= qr_width < 160:
+        approx_working_distance = 280
+    elif 130 <= qr_width < 140:
+        approx_working_distance = 310
     else:
-        print("Too close to subject. Focus value not found. Default value: 204")
-        focus_value = 204
+        print("Too far away, moving closer")
+        approx_working_distance = 340
 
-
-
-    # Create robtargets for every new puck
-    for puck in temp_puck_list:
-        puck = OpenCV_to_RAPID.create_robtarget(gripper_height=gripper_height, gripper_rot=rot, cam_pos=cam_pos,
-                                                image=image, puck=puck, cam_comp=cam_comp)
-        robtarget_pucks.append(puck)
+    return approx_working_distance
 
 
 
