@@ -104,10 +104,10 @@ while norbert.is_running():
             if puck.number == pucknr:
                 puck_to_RAPID = puck
                 break
-
-        rot = OpenCV_to_RAPID.z_degrees_to_quaternion(0)
+        rotation = puck_to_RAPID.check_collision(robtarget_pucks)
+        rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation)
         norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
-
+        norbert.set_robtarget_rotation_quaternion("puck_target", rot)
         norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
         norbert.set_rapid_variable("image_processed", "TRUE")
 
@@ -217,7 +217,7 @@ while norbert.is_running():
             rot = OpenCV_to_RAPID.z_degrees_to_quaternion(angle)
 
             norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
-            #norbert.set_robtarget_rotation_quaternion("puck_target", rot)
+            norbert.set_robtarget_rotation_quaternion("puck_target", rot)
             norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
             norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_rapid_variable("image_processed", "TRUE")
