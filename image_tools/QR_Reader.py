@@ -14,6 +14,7 @@ def QR_Scanner(img):
     normalized_img = cv2.normalize(blur, blur, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=-1)
     data = decode(normalized_img, symbols=[ZBarSymbol.QRCODE])
     puck_list = []
+    width_list = []
 
     sorted_data = sorted(data, key=lambda x: x[0])  # Sort the QR codes in ascending order
 
@@ -24,10 +25,6 @@ def QR_Scanner(img):
         y1 = points[0][1]
         x2 = points[3][0]
         y2 = points[3][1]
-
-        # Calculate distance between (x1,y1) and (x2,y2) to understand height of pucks:
-        point_distance = math.hypot((x2-x1), (y2-y1))
-        print(point_distance)
 
         angle = np.rad2deg(np.arctan2(-(y2 - y1), x2 - x1))  # Calculate the orientation of each QR code
 
@@ -41,11 +38,15 @@ def QR_Scanner(img):
         puck = str(QR_Code.data, "utf-8")  # Convert QR code data to string
         puck_number = int(''.join(filter(str.isdigit, puck)))  # Find only puck number from QR code string
 
+        # Calculate distance between (x1,y1) and (x2,y2) to understand height of pucks:
+        qr_width = math.hypot((x2 - x1), (y2 - y1))
+        width_list.append((puck_number, qr_width))
+
         # Make the puck object and add it to the puck list
         puck = Puck.Puck(puck_number, position, angle)
         puck_list.append(puck)
 
-    return puck_list
+    return puck_list, width_list
 
 
 def QR_Scanner_visualized(img):
