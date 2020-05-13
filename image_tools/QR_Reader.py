@@ -2,6 +2,7 @@ import cv2
 from pyzbar.pyzbar import decode, ZBarSymbol
 import numpy as np
 import Puck
+import math
 
 
 def QR_Scanner(img):
@@ -23,6 +24,10 @@ def QR_Scanner(img):
         y1 = points[0][1]
         x2 = points[3][0]
         y2 = points[3][1]
+
+        # Calculate distance between (x1,y1) and (x2,y2) to understand height of pucks:
+        point_distance = math.hypot((x2-x1), (y2-y1))
+        print(point_distance)
 
         angle = np.rad2deg(np.arctan2(-(y2 - y1), x2 - x1))  # Calculate the orientation of each QR code
 

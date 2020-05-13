@@ -1,6 +1,6 @@
 #from config import config
 import config_independent
-from image_tools import ImageFunctions, camera_correction
+from image_tools import ImageFunctions, camera_correction, QR_Reader
 from RobotWebServices import RWS
 import OpenCV_to_RAPID
 import random
@@ -302,6 +302,26 @@ while norbert.is_running():
             # Capture image
             ImageFunctions.capture_image(cam, gripper_height)
 
+    elif userinput == 11:
+        """Find all corner distances (px) for the QR-codes with different gripper height"""
+
+        i = 0
+        updated_z = 60  # Starting at gripper height
+        while norbert.is_running() and updated_z < 500:
+            updated_z = 60 + i * 30
+            i += 1
+            # Start focus values test in RAPID (using focustarget because it is already in RAPID program
+            norbert.set_robtarget_translation("focustarget", [0, 0, updated_z])
+            norbert.set_rapid_variable("WPW", 7)
+            norbert.wait_for_rapid()
+
+            gripper_height = norbert.get_gripper_height()
+            # Capture image
+            img = ImageFunctions.capture_image(cam, gripper_height)
+            QR_Reader.QR_Scanner(img)
+
+    elif userinput == 12:
+        """Picking pucks from stacks"""
 
 
 
@@ -310,7 +330,7 @@ while norbert.is_running():
         norbert.stop_RAPID()
         norbert.motors_off()
 
-    elif userinput == 9:
+    elif userinput == 10:
         i = 0
         angle = 0
         # After two loops, the puck is picked up and placed at a random location
