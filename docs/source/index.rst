@@ -17,7 +17,7 @@ User Guide
 
    license
    installation
-   robotware
+   robotwebservices
    imagefunctions
    puck
    help
