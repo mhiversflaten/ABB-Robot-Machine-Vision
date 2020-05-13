@@ -40,13 +40,14 @@ def QR_Scanner(img):
 
         # Calculate distance between (x1,y1) and (x2,y2) to understand height of pucks:
         qr_width = math.hypot((x2 - x1), (y2 - y1))
-        width_list.append((puck_number, qr_width))
+        print("width", qr_width)
+        #width_list.append((puck_number, qr_width))
 
         # Make the puck object and add it to the puck list
-        puck = Puck.Puck(puck_number, position, angle)
+        puck = Puck.Puck(puck_number, position, angle, qr_width)
         puck_list.append(puck)
 
-    return puck_list, width_list
+    return puck_list
 
 
 def QR_Scanner_visualized(img):

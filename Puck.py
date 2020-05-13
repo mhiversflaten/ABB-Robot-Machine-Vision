@@ -14,11 +14,12 @@ class Puck:
     puck height
     """
 
-    def __init__(self, number, position, angle, height=30):
+    def __init__(self, number, position, angle, qr_width, height=30):
         self.number = number
         self.set_number(number)
         self.set_position(position)
         self.set_angle(angle)
+        self.qr_width = qr_width
         self.set_height(height)
 
     def __eq__(self, other):
@@ -80,8 +81,8 @@ class Puck:
             collision_list.clear()
 
             # Collision area:
-            x1 = - 150
-            x2 = 10
+            x1 = - 95
+            x2 = 30
             y1 = - 67.5
             y2 = 67.5
 
@@ -98,6 +99,14 @@ class Puck:
                 retval = rotation - 360
             else:
                 retval = rotation
+
+            forward_grip = True
+            if retval > 90:
+                retval -= 180
+                forward_grip = False
+            elif retval < -90:
+                retval += 180
+                forward_grip = False
             print("retval:", retval)
 
             rotation += 1
@@ -105,7 +114,7 @@ class Puck:
             tries += 1
             if tries > 360:  # Stop trying if every angle gives collision
                 sys.exit(0)
-        return retval  # Return the value that gave no collision
+        return retval, forward_grip  # Return the value that gave no collision
 
 
 def rotate(point, about_point, angle):

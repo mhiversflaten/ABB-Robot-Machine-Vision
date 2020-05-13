@@ -1,5 +1,6 @@
 import math
 import configparser
+from image_tools import ImageFunctions
 
 
 def pixel_to_mm(gripper_height, puck, image):
@@ -70,9 +71,12 @@ def gripper_camera_offset(rot):
     return offset_x, offset_y
 
 
-def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp=False):
+def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp=False, pucks_in_height=False):
     """Combine all known offsets to make a robtarget on the work object.
     """
+
+    if pucks_in_height:
+        working_distance = ImageFunctions.approximate_stack(puck, gripper_height)
 
     # Transform position depending on how the gripper is rotated
     transform_position(gripper_rot=gripper_rot, puck=puck)

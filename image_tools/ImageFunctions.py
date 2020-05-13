@@ -55,33 +55,36 @@ def calculate_focus(cam, working_distance):
     time.sleep(0.3)
 
 
-def approximate_stack(qr_width):
+def approximate_stack(puck, gripper_height):
 
-    if qr_width >= 400:
+    if puck.qr_width >= 400:
         approx_working_distance = 100
-    elif 300 <= qr_width < 400:
+    elif 300 <= puck.qr_width < 400:
         approx_working_distance = 130
-    elif 250 <= qr_width < 300:
+    elif 250 <= puck.qr_width < 300:
         approx_working_distance = 160
-    elif 210 <= qr_width < 250:
+    elif 210 <= puck.qr_width < 250:
         approx_working_distance = 190
-    elif 180 <= qr_width < 210:
+    elif 180 <= puck.qr_width < 210:
         approx_working_distance = 220
-    elif 160 <= qr_width < 180:
+    elif 160 <= puck.qr_width < 180:
         approx_working_distance = 250
-    elif 140 <= qr_width < 160:
+    elif 140 <= puck.qr_width < 160:
         approx_working_distance = 280
-    elif 130 <= qr_width < 140:
+    elif 130 <= puck.qr_width < 140:
         approx_working_distance = 310
     else:
         print("Too far away, moving closer")
         approx_working_distance = 340
 
+    camera_height = gripper_height + 70
+    puck.set_height(camera_height - approx_working_distance)
+
     return approx_working_distance
 
 
 
-def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
+def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1, pucks_in_height=False):
     """Finds all pucks in the frame of the camera by capturing an image and scanning the image for QR codes.
     After the codes have been pinpointed, a series of transformations happen to finally create robtargets
     which can be sent to RobotWebServices.
@@ -107,7 +110,7 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
         # Create robtargets for every new puck
         for puck in temp_puck_list:
             puck = OpenCV_to_RAPID.create_robtarget(gripper_height=gripper_height, gripper_rot=rot, cam_pos=cam_pos,
-                                                    image=image, puck=puck, cam_comp=cam_comp)
+                                                    image=image, puck=puck, cam_comp=cam_comp, pucks_in_height=pucks_in_height)
             robtarget_pucks.append(puck)
 
     return robtarget_pucks
