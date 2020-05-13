@@ -2,6 +2,7 @@ import math
 import sys
 
 
+
 class Puck:
     """
     Puck class
@@ -19,7 +20,6 @@ class Puck:
         self.set_position(position)
         self.set_angle(angle)
         self.set_height(height)
-
 
     def __eq__(self, other):
         if not isinstance(other, Puck):
