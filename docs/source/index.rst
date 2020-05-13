@@ -3,31 +3,24 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Documentation for ABB Python tools UiS
-======================================
-
-Purpose
-=======
+ABB Robot with Machine Vision
+=============================
 
 This software is mainly directed toward engineering students at the University of Stavanger.
+It was first created as a Bachelor thesis work.
 
-Here is some text explaining some very complicated stuff::
-
-   print('hello')
-   >> hello
-
-Test
-^^^^
+User Guide
+^^^^^^^^^^
 
 .. toctree::
    :maxdepth: 2
 
-   installation
-   robotware
    license
-   help
+   installation
+   robotwebservices
    imagefunctions
    puck
+   help
 
 
 Indices and tables

@@ -181,6 +181,7 @@ while norbert.is_running():
         """
         print("Repeatability test started")
         # TODO: Change WPW and randomTarget only every other loop
+        config_independent.repeatability_test = True
 
         i = 1
         # config_independent.number_of_loops = 0

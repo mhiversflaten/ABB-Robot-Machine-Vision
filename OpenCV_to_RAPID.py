@@ -2,7 +2,7 @@ import math
 import configparser
 
 
-def pixel_to_mm(gripper_height, puck):
+def pixel_to_mm(gripper_height, puck, image):
     """Converts coordinates in image from pixels to millimeters.
     This depends on the camera's working distance.
     """
@@ -12,7 +12,7 @@ def pixel_to_mm(gripper_height, puck):
     focal_length = 3.7  # mm (+ / - 5 percent)
     sensor_width = 3.6288
     # sensor_height = 2.7216 (not used here)
-    resolution_width = 1280
+    resolution_width = image.shape[1]
 
     working_distance = gripper_height + 70
 
@@ -70,7 +70,7 @@ def gripper_camera_offset(rot):
     return offset_x, offset_y
 
 
-def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False):
+def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp=False):
     """Combine all known offsets to make a robtarget on the work object.
     """
 
@@ -78,7 +78,7 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, puck, cam_comp=False)
     transform_position(gripper_rot=gripper_rot, puck=puck)
 
     # Converts puck position from pixels to millimeters
-    pixel_to_mm(gripper_height=gripper_height, puck=puck)
+    pixel_to_mm(gripper_height=gripper_height, puck=puck, image=image)
 
     # Compensate for overshoot in 2D image
     overshoot_comp(gripper_height=gripper_height, puck=puck)
@@ -132,7 +132,6 @@ def overshoot_comp(gripper_height, puck):
 
 
 def camera_compensation(gripper_height, gripper_rot, puck):
-
     """Compensate for an angled camera view. Different cameras will be
     angled differently both internally and externally when mounted to a surface.
     The slope values must first be calculated by running camera_adjustment.py.

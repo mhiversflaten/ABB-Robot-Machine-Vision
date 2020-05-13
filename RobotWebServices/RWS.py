@@ -1,17 +1,20 @@
 from requests.auth import HTTPDigestAuth
 from requests import Session
-import OpenCV_to_RAPID
 import xml.etree.ElementTree as ET
 import ast
 import time
 import json
+import math
 
 # Address used to organize ET elements
 namespace = '{http://www.w3.org/1999/xhtml}'
 
 
 class RWS:
-    """Class for communicating with RobotWebServices through Robot Web Services (Rest API)"""
+    """Class for communicating with RobotWare through Robot Web Services (ABB's Rest API).
+    Most of the functions are mainly aimed at laboratory work at the University of Stavanger,
+    but may hopefully prove useful otherwise as well.
+    """
 
     def __init__(self, base_url='http://152.94.0.38', username='Default User', password='robotics'):
         self.base_url = base_url
@@ -42,7 +45,8 @@ class RWS:
         return value
 
     def get_robtarget_variables(self, var):
-        """Gets both translational and rotational data from """
+        """Gets both translational and rotational data from robtarget.
+        """
 
         resp = self.session.get(self.base_url + '/rw/rapid/symbol/data/RAPID/T_ROB1/' + var + ';value?json=1')
         json_string = resp.text
@@ -108,7 +112,7 @@ class RWS:
         in RAPID by rotation about the z-axis in degrees.
         """
 
-        rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation_z_degrees)
+        rot = z_degrees_to_quaternion(rotation_z_degrees)
 
         trans, _rot = self.get_robtarget_variables(var)
 
@@ -200,7 +204,7 @@ class RWS:
                    'stopatbp': 'disabled', 'alltaskbytsp': 'false'}
         resp = self.session.post(self.base_url + "/rw/rapid/execution?action=start", data=payload)
         if resp.status_code == 204:
-            print("RAPID execution started")
+            print("RAPID execution started from main")
         else:
             print("Could not start RAPID, maybe motors are turned off")
 
@@ -285,3 +289,22 @@ class RWS:
             print(f'Set \"{var}\" speeddata to v{speeddata}')
         else:
             print('Could not set speeddata. Check that the variable name is correct')
+
+
+def z_degrees_to_quaternion(rotation_z_degrees):
+    """Convert a rotation about the z-axis in degrees to Quaternion.
+    """
+    roll = math.pi
+    pitch = 0
+    yaw = math.radians(rotation_z_degrees)
+
+    qw = math.cos(roll / 2) * math.cos(pitch / 2) * math.cos(yaw / 2) + math.sin(roll / 2) * math.sin(
+        pitch / 2) * math.sin(yaw / 2)
+    qx = math.sin(roll / 2) * math.cos(pitch / 2) * math.cos(yaw / 2) - math.cos(roll / 2) * math.sin(
+        pitch / 2) * math.sin(yaw / 2)
+    qy = math.cos(roll / 2) * math.sin(pitch / 2) * math.cos(yaw / 2) + math.sin(roll / 2) * math.cos(
+        pitch / 2) * math.sin(yaw / 2)
+    qz = math.cos(roll / 2) * math.cos(pitch / 2) * math.sin(yaw / 2) - math.sin(roll / 2) * math.sin(
+        pitch / 2) * math.cos(yaw / 2)
+
+    return [qw, qx, qy, qz]

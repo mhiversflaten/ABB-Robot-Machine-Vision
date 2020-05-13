@@ -1,7 +1,17 @@
-RobotWare
-=========
+Robot Web Services
+==================
 
-.. py:class:: RAPID(base_url, username, password)
+Take full control of ABB robots through HTTP requests, made easy with the RWS class.
+Operating mode should be automatic::
+
+    >>> robot = RWS.RWS(base_url='robot_IP', username='user', password='pass')
+    >>> robot.request_mastership()
+    >>> robot.motors_on()
+    Robot motors turned on
+    >>> robot.start_rapid()
+    RAPID execution started from main
+
+.. py:class:: RWS(base_url, username, password)
 
     .. py:method:: motors_on(self)
 
@@ -64,12 +74,21 @@ RobotWare
         :param value: Desired variable value
         :type value: int, double or str
 
-    .. py:method:: set_robtarget_variables(self, var, trans)
+    .. py:method:: set_robtarget_translation(self, var, trans)
 
-        Sets the translational data of a robtarget variable in RAPID.
+        Sets only the translational data of a robtarget variable in RAPID.
 
         :param str var: Name of robtarget variable as declared in RAPID
         :param int[] trans: Translational data [x,y,z]
+
+    .. py:method:: set_robtarget_rotation_z_degrees(self, var, rotation_z_degrees)
+
+        Updates the orientation of a robtarget variable
+        in RAPID by rotation about the z-axis in degrees.
+        0 degrees gives the Quaternion [0,1,0,0].
+
+        :param str var: Name of robtarget variable as declared in RAPID
+        :param int rotation_z_degrees: Rotation in degrees
 
     .. py:method:: get_robtarget_variables(self, var)
 

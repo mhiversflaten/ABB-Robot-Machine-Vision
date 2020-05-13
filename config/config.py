@@ -1,5 +1,4 @@
 from pyueye import ueye
-from image_tools.pyueye_example_camera import Camera
 import configparser
 
 # Initialize camera

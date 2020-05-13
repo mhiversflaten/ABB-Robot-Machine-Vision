@@ -1,24 +1,30 @@
-Installation of ABB-Klosser
-===========================
+Installation
+============
 
-Here are the different ways of acquiring the ABB-Klosser software package.
+This documentation covers two different packages; IDS-XS-TOOLS-UiS_ & RWS-UiS_.
 
-$ pip install ABB-Klosser
+.. _IDS-XS-TOOLS-UiS: https://pypi.org/project/IDS-XS-TOOLS-UiS/
+.. _RWS-UiS: https://pypi.org/project/RWS-UiS/
+
+Here are the different ways of acquiring the software packages.
+
+$ pip install
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-| To install ABB-Klosser, simply run this command in your terminal of choice:
+| To install the packages, simply run these commands in your terminal of choice:
 
 ::
 
-    pip install ABB-Klosser
+    pip install IDS-XS-TOOLS-UiS
+    pip install RWS-UiS
 
 Get the source code
 ^^^^^^^^^^^^^^^^^^^
 
-| ABB-Klosser is on GitHub, and the public repository can be cloned:
+| All code from the docs is on GitHub, and the public repository can be cloned:
 
 ::
 
-    git clone https://github.com/prinsWindy/ABB-Klosser.git
+    git clone https://github.com/prinsWindy/ABB-Robot-Machine-Vision.git
 
 

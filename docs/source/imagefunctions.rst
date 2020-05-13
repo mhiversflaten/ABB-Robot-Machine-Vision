@@ -32,9 +32,6 @@ The QR scanner function uses software from ZBar_ through pyzbar_. The image pass
 function is first filtered and transformed into a normalized grayscale image. The grayscale
 image is decoded by ZBar to extract information from QR codes in the image.
 
-.. _ZBar: http://zbar.sourceforge.net/
-.. _ZBar: https://pypi.org/project/pyzbar/
-
 .. py:function:: QR_Scanner(img)
 
     Filters and normalizes the input image. The resulting image is decoded using pyzbar_.
@@ -44,5 +41,6 @@ image is decoded by ZBar to extract information from QR codes in the image.
 
     :return: A list of Puck objects
 
+.. _ZBar: http://zbar.sourceforge.net/
 .. _pyzbar: https://pypi.org/project/pyzbar/
 

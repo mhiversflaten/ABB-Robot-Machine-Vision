@@ -3,66 +3,53 @@ import config_independent
 from image_tools.QR_Reader import QR_Scanner, QR_Scanner_visualized
 from pyueye import ueye
 import time
-from image_tools.pyueye_example_utils import ImageData, ImageBuffer
 import OpenCV_to_RAPID
 
 
-
 def capture_image(cam, gripper_height):
-    """Captures a single image through PyuEye functions. Focus is manually adjusted depending on the height
-    of the camera above the subject.
+    """Captures a single image through PyuEye functions.
+    Focus is manually adjusted depending on the working distance.
     """
     camera_height = gripper_height + 70  # Camera is placed 70mm above gripper
-    # TODO: Find a curve that correlates distance from subject and focus value
+    working_distance = camera_height - 30  # -30 because one puck
 
-    height_above_subject = gripper_height + 70 - 30  # -30 because one puck
+    calculate_focus(cam, working_distance)
 
-    calculate_focus(cam, height_above_subject)
-
-    #nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
-
-    # TODO: For finding focus values for the function and case 8 in main.
-    # Short pause before capturing image to ensure that the camera is still and focused
-    """time.sleep(3)
-    focus_value = ueye.UINT()
-    ueye.is_Focus(cam.hCam, ueye.FOC_CMD_GET_MANUAL_FOCUS, focus_value, ueye.sizeof(focus_value))
-    print(focus_value.value)
-
-    focus_file = open('focus_file_XS.txt', 'a')
-
-    focus_file.write("Camera Height: {0}, Focus Value: {1}\n".format(camera_height, focus_value.value))"""
+    # Trigger autofocus once (use instead of calculate_focus if needed):
+    # nRet = ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_ENABLE_AUTOFOCUS_ONCE, None, 0)
 
     array = cam.get_image()
 
     return array
 
 
-def calculate_focus(cam, height_above_subject):
+def calculate_focus(cam, working_distance):
     """This characteristic belongs to the IDS XS camera with serial code 4102885308.
     As stated by IDS themselves the characteristic is not robust and could vary between
     different cameras.
+    The characteristic was made based on images up to a working distance of 620mm.
     """
-
-    if height_above_subject >= 357.5:
+    if working_distance >= 357.5:
         focus_value = 204
-    elif 237 <= height_above_subject < 357.5:
+    elif 237 <= working_distance < 357.5:
         focus_value = 192
-    elif 169 <= height_above_subject < 237:
+    elif 169 <= working_distance < 237:
         focus_value = 180
-    elif 131.5 <= height_above_subject < 169:
+    elif 131.5 <= working_distance < 169:
         focus_value = 168
-    elif 101.5 <= height_above_subject < 131.5:
+    elif 101.5 <= working_distance < 131.5:
         focus_value = 156
-    elif 86.5 <= height_above_subject < 101.5:
+    elif 86.5 <= working_distance < 101.5:
         focus_value = 144
-    elif 72 <= height_above_subject < 86.5:
+    elif 72 <= working_distance < 86.5:
         focus_value = 128
-    elif 42.5 <= height_above_subject < 72:
+    elif 42.5 <= working_distance < 72:
         focus_value = 112
     else:
         print("Too close to subject. Focus value not found. Default value: 204")
         focus_value = 204
 
+    # Set the correct focus value
     focus_UINT = ueye.UINT(focus_value)
     ueye.is_Focus(cam.hCam, ueye.FOC_CMD_SET_MANUAL_FOCUS, focus_UINT, ueye.sizeof(focus_UINT))
     time.sleep(0.3)
@@ -91,30 +78,35 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
             if any(puck == x for x in temp_puck_list):
                 temp_puck_list.remove(puck)
 
+        # Create robtargets for every new puck
         for puck in temp_puck_list:
             puck = OpenCV_to_RAPID.create_robtarget(gripper_height=gripper_height, gripper_rot=rot, cam_pos=cam_pos,
-                                                    puck=puck, cam_comp=cam_comp)
+                                                    image=image, puck=puck, cam_comp=cam_comp)
             robtarget_pucks.append(puck)
 
     return robtarget_pucks
 
 
 def showVideo(cam):
+    """Continuously displays the robot's view in an OpenCV imshow window.
+    """
     while True:
+        if config_independent.repeatability_test:
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            bottomLeftCornerOfText = (10, 50)
+            fontScale = 1
+            fontColor = (255, 255, 255)
+            lineType = 2
+
+            cv2.putText(array, 'Number of loops: ' + str(config_independent.number_of_loops),
+                        bottomLeftCornerOfText,
+                        font,
+                        fontScale,
+                        fontColor,
+                        lineType)
+
         array = cam.get_image()
         array = QR_Scanner_visualized(array)
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        bottomLeftCornerOfText = (10, 50)
-        fontScale = 1
-        fontColor = (255, 255, 255)
-        lineType = 2
-
-        cv2.putText(array, 'Number of loops: ' + str(config_independent.number_of_loops),
-                    bottomLeftCornerOfText,
-                    font,
-                    fontScale,
-                    fontColor,
-                    lineType)
         # array = cv2.resize(array,(0,0),fx=0.5, fy=0.5)
         cv2.imshow("Continuous video display", array)
         if cv2.waitKey(1) & 0xFF == ord('q'):
