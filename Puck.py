@@ -1,4 +1,6 @@
 import math
+import sys
+
 
 class Puck:
     """
@@ -72,56 +74,53 @@ class Puck:
         collision_list = [True]
         rotation = 0
         tries = 0
+        retval = 0
         while True in collision_list:
             print("While loop")
             collision_list.clear()
+
+            # Collision area:
+            x1 = - 150
+            x2 = 10
+            y1 = - 67.5
+            y2 = 67.5
+
             for puck in puck_list:
                 if self.number != puck.number:
                     puck_pos = self.position
+                    rotated_position = rotate(puck.position, puck_pos, - rotation)
 
-                    # Collision area:
-                    x1 = - 500
-                    x2 = 0
-                    y1 = - 150
-                    y2 = 150
-                    points = [(x1, y1), (x2, y2)]  # Rectangle
-
-                    rotated_points = rotate(points=points, around_point=(0, 0), angle=rotation)
-                    x1 = rotated_points[0][0]
-                    x2 = rotated_points[1][0]
-                    y1 = rotated_points[0][1]
-                    y2 = rotated_points[1][1]
-                    print(x1,x2,y1,y2)
-
-                    collision = (x1 < puck.position[0] - puck_pos[0] < x2) \
-                                and (y1 < puck.position[1] - puck_pos[1] < y2)
+                    collision = (x1 + puck_pos[0] < rotated_position[0] < x2 + puck_pos[0]) \
+                                and (y1 + puck_pos[1] < rotated_position[1] < y2 + puck_pos[1])
                     print("collision:", collision)
                     collision_list.append(collision)
-            rotation += 180
+            if rotation > 180:
+                retval = rotation - 360
+            else:
+                retval = rotation
+            print("retval:", retval)
+
+            rotation += 1
             print(rotation)
             tries += 1
-            if tries > 12:  # Stop trying if every angle gives collision
-                return False
-        if rotation > 180:
-            rotation -= 360
-        elif rotation < -180:
-            rotation += 360
-        return rotation - 30  # Return the value that gave no collision
+            if tries > 360:  # Stop trying if every angle gives collision
+                sys.exit(0)
+        return retval  # Return the value that gave no collision
 
 
-def rotate(points, around_point, angle):
+def rotate(point, about_point, angle):
     """
-    Rotate a list of point counterclockwise by a given angle around a given origin.
+    Rotate a point counterclockwise by a given angle around a given origin.
 
     The angle should be given in degrees.
     """
-    rotated_points = []
-    for point in points:
-        angle = math.degrees(angle)
-        ox, oy = around_point
-        px, py = point
+    angle = math.radians(angle)
 
-        qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
-        qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
-        rotated_points.append((qx, qy))
-    return rotated_points
+    ox, oy = about_point
+    px, py = point
+
+    qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
+    qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
+    rotated_point = (qx, qy)
+
+    return rotated_point
