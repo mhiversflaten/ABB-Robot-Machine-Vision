@@ -55,6 +55,38 @@ def calculate_focus(cam, working_distance):
     time.sleep(0.3)
 
 
+def approximate_stack(qr_width, gripper_height):
+
+    if qr_width >= 400:
+        focus_value = 204
+    elif 237 <= qr_width < 357.5:
+        focus_value = 192
+    elif 169 <= qr_width < 237:
+        focus_value = 180
+    elif 131.5 <= qr_width < 169:
+        focus_value = 168
+    elif 101.5 <= qr_width < 131.5:
+        focus_value = 156
+    elif 86.5 <= qr_width < 101.5:
+        focus_value = 144
+    elif 72 <= qr_width < 86.5:
+        focus_value = 128
+    elif 42.5 <= qr_width < 72:
+        focus_value = 112
+    else:
+        print("Too close to subject. Focus value not found. Default value: 204")
+        focus_value = 204
+
+
+
+    # Create robtargets for every new puck
+    for puck in temp_puck_list:
+        puck = OpenCV_to_RAPID.create_robtarget(gripper_height=gripper_height, gripper_rot=rot, cam_pos=cam_pos,
+                                                image=image, puck=puck, cam_comp=cam_comp)
+        robtarget_pucks.append(puck)
+
+
+
 def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
     """Finds all pucks in the frame of the camera by capturing an image and scanning the image for QR codes.
     After the codes have been pinpointed, a series of transformations happen to finally create robtargets
@@ -69,7 +101,7 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1):
     for _ in range(number_of_images):
         image = capture_image(cam=cam, gripper_height=gripper_height)
 
-        # Scan the image_tools and return all QR code positions
+        # Scan the image and return all QR code positions
         temp_puck_list = QR_Scanner(image)
 
         # Check if the QR codes that were found have already been located previously.
