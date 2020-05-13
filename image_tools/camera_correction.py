@@ -114,6 +114,7 @@ def find_correct_exposure(cam, robot):
 
     # List with exposure values
     exposure_values = []
+    puck_list = []
     # Exposure range (in ms)
     exposure_low = 1
     exposure_high = 66
@@ -136,9 +137,18 @@ def find_correct_exposure(cam, robot):
             print('Currently set exposure time %8.3f ms' % d)
         # Position returns as None if no QR-code is found
         if puck_list:
-            exposure_values.append(exposure)
+            exposure_values.append((exposure, len(puck_list)))
 
-    exposure = str(median(exposure_values))
+    weighted_sum = 0
+    pucks_found = 0
+    for value_pair in exposure_values:
+        pucks_found += value_pair[1]
+        weighted_sum += value_pair[0] * value_pair[1]
+
+    exposure = str(int(weighted_sum / pucks_found))
+
+    #exposure = str(median(exposure_values[0]))
+    print(exposure_values[0])
 
     configfile_name = abspath
 
