@@ -83,7 +83,7 @@ class Puck:
         collision_list = [True]  # Assume there is collision before otherwise is proven
         rotation = 0  # Current rotation in degrees
         tries = 0  # Amount of tries to avoid collision
-        retval = 0  # Rotation which will avoid collision
+        correct_rotation = 0  # Rotation which will avoid collision
         forward_grip = True  # Slide in forward or backward toward puck
 
         # Collision area/path (rectangle):
@@ -115,18 +115,18 @@ class Puck:
 
             # Maximum rotation is 180 degrees (+/-)
             if rotation > 180:
-                retval = rotation - 360
+                correct_rotation = rotation - 360
             else:
-                retval = rotation
+                correct_rotation = rotation
 
             # If the gripper must rotate more than 90 degrees (+/-),
             # then it should instead slide in toward the puck backward.
             # This is done by doing a "180" with the gripper.
-            if retval > 90:
-                retval -= 180
+            if correct_rotation > 90:
+                correct_rotation -= 180
                 forward_grip = False  # Backward grip
-            elif retval < -90:
-                retval += 180
+            elif correct_rotation < -90:
+                correct_rotation += 180
                 forward_grip = False  # Backward grip
 
             rotation += 1
@@ -134,7 +134,7 @@ class Puck:
 
             if tries > 360:  # Stop trying if every angle gives collision
                 sys.exit(0)  # TODO: add better handling here
-        return retval, forward_grip  # Return the value that gave no collision
+        return correct_rotation, forward_grip  # Return the value that gave no collision
 
 
 def rotate(point, about_point, angle):
