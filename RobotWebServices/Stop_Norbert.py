@@ -1,6 +1,8 @@
 from requests.auth import HTTPDigestAuth
 from RobotWebServices import RWS
 
+"""Script to easily turn the motors off, on Norbert"""
+
 norbert = RWS.RWS()
 
 norbert_url = 'http://152.94.0.38'
