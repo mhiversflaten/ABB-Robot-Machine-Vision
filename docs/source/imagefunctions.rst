@@ -53,8 +53,14 @@ Capturing Images and Video
 
     Continuously displays the robot's view in an OpenCV imshow window.
     The video uses :py:func:`QR_Scanner_visualized` to visualize the scanned QR codes.
-    :py:func:`showVideo` works well in threads::
+    :py:func:`showVideo` works well in threads:
 
-        test some code
+    .. code-block:: python
+
+        # Show video feed in separate thread
+        cam_thread = threading.Thread(target=ImageFunctions.showVideo, args=(cam,), daemon=True)
+        cam_thread.start()
+
+    Still images can still be retrieved through :ref:`capture_image` while the thread is active.
 
     :param Camera cam: A :ref:`Camera object`
