@@ -7,6 +7,7 @@ import json
 import math
 
 # Address used to organize ET elements
+
 namespace = '{http://www.w3.org/1999/xhtml}'
 
 
@@ -62,7 +63,7 @@ class RWS:
         """
 
         resp = self.session.get(self.base_url +
-                            '/rw/motionsystem/mechunits/ROB_1/robtarget/?tool=tGripper&wobj=wobjTableN&coordinate=Wobj')
+                                '/rw/motionsystem/mechunits/ROB_1/robtarget/?tool=tGripper&wobj=wobjTableN&coordinate=Wobj')
 
         root = ET.fromstring(resp.text)
 
@@ -104,7 +105,7 @@ class RWS:
         else:
             self.set_rapid_variable(var, "[[" + ','.join(
                 [str(s) for s in trans]) + "],[" + ','.join(str(s) for s in rot) + "],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,"
-                                                                               "9E+9,9E+9]]")
+                                                                                   "9E+9,9E+9]]")
 
     def set_robtarget_rotation_z_degrees(self, var, rotation_z_degrees):
         """Updates the orientation of a robtarget variable
@@ -289,6 +290,31 @@ class RWS:
         else:
             print('Could not set speeddata. Check that the variable name is correct')
 
+    # TODO: Check if this function works as intended
+    def send_puck(self, trans, rot=0, forward_grip=True):
+        """Sets gripper angle, camera offset and puck target values chosen.
+        If collision check, the variable rot and forward grip may be updated
+        """
+
+        self.set_rapid_variable("gripper_angle", rot)
+        offset_x, offset_y = gripper_camera_offset(rot)
+        if forward_grip:
+            self.set_rapid_array("gripper_camera_offset", (offset_x, offset_y))
+        else:
+            self.set_rapid_array("gripper_camera_offset", (-offset_x, -offset_y))
+        self.set_robtarget_translation("puck_target", trans)
+
+
+def quaternion_to_degrees(quaternion):
+    """Convert a Quaternion to a rotation about the z-axis in degrees.
+    """
+    w, x, y, z = quaternion
+    t1 = +2.0 * (w * z + x * y)
+    t2 = +1.0 - 2.0 * (y * y + z * z)
+    rotation_z = math.atan2(t1, t2)
+
+    return rotation_z
+
 
 def z_degrees_to_quaternion(rotation_z_degrees):
     """Convert a rotation about the z-axis in degrees to Quaternion.
@@ -307,3 +333,13 @@ def z_degrees_to_quaternion(rotation_z_degrees):
         pitch / 2) * math.cos(yaw / 2)
 
     return [qw, qx, qy, qz]
+
+
+def gripper_camera_offset(rot):
+    r = 55  # Distance between gripper and camera
+    rotation_z_radians = quaternion_to_degrees(rot)
+
+    offset_x = r * math.cos(rotation_z_radians)
+    offset_y = r * math.sin(rotation_z_radians)
+
+    return offset_x, offset_y
