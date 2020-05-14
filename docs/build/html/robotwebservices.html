@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Robot Web Services &#8212; ABB-Robot-Machine-Vision 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Camera class" href="camera.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="robot-web-services">
+<h1>Robot Web Services<a class="headerlink" href="#robot-web-services" title="Permalink to this headline">¶</a></h1>
+<p>Take full control of ABB robots through HTTP requests, made easy with the RWS class.
+Operating mode should be automatic:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span> <span class="o">=</span> <span class="n">RWS</span><span class="o">.</span><span class="n">RWS</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;robot_IP&#39;</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;pass&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">request_mastership</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">motors_on</span><span class="p">()</span>
+<span class="go">Robot motors turned on</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">start_rapid</span><span class="p">()</span>
+<span class="go">RAPID execution started from main</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="RWS">
+<em class="property">class </em><code class="sig-name descname">RWS</code><span class="sig-paren">(</span><em class="sig-param">base_url</em>, <em class="sig-param">username</em>, <em class="sig-param">password</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="RWS.motors_on">
+<code class="sig-name descname">motors_on</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.motors_on" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a request to turn the robot’s motors on. Mastership is required.
+Prints a message to the console stating whether or not the motors were in fact turned on.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.motors_off">
+<code class="sig-name descname">motors_off</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.motors_off" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a request to turn the robot’s motors off. Mastership is required.
+Prints a message to the console stating whether or not the motors were in fact turned off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.request_mastership">
+<code class="sig-name descname">request_mastership</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.request_mastership" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests mastership over controller in automatic mode.
+For mastership in manual mode, see <a class="reference internal" href="#RWS.request_rmmp" title="RWS.request_rmmp"><code class="xref py py-func docutils literal notranslate"><span class="pre">request_rmmp()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.release_mastership">
+<code class="sig-name descname">release_mastership</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.release_mastership" title="Permalink to this definition">¶</a></dt>
+<dd><p>Releases mastership over controller.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.request_rmmp">
+<code class="sig-name descname">request_rmmp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.request_rmmp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests RMMP (Request Manual Mode Privileges).
+The request needs to be accepted within 10 seconds on controller.
+For mastership in automatic mode, see <a class="reference internal" href="#RWS.request_mastership" title="RWS.request_mastership"><code class="xref py py-func docutils literal notranslate"><span class="pre">request_mastership()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.cancel_rmmp">
+<code class="sig-name descname">cancel_rmmp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.cancel_rmmp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancels held or requested RMMP.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.reset_pp">
+<code class="sig-name descname">reset_pp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.reset_pp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets RAPID program pointer to main procedure.
+Prints a message to the console stating whether or not the request was successful.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.start_RAPID">
+<code class="sig-name descname">start_RAPID</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.start_RAPID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets RAPID program pointer to main procedure, and starts RAPID execution.
+Prints a message to the console stating whether or not the request was successful.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.stop_RAPID">
+<code class="sig-name descname">stop_RAPID</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.stop_RAPID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops RAPID execution.
+Prints a message to the console stating whether or not the request was successful.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.get_rapid_variable">
+<code class="sig-name descname">get_rapid_variable</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.get_rapid_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the raw value of any variable in RAPID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A number if RAPID variable is ‘num’</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int/double</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A string if RAPID variable is not ‘num’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.set_rapid_variable">
+<code class="sig-name descname">set_rapid_variable</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.set_rapid_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the value of any variable in RAPID.
+Unless the variable is ‘num’, value has to be a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong> (<em>str</em>) – Name of variable as declared in RAPID</p></li>
+<li><p><strong>value</strong> (<em>int</em><em>, </em><em>double</em><em> or </em><em>str</em>) – Desired variable value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.set_robtarget_translation">
+<code class="sig-name descname">set_robtarget_translation</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em>, <em class="sig-param">trans</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.set_robtarget_translation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets only the translational data of a robtarget variable in RAPID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong> (<em>str</em>) – Name of robtarget variable as declared in RAPID</p></li>
+<li><p><strong>trans</strong> (<em>int</em><em>[</em><em>]</em>) – Translational data [x,y,z]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.set_robtarget_rotation_z_degrees">
+<code class="sig-name descname">set_robtarget_rotation_z_degrees</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em>, <em class="sig-param">rotation_z_degrees</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.set_robtarget_rotation_z_degrees" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the orientation of a robtarget variable
+in RAPID by rotation about the z-axis in degrees.
+0 degrees gives the Quaternion [0,1,0,0].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong> (<em>str</em>) – Name of robtarget variable as declared in RAPID</p></li>
+<li><p><strong>rotation_z_degrees</strong> (<em>int</em>) – Rotation in degrees</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.get_robtarget_variables">
+<code class="sig-name descname">get_robtarget_variables</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.get_robtarget_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets translational and rotational data of a robtarget variable in RAPID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>var</strong> (<em>str</em>) – Name of robtarget variable as declared in RAPID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Translational data of robtarget [x,y,z]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Rotational data of robtarget (Quaternion: [w,x,y,z])</p>
+</dd>
+</dl>
+<p>See quaternion_to_euler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.get_gripper_position">
+<code class="sig-name descname">get_gripper_position</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.get_gripper_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets translational and rotational of the UiS tool ‘tGripper’
+with respect to the work object ‘wobjTableN’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Translational data of gripper [x,y,z]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rotational data of gripper (Quaternion: [w,x,y,z]).</p>
+</dd>
+</dl>
+<p>See quaternion_to_euler</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.get_gripper_height">
+<code class="sig-name descname">get_gripper_height</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.get_gripper_height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses <a class="reference internal" href="#RWS.get_gripper_position" title="RWS.get_gripper_position"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_gripper_position()</span></code></a> to get the height of the UiS tool
+‘tGripper’ above the work object ‘wobjTableN’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.set_rapid_array">
+<code class="sig-name descname">set_rapid_array</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.set_rapid_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the values of a num array variable in RAPID.
+The length of the num array must match the length of the array from Python.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong> (<em>str</em>) – Name of variable as declared in RAPID.</p></li>
+<li><p><strong>value</strong> (<em>int</em><em>[</em><em>]</em>) – Array to be sent to RAPID.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.wait_for_rapid">
+<code class="sig-name descname">wait_for_rapid</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var='ready_flag'</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.wait_for_rapid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Polls a boolean variable in RAPID every 0.1 seconds.
+When the variable is TRUE, Python resets it and continues.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>var</strong> (<em>str</em>) – Name of boolean variable as declared in RAPID.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.set_zonedata">
+<code class="sig-name descname">set_zonedata</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em>, <em class="sig-param">zonedata</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.set_zonedata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value for a zonedata variable in RAPID. Mastership is required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong> (<em>str</em>) – Name of variable as declared in RAPID.</p></li>
+<li><p><strong>zonedata</strong> (<em>int</em>) – desired zonedata value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.set_speeddata">
+<code class="sig-name descname">set_speeddata</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em>, <em class="sig-param">speeddata</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.set_speeddata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value [int] for a speeddata variable in RAPID. Mastership is required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong> (<em>str</em>) – Name of variable as declared in RAPID.</p></li>
+<li><p><strong>speeddata</strong> (<em>int</em>) – Desired speeddata value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.set_speed_ratio">
+<code class="sig-name descname">set_speed_ratio</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">speed_ratio</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.set_speed_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the speed ratio of the robot. Mastership is required.
+speed_ratio: desired speed ratio in percent [1-100].</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.is_running">
+<code class="sig-name descname">is_running</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.is_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses <a class="reference internal" href="#RWS.get_execution_state" title="RWS.get_execution_state"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_execution_state()</span></code></a> to check if RAPID execution is running or stopped.
+Returns True if running and False if stopped.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.get_execution_state">
+<code class="sig-name descname">get_execution_state</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.get_execution_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Polls the RAPID execution state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>‘running’ or ‘stopped’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ABB-Robot-Machine-Vision</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Robot Web Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="camera.html">Camera class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imagefunctions.html">Image Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="puck.html">Puck Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Need Help?</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="camera.html" title="next chapter">Camera class</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Markus Iversflaten & Ole Christian Handegård.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/robotwebservices.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

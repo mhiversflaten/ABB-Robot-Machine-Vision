@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Image Tools &#8212; ABB-Robot-Machine-Vision 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Puck Class" href="puck.html" />
+    <link rel="prev" title="Camera class" href="camera.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="image-tools">
+<h1>Image Tools<a class="headerlink" href="#image-tools" title="Permalink to this headline">¶</a></h1>
+<p>The image tools included in the ABB-Robot-Machine-Vision package are mainly
+directed toward <a class="reference external" href="https://en.ids-imaging.com/">uEye cameras</a>.
+These tools utilize IDS’s Python bindings for the uEye API: <a class="reference external" href="https://pypi.org/project/pyueye/">PyuEye</a>.</p>
+<div class="section" id="scanning-qr-codes">
+<h2>Scanning QR Codes<a class="headerlink" href="#scanning-qr-codes" title="Permalink to this headline">¶</a></h2>
+<p>The QR scanner function uses software from <a class="reference external" href="http://zbar.sourceforge.net/">ZBar</a> through <a class="reference external" href="https://pypi.org/project/pyzbar/">pyzbar</a>. The image passed to the
+function is first filtered and transformed into a normalized grayscale image. The grayscale
+image is decoded by ZBar to extract information from QR codes in the image.</p>
+<dl class="function">
+<dt id="QR_Scanner">
+<code class="sig-name descname">QR_Scanner</code><span class="sig-paren">(</span><em class="sig-param">img</em><span class="sig-paren">)</span><a class="headerlink" href="#QR_Scanner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters and normalizes the input image. The processed image is decoded using <a class="reference external" href="https://pypi.org/project/pyzbar/">pyzbar</a>.
+For every QR code detected, a <a class="reference internal" href="puck.html#puck-object"><span class="std std-ref">Puck object</span></a> is created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>img</strong> (<em>ndarray</em>) – An image</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of Puck objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="QR_Scanner_visualized">
+<code class="sig-name descname">QR_Scanner_visualized</code><span class="sig-paren">(</span><em class="sig-param">img</em><span class="sig-paren">)</span><a class="headerlink" href="#QR_Scanner_visualized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters and normalizes the input image. The processed image is decoded using <a class="reference external" href="https://pypi.org/project/pyzbar/">pyzbar</a>.
+QR codes found in the image are marked with red squares for display.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>img</strong> (<em>ndarray</em>) – An image</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Image for display</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="capturing-images-and-video">
+<h2>Capturing Images and Video<a class="headerlink" href="#capturing-images-and-video" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="capture_image">
+<code class="sig-name descname">capture_image</code><span class="sig-paren">(</span><em class="sig-param">cam</em>, <em class="sig-param">gripper_height</em><span class="sig-paren">)</span><a class="headerlink" href="#capture_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manually adjusts the camera focus through <a class="reference internal" href="#calculate_focus" title="calculate_focus"><code class="xref py py-func docutils literal notranslate"><span class="pre">calculate_focus()</span></code></a>.
+Captures a single image through PyuEye functions.
+Focus is manually adjusted depending on the working distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cam</strong> (<em>Camera</em>) – A <a class="reference internal" href="camera.html#camera-object"><span class="std std-ref">Camera class</span></a></p></li>
+<li><p><strong>gripper_height</strong> (<em>int</em>) – The height of the gripper above the work object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="showVideo">
+<code class="sig-name descname">showVideo</code><span class="sig-paren">(</span><em class="sig-param">cam</em><span class="sig-paren">)</span><a class="headerlink" href="#showVideo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Continuously displays the robot’s view in an OpenCV imshow window.
+The video uses <a class="reference internal" href="#QR_Scanner_visualized" title="QR_Scanner_visualized"><code class="xref py py-func docutils literal notranslate"><span class="pre">QR_Scanner_visualized()</span></code></a> to visualize the scanned QR codes.
+<a class="reference internal" href="#showVideo" title="showVideo"><code class="xref py py-func docutils literal notranslate"><span class="pre">showVideo()</span></code></a> works well in threads:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show video feed in separate thread</span>
+<span class="n">cam_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">ImageFunctions</span><span class="o">.</span><span class="n">showVideo</span><span class="p">,</span>
+             <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">cam</span><span class="p">,),</span> <span class="n">daemon</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">cam_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Single images can still be retrieved through
+<a class="reference internal" href="#capture_image" title="capture_image"><code class="xref py py-func docutils literal notranslate"><span class="pre">capture_image()</span></code></a> while the thread is active.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cam</strong> (<em>Camera</em>) – A <a class="reference internal" href="camera.html#camera-object"><span class="std std-ref">Camera class</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="calculate_focus">
+<code class="sig-name descname">calculate_focus</code><span class="sig-paren">(</span><em class="sig-param">cam</em>, <em class="sig-param">working_distance</em><span class="sig-paren">)</span><a class="headerlink" href="#calculate_focus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the correct focus value for a specific IDS XS
+camera with some working distance.
+The focus value is found by comparing the working distance to a characteristic.
+This characteristic is <em>unique</em> to the XS camera with serial code 4102885308.
+This function should be accurate for working distances up to 620mm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cam</strong> (<em>Camera</em>) – A <a class="reference internal" href="camera.html#camera-object"><span class="std std-ref">Camera class</span></a></p></li>
+<li><p><strong>working_distance</strong> (<em>int</em>) – Distance from camera lens to subject</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="findPucks">
+<code class="sig-name descname">findPucks</code><span class="sig-paren">(</span><em class="sig-param">cam</em>, <em class="sig-param">robot</em>, <em class="sig-param">robtarget_pucks</em>, <em class="sig-param">cam_comp=False</em>, <em class="sig-param">number_of_images=1</em><span class="sig-paren">)</span><a class="headerlink" href="#findPucks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds all pucks in the images taken and puts them in a list.
+The positions of all pucks are then converted to robtargets using
+<code class="xref py py-func docutils literal notranslate"><span class="pre">create_robtarget()</span></code>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ABB-Robot-Machine-Vision</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="robotwebservices.html">Robot Web Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="camera.html">Camera class</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Image Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#scanning-qr-codes">Scanning QR Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#capturing-images-and-video">Capturing Images and Video</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="puck.html">Puck Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="help.html">Need Help?</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="camera.html" title="previous chapter">Camera class</a></li>
+      <li>Next: <a href="puck.html" title="next chapter">Puck Class</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Markus Iversflaten & Ole Christian Handegård.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/imagefunctions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
