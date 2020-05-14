@@ -2,8 +2,8 @@ import math
 import sys
 
 
-
 class Puck:
+
     """
     Puck class
 
@@ -71,53 +71,69 @@ class Puck:
         return self.position + [self.height - 30]
 
     def check_collision(self, puck_list):
-        """To pick up pucks, the gripper slides in towards them.
+        """
+        To pick up pucks, the gripper slides in towards them.
         This path must be clear of any other pucks, so that no collisions occur.
+
+        Depending on the positions of all other pucks,
+        this path is rotated around the puck until a clear path is found.
         """
 
         # Assume there is collision before otherwise is proven
         collision_list = [True]
-        rotation = 0
-        tries = 0
-        retval = 0
-        while True in collision_list:
-            print("While loop")
+        rotation = 0  # Current rotation in degrees
+        tries = 0  # Amount of tries to avoid collision
+        retval = 0  # Rotation which will avoid collision
+        forward_grip = True  # Slide in forward or backward toward puck
+
+        # Collision area/path (rectangle):
+        x1 = - 95
+        x2 = 30
+        y1 = - 67.5
+        y2 = 67.5
+
+        while True in collision_list:  # While there is still at least one collision
+
             collision_list.clear()
 
-            # Collision area:
-            x1 = - 95
-            x2 = 30
-            y1 = - 67.5
-            y2 = 67.5
-
-            for puck in puck_list:
-                if self.number != puck.number:
+            for other_puck in puck_list:
+                if self.number != other_puck.number:
                     puck_pos = self.position
-                    rotated_position = rotate(puck.position, puck_pos, - rotation)
 
+                    # Rotate every puck around current puck (self)
+                    # Instead of rotating the path in relation to the puck,
+                    # the other pucks are rotated around the puck until they no longer appear inside the path.
+                    # This means the rotation has to be equal and opposite.
+                    rotated_position = rotate(other_puck.position, puck_pos, - rotation)
+
+                    # Check if any pucks block the path
                     collision = (x1 + puck_pos[0] < rotated_position[0] < x2 + puck_pos[0]) \
                                 and (y1 + puck_pos[1] < rotated_position[1] < y2 + puck_pos[1])
-                    print("collision:", collision)
+
+                    # Gather all results in list
                     collision_list.append(collision)
+
+            # Maximum rotation is 180 degrees (+/-)
             if rotation > 180:
                 retval = rotation - 360
             else:
                 retval = rotation
 
-            forward_grip = True
+            # If the gripper must rotate more than 90 degrees (+/-),
+            # then it should instead slide in toward the puck backward.
+            # This is done by doing a "180" with the gripper.
             if retval > 90:
                 retval -= 180
                 forward_grip = False
             elif retval < -90:
                 retval += 180
                 forward_grip = False
-            print("retval:", retval)
 
             rotation += 1
-            print(rotation)
             tries += 1
+
             if tries > 360:  # Stop trying if every angle gives collision
-                sys.exit(0)
+                sys.exit(0)  # TODO: add better handling here
         return retval, forward_grip  # Return the value that gave no collision
 
 
