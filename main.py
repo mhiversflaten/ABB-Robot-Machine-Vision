@@ -17,7 +17,6 @@ cam_thread = threading.Thread(target=ImageFunctions.showVideo, args=(cam,), daem
 cam_thread.start()
 
 robtarget_pucks = []
-all_pucks = []
 puck_to_RAPID = 0
 
 # Initialize robot communication, start motors, and execute RAPID program
@@ -125,6 +124,9 @@ while norbert.is_running():
         print(robtarget_pucks)
 
     if userinput == 3:
+        """Stack all visible pucks in the work area. 
+        Starts with the lowest numbered puck and stacks them in ascending order.
+        Uses collision avoidance. """
         print("Stack pucks")
         norbert.set_rapid_variable("WPW", 3)
         norbert.wait_for_rapid()
@@ -132,9 +134,10 @@ while norbert.is_running():
         angle = 0
         while not robtarget_pucks:
             ImageFunctions.findPucks(cam, norbert, robtarget_pucks, number_of_images=5)
+
         print("Found pucks: ", end='')
         print(*robtarget_pucks, sep=', ')
-        all_pucks = robtarget_pucks  # Permanent robtarget puck list
+
         for puck in robtarget_pucks:
             print("number: ", puck.number, "angle:", puck.angle)
 
@@ -150,7 +153,6 @@ while norbert.is_running():
                     puck_to_RAPID = puck
                     break
 
-            #rot = OpenCV_to_RAPID.z_degrees_to_quaternion(0)
             rotation, forward_grip = puck_to_RAPID.check_collision(robtarget_pucks)
             rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation)
 

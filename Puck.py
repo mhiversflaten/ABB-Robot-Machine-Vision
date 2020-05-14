@@ -71,6 +71,10 @@ class Puck:
         return self.position + [self.height - 30]
 
     def check_collision(self, puck_list):
+        """To pick up pucks, the gripper slides in towards them.
+        This path must be clear of any other pucks, so that no collisions occur.
+        """
+
         # Assume there is collision before otherwise is proven
         collision_list = [True]
         rotation = 0
