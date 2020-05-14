@@ -7,7 +7,6 @@ class UserBehavior(TaskSet):
     """Used for testing communication between Python and RAPID (RobotWare) through the use of RobotWebServices
     and REST API"""
 
-
     def on_start(self):
         pass
 
@@ -19,7 +18,6 @@ class UserBehavior(TaskSet):
         """Get the state of the controller"""
 
         self.client.get('/rw/rapid/execution?json=1', auth=HTTPDigestAuth(username='Default User', password='robotics'))
-
 
     @task(1)
     def setrapidvariable(self):
