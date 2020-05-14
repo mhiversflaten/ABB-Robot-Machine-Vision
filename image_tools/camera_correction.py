@@ -159,7 +159,6 @@ def find_correct_exposure(cam, robot):
 
     exposure = str(int(weighted_sum / pucks_found))
 
-    #exposure = str(median(exposure_values[0]))
     print(exposure_values[0])
 
     configfile_name = abspath
