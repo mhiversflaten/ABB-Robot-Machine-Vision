@@ -291,10 +291,18 @@ class RWS:
         else:
             print('Could not set speeddata. Check that the variable name is correct')
 
-    # TODO: Check function
-    def send_puck(self, trans, rot=0):
+    # TODO: Check if this function works as intended
+    def send_puck(self, trans, rot=0, forward_grip=True):
+        """Sets gripper angle, camera offset and puck target values chosen.
+        If collision check, the variable rot and forward grip may be updated
+        """
+
         self.set_rapid_variable("gripper_angle", rot)
-        self.set_rapid_array("gripper_camera_offset", gripper_camera_offset(rot))
+        offset_x, offset_y = gripper_camera_offset(rot)
+        if forward_grip:
+            self.set_rapid_array("gripper_camera_offset", (offset_x, offset_y))
+        else:
+            self.set_rapid_array("gripper_camera_offset", (-offset_x, -offset_y))
         self.set_robtarget_translation("puck_target", trans)
 
 
