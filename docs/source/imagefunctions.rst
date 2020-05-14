@@ -1,7 +1,8 @@
 Image Tools
 ===========
 
-The image tools included in the ABB-Klosser package are mainly directed toward `uEye cameras`_.
+The image tools included in the ABB-Robot-Machine-Vision package are mainly
+directed toward `uEye cameras`_.
 These tools utilize IDS's Python bindings for the uEye API: PyuEye_.
 
 .. _PyuEye: https://pypi.org/project/pyueye/
@@ -41,6 +42,7 @@ Capturing Images and Video
 
 .. py:function:: capture_image(cam, gripper_height)
 
+    Manually adjusts the camera focus through :py:func:`calculate_focus`.
     Captures a single image through PyuEye functions.
     Focus is manually adjusted depending on the working distance.
 
@@ -58,9 +60,28 @@ Capturing Images and Video
     .. code-block:: python
 
         # Show video feed in separate thread
-        cam_thread = threading.Thread(target=ImageFunctions.showVideo, args=(cam,), daemon=True)
+        cam_thread = threading.Thread(target=ImageFunctions.showVideo,
+                     args=(cam,), daemon=True)
         cam_thread.start()
 
-    Still images can still be retrieved through :ref:`capture_image` while the thread is active.
+    Single images can still be retrieved through
+    :py:func:`capture_image` while the thread is active.
 
     :param Camera cam: A :ref:`Camera object`
+
+.. py:function:: calculate_focus(cam, working_distance)
+
+    Calculates the correct focus value for a specific IDS XS
+    camera with some working distance.
+    The focus value is found by comparing the working distance to a characteristic.
+    This characteristic is *unique* to the XS camera with serial code 4102885308.
+    This function should be accurate for working distances up to 620mm.
+
+    :param Camera cam: A :ref:`Camera object`
+    :param int working_distance: Distance from camera lens to subject
+
+.. py:function:: findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1)
+
+    Finds all pucks in the images taken and puts them in a list.
+    The positions of all pucks are then converted to robtargets using
+    :py:func:`create_robtarget`.

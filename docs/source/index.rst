@@ -20,6 +20,7 @@ User Guide
    robotwebservices
    camera
    imagefunctions
+   opencvtorapid
    puck
    help
 
