@@ -2,7 +2,6 @@ import numpy as np
 import configparser
 from image_tools.QR_Reader import QR_Scanner
 from pyueye import ueye
-from numpy import median
 from image_tools import ImageFunctions
 import os
 import sys
@@ -160,7 +159,6 @@ def find_correct_exposure(cam, robot):
 
     exposure = str(int(weighted_sum / pucks_found))
 
-    #exposure = str(median(exposure_values[0]))
     print(exposure_values[0])
 
     configfile_name = abspath
