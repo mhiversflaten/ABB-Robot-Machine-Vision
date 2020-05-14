@@ -89,13 +89,13 @@ def approximate_stack(puck, gripper_height):
 def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1, pucks_in_height=False):
     """Finds all pucks in the frame of the camera by capturing an image and scanning the image for QR codes.
     After the codes have been pinpointed, a series of transformations happen to finally create robtargets
-    which can be sent to RobotWebServices.
+    which can be sent to RobotWare.
     """
 
-    trans, rot = robot.get_gripper_position()
+    trans, gripper_rot = robot.get_gripper_position()
     gripper_height = robot.get_gripper_height()
 
-    cam_pos = OpenCV_to_RAPID.get_camera_position(trans=trans, rot=rot)
+    cam_pos = OpenCV_to_RAPID.get_camera_position(trans=trans, rot=gripper_rot)
 
     for _ in range(number_of_images):
         image = capture_image(cam=cam, gripper_height=gripper_height)
@@ -111,8 +111,9 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1, p
 
         # Create robtargets for every new puck
         for puck in temp_puck_list:
-            puck = OpenCV_to_RAPID.create_robtarget(gripper_height=gripper_height, gripper_rot=rot, cam_pos=cam_pos,
-                                                    image=image, puck=puck, cam_comp=cam_comp, pucks_in_height=pucks_in_height)
+            puck = OpenCV_to_RAPID.create_robtarget(gripper_height=gripper_height, gripper_rot=gripper_rot,
+                                                    cam_pos=cam_pos, image=image, puck=puck, cam_comp=cam_comp,
+                                                    pucks_in_height=pucks_in_height)
             robtarget_pucks.append(puck)
 
     return robtarget_pucks

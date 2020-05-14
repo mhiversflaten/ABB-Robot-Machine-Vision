@@ -20,8 +20,7 @@ class RWS:
         self.base_url = base_url
         self.username = username
         self.password = password
-        # create persistent HTTP communication
-        self.session = Session()
+        self.session = Session() # create persistent HTTP communication
         self.session.auth = HTTPDigestAuth(self.username, self.password)
 
     def set_rapid_variable(self, var, value):

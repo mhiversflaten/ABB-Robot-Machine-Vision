@@ -11,6 +11,7 @@ class Puck:
     puck number
     puck position (x,y)
     puck angle
+    puck QR width
     puck height
     """
 
@@ -30,7 +31,7 @@ class Puck:
         return self.number == other.number
 
     def __str__(self):
-        return 'puck #' + str(self.number)
+        return 'Puck #' + str(self.number)
 
     def set_position(self, position):
         try:
@@ -79,8 +80,7 @@ class Puck:
         this path is rotated around the puck until a clear path is found.
         """
 
-        # Assume there is collision before otherwise is proven
-        collision_list = [True]
+        collision_list = [True]  # Assume there is collision before otherwise is proven
         rotation = 0  # Current rotation in degrees
         tries = 0  # Amount of tries to avoid collision
         retval = 0  # Rotation which will avoid collision
@@ -124,10 +124,10 @@ class Puck:
             # This is done by doing a "180" with the gripper.
             if retval > 90:
                 retval -= 180
-                forward_grip = False
+                forward_grip = False  # Backward grip
             elif retval < -90:
                 retval += 180
-                forward_grip = False
+                forward_grip = False  # Backward grip
 
             rotation += 1
             tries += 1

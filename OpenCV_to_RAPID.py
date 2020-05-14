@@ -34,7 +34,7 @@ def transform_position(gripper_rot, puck):
     puck.set_position(position=[-puck.position[1], -puck.position[0]])
 
     # Convert from quaternion to Euler angle (we only need z-axis)
-    rotation_z_radians = -quaternion_to_degrees(gripper_rot)
+    rotation_z_radians = -quaternion_to_radians(gripper_rot)
     rotation_z_degrees = math.degrees(rotation_z_radians)
     # TODO: Check if rotation is positive or negative for a given orientation
 
@@ -63,7 +63,14 @@ def get_camera_position(trans, rot):
 
 def gripper_camera_offset(rot):
     r = 55  # Distance between gripper and camera
-    rotation_z_radians = quaternion_to_degrees(rot)
+
+    # Check if input is quaternion
+    if isinstance(rot, tuple):
+        if len(rot) == 4 and (isinstance(rot[0], int) or isinstance(rot[0], float)):
+            rotation_z_radians = quaternion_to_radians(rot)
+    else:
+        # If input is not Quaternion, it should be int or float (an angle)
+        rotation_z_radians = rot
 
     offset_x = r * math.cos(rotation_z_radians)
     offset_y = r * math.sin(rotation_z_radians)
@@ -97,7 +104,7 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp
     return puck
 
 
-def quaternion_to_degrees(quaternion):
+def quaternion_to_radians(quaternion):
     """Convert a Quaternion to a rotation about the z-axis in degrees.
     """
     w, x, y, z = quaternion
@@ -141,7 +148,7 @@ def camera_compensation(gripper_height, gripper_rot, puck):
     The slope values must first be calculated by running camera_adjustment.py.
     Works with any camera orientation.
     """
-    rotation_z_radians = quaternion_to_degrees(gripper_rot)
+    rotation_z_radians = quaternion_to_radians(gripper_rot)
     camera_height = gripper_height + 70
     working_distance = camera_height - puck.height
 

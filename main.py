@@ -52,10 +52,19 @@ while norbert.is_running():
 
 
     if userinput == 1:
-        print("Pick and place a single puck")
-        norbert.set_rapid_variable("WPW", 1)
-        norbert.wait_for_rapid()
+        """
+        Pick up and place a chosen puck to a chosen location. 
+        Captures an image and finds all pucks in the work area.
+        The user is prompted to select puck and location.
+        Uses collision avoidance.
+        """
 
+        print("Pick and place a single puck")
+
+        norbert.set_rapid_variable("WPW", 1)  # Start same CASE in RAPID
+        norbert.wait_for_rapid()  # Robot goes to overview position
+
+        # Capture X amount of images to ensure that all pucks are found
         robtarget_pucks = ImageFunctions.findPucks(cam, norbert, robtarget_pucks, number_of_images=5)
 
         if not robtarget_pucks:
@@ -72,23 +81,36 @@ while norbert.is_running():
         for puck in robtarget_pucks:
             puck_numbers.append(puck.number)
 
-        print('Which puck should be moved? Options: "', end='')
-        print(*puck_numbers, sep='", "', end='"')
-        pucknr = int(input(': '))
+        # Select puck that should be moved
+        while True:
+            print('Which puck should be moved? Options: "', end='')
+            print(*puck_numbers, sep='", "', end='"')
+            try:
+                pucknr = int(input(': '))
+            except ValueError:
+                print('Input must be an integer. Try again.')
+                continue
+            if pucknr in puck_numbers:  # Success
+                break
+            else:
+                print('Wrong input, please try again.')
+                continue
 
+        # Extract the selected puck from the puck list -> puck_to_RAPID
         for puck in robtarget_pucks:
             if puck.number == pucknr:
                 puck_to_RAPID = puck
                 break
 
-        rot = OpenCV_to_RAPID.z_degrees_to_quaternion(0)
-        norbert.set_rapid_variable("gripper_angle", 0)
-        #norbert.set_robtarget_rotation_quaternion("puck_target", rot)
+        rotation, forward_grip = puck_to_RAPID.check_collision(robtarget_pucks)
+        rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation)
+        norbert.set_rapid_variable("gripper_angle", rotation)
         norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
-        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
-        norbert.set_rapid_variable("image_processed", "TRUE")
 
-        robtarget_pucks.remove(puck_to_RAPID)
+        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
+        norbert.set_rapid_variable("image_processed", "TRUE")  # Robot may move toward selected puck
+
+        robtarget_pucks.remove(puck_to_RAPID)  # Remove puck so that it may be added to the list again later
 
         print('\nWhere should the puck be moved to? \nEnter x, y and z coordinates, '
               'or leave empty to move to middle of work area.\n')
@@ -98,40 +120,42 @@ while norbert.is_running():
         z = input("z: ")
         norbert.set_robtarget_translation("put_puck_target", [x, y, z])
 
-        norbert.wait_for_rapid()
+        norbert.wait_for_rapid()  # Robot moves to close-up image position
 
         # Capture images until the puck is found again in the close-up image
         while not any(pucknr == x.number for x in robtarget_pucks):
             ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
 
+        # Extract the selected puck from the puck list -> puck_to_RAPID
         for puck in robtarget_pucks:
             if puck.number == pucknr:
                 puck_to_RAPID = puck
                 break
 
-        rotation, forward_grip = puck_to_RAPID.check_collision(robtarget_pucks)
         norbert.set_rapid_variable("gripper_angle", rotation)
-        rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation)
         offset_x, offset_y = OpenCV_to_RAPID.gripper_camera_offset(rot)
         if forward_grip:
             norbert.set_rapid_array("gripper_camera_offset", (offset_x, offset_y))
         else:
             norbert.set_rapid_array("gripper_camera_offset", (-offset_x, -offset_y))
         norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
-        norbert.set_rapid_variable("image_processed", "TRUE")
+        norbert.set_rapid_variable("image_processed", "TRUE")  # Robot may pick and place selected puck
 
-        robtarget_pucks.remove(puck_to_RAPID)
-        print(robtarget_pucks)
+        robtarget_pucks.remove(puck_to_RAPID)  # Remove puck so that it may be added to the list again later
 
     if userinput == 3:
-        """Stack all visible pucks in the work area. 
+        """
+        Stack all visible pucks in the work area. 
         Starts with the lowest numbered puck and stacks them in ascending order.
-        Uses collision avoidance. """
+        Stack location can be set in RAPID script (origin is default).
+        Uses collision avoidance.
+        """
+
         print("Stack pucks")
         norbert.set_rapid_variable("WPW", 3)
-        norbert.wait_for_rapid()
+        norbert.wait_for_rapid()  # Robot goes to overview position
 
-        angle = 0
+        # Capture X amount of images to ensure all pucks are found
         while not robtarget_pucks:
             ImageFunctions.findPucks(cam, norbert, robtarget_pucks, number_of_images=5)
 
@@ -139,15 +163,18 @@ while norbert.is_running():
         print(*robtarget_pucks, sep=', ')
 
         for puck in robtarget_pucks:
-            print("number: ", puck.number, "angle:", puck.angle)
+            print("number:", puck.number, "angle:", puck.angle)
+            print(f"{puck}; Position: {puck.position}, Angle: {puck.angle}, Height: {puck.height}")
 
+        # Tell RAPID how many pucks were found
         norbert.set_rapid_variable("length", len(robtarget_pucks))
-        norbert.set_rapid_variable("image_processed", "TRUE")
+        norbert.set_rapid_variable("image_processed", "TRUE")  # Start the for loop in RAPID
 
         for _ in range(len(robtarget_pucks)):
 
-            pucknr = min(int(x.number) for x in robtarget_pucks)
+            pucknr = min(int(x.number) for x in robtarget_pucks)  # Find the lowest numbered puck
 
+            # Extract the selected puck from the puck list -> puck_to_RAPID
             for puck in robtarget_pucks:
                 if puck.number == pucknr:
                     puck_to_RAPID = puck
@@ -162,23 +189,19 @@ while norbert.is_running():
             norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_rapid_variable("image_processed", "TRUE")
 
-            robtarget_pucks.remove(puck_to_RAPID)
+            robtarget_pucks.remove(puck_to_RAPID)  # Remove puck so that it may be added to the list again later
 
-            norbert.wait_for_rapid()
+            norbert.wait_for_rapid()  # Robot moves to close-up image position
 
             # Capture images until the puck is found again in the close-up image
             while not any(pucknr == x.number for x in robtarget_pucks):
                 ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
 
-            pucknr = min(int(x.number) for x in robtarget_pucks)
-
+            # Extract the selected puck from the puck list -> puck_to_RAPID
             for puck in robtarget_pucks:
                 if puck.number == pucknr:
                     puck_to_RAPID = puck
                     break
-
-            rotation, forward_grip = puck_to_RAPID.check_collision(robtarget_pucks)
-            rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation)
 
             #norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
             norbert.set_rapid_variable("gripper_angle", rotation)
@@ -190,9 +213,9 @@ while norbert.is_running():
             norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_rapid_variable("image_processed", "TRUE")
 
-            robtarget_pucks.remove(puck_to_RAPID)
+            robtarget_pucks.remove(puck_to_RAPID)  # Remove the puck from the list as we're done with it
 
-            norbert.wait_for_rapid()
+            norbert.wait_for_rapid()  # Robot may pick and place selected puck
 
     elif userinput == 5:
         """The repeatability test uses only one puck in the work area, which is to be found, 
