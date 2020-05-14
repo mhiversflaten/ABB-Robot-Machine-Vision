@@ -10,7 +10,7 @@ def pixel_to_mm(gripper_height, puck, image):
 
     # As a good approximation we can say that: sensor width / FOV width = focal length / working distance
     # parameters from the XS camera
-    focal_length = 3.7  # mm (+ / - 5 percent)
+    focal_length = 3.7  # mm (+/- 5 percent)
     sensor_width = 3.6288
     # sensor_height = 2.7216 (not used here)
     resolution_width = image.shape[1]
@@ -62,6 +62,9 @@ def get_camera_position(trans, rot):
 
 
 def gripper_camera_offset(rot):
+    """Finds the offset between the camera and the gripper by using the gripper's orientation.
+    """
+
     r = 55  # Distance between gripper and camera
 
     # Check if input is quaternion
@@ -138,8 +141,10 @@ def overshoot_comp(gripper_height, puck):
     """Compensate for the overshoot phenomenon which occurs when trying to pinpoint
     the location of a 3D object in a 2D image.
     """
-    adjustment = [x * puck.height / (gripper_height + 70) for x in puck.position]
-    puck.set_position(position=list(map(lambda x, y: x - y, puck.position, adjustment)))
+    compensation = [x * puck.height / (gripper_height + 70) for x in puck.position]
+
+    # Subtract compensation values from puck position
+    puck.set_position(position=list(map(lambda x, y: x - y, puck.position, compensation)))
 
 
 def camera_compensation(gripper_height, gripper_rot, puck):

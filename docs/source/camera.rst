@@ -1,0 +1,19 @@
+Camera class
+============
+
+The Camera class contains methods specifically meant for the University of Stavanger.
+These functions have only been tested on a IDS UI-1007XS-C camera, and might not work
+correctly as intended on other models.
+
+The Camera class makes it possible to initalize a uEye camera, set parameters, and start video capture.
+
+Quickstart
+^^^^^^^^^^
+
+.. highlight:: python
+
+    cam = Camera()
+    cam.init()
+    cam.set_parameters()
+    cam.allocate_memory()
+    cam.capture_video()

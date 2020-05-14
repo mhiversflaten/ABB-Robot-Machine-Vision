@@ -1,6 +1,6 @@
-#from config import config
 import config_independent
-from image_tools import ImageFunctions, camera_correction, QR_Reader
+import image_tools.ImageFunctions
+from image_tools import ImageFunctions, camera_correction
 from RobotWebServices import RWS
 import OpenCV_to_RAPID
 import random
@@ -332,7 +332,7 @@ while norbert.is_running():  # Run script while RAPID execution is running
             gripper_height = norbert.get_gripper_height()
             # Capture image
             img = ImageFunctions.capture_image(cam, gripper_height)
-            QR_Reader.QR_Scanner(img)
+            image_tools.ImageFunctions.QR_Scanner(img)
 
     elif userinput == 11:
         """Picking pucks from stacks"""
@@ -387,7 +387,7 @@ while norbert.is_running():  # Run script while RAPID execution is running
         import cv2
         gripper_height = norbert.get_gripper_height()
         img = ImageFunctions.capture_image(cam, gripper_height)
-        img = QR_Reader.QR_Scanner_visualized(img)
+        img = image_tools.ImageFunctions.QR_Scanner_visualized(img)
         cv2.imwrite('Scanned_puck.png', img)
 
     else:

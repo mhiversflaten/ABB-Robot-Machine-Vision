@@ -1,8 +1,7 @@
 import numpy as np
 import configparser
-from image_tools.QR_Reader import QR_Scanner
+from image_tools.ImageFunctions import QR_Scanner
 from pyueye import ueye
-from numpy import median
 from image_tools import ImageFunctions
 import os
 import sys

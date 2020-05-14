@@ -7,13 +7,6 @@ These tools utilize IDS's Python bindings for the uEye API: PyuEye_.
 .. _PyuEye: https://pypi.org/project/pyueye/
 .. _uEye cameras: https://en.ids-imaging.com/
 
-=======
-The image tools included in the ABB-Klosser package are mainly directed toward :ref:`uEye cameras`_ [[fix this link]].
-These tools utilize IDS's Python bindings for the uEye API: pyuEye_.
-
-.. _pyuEye: https://pypi.org/project/pyueye/
-.. _uEye cameras: https://en.ids-imaging.com/
-
 Capturing Images and Video
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -44,3 +37,13 @@ image is decoded by ZBar to extract information from QR codes in the image.
 .. _ZBar: http://zbar.sourceforge.net/
 .. _pyzbar: https://pypi.org/project/pyzbar/
 
+
+.. py:function:: capture_image(cam, gripper_height)
+
+    Captures a single image through PyuEye functions.
+    Focus is manually adjusted depending on the working distance.
+
+    :param Camera cam: A camera object
+    :param int gripper_height: The height of the gripper above the work object
+
+    :return: An image
