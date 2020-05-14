@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Puck Class &#8212; ABB-Robot-Machine-Vision 0.0.1 documentation</title>
+    <title>OpenCV_to_RAPID.py &#8212; ABB-Robot-Machine-Vision 0.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Need Help?" href="help.html" />
+    <link rel="next" title="Puck Class" href="puck.html" />
     <link rel="prev" title="Image Tools" href="imagefunctions.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -32,30 +32,12 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="puck-class">
-<span id="puck"></span><h1>Puck Class<a class="headerlink" href="#puck-class" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="Puck">
-<em class="property">class </em><code class="sig-name descname">Puck</code><span class="sig-paren">(</span><em class="sig-param">number</em>, <em class="sig-param">position</em>, <em class="sig-param">angle</em>, <em class="sig-param">height=30</em><span class="sig-paren">)</span><a class="headerlink" href="#Puck" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="Puck.check_collision">
-<code class="sig-name descname">check_collision</code><span class="sig-paren">(</span><em class="sig-param">puck_list</em><span class="sig-paren">)</span><a class="headerlink" href="#Puck.check_collision" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds an angle of rotation for the gripper which avoids
-collisions between the gripper and other pucks
-when sliding in to pick up a puck.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>puck_list</strong> (<a class="reference internal" href="#Puck" title="Puck"><em>Puck</em></a><em>[</em><em>]</em>) – List of all :ref:<a href="#id1"><span class="problematic" id="id2">`</span></a>Puck`s</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Rotation which yields no collision</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>If puck should be gripped forward or backward</p>
-</dd>
-</dl>
-</dd></dl>
-
+  <div class="section" id="opencv-to-rapid-py">
+<h1>OpenCV_to_RAPID.py<a class="headerlink" href="#opencv-to-rapid-py" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="create_robtarget">
+<code class="sig-name descname">create_robtarget</code><span class="sig-paren">(</span><em class="sig-param">gripper_height</em>, <em class="sig-param">gripper_rot</em>, <em class="sig-param">cam_pos</em>, <em class="sig-param">image</em>, <em class="sig-param">puck</em>, <em class="sig-param">cam_comp=False</em><span class="sig-paren">)</span><a class="headerlink" href="#create_robtarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>test</p>
 </dd></dl>
 
 </div>
@@ -83,7 +65,8 @@ when sliding in to pick up a puck.</p>
 <li class="toctree-l1"><a class="reference internal" href="robotwebservices.html">Robot Web Services</a></li>
 <li class="toctree-l1"><a class="reference internal" href="camera.html">Camera class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="imagefunctions.html">Image Tools</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Puck Class</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenCV_to_RAPID.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="puck.html">Puck Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="help.html">Need Help?</a></li>
 </ul>
 
@@ -92,7 +75,7 @@ when sliding in to pick up a puck.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="imagefunctions.html" title="previous chapter">Image Tools</a></li>
-      <li>Next: <a href="help.html" title="next chapter">Need Help?</a></li>
+      <li>Next: <a href="puck.html" title="next chapter">Puck Class</a></li>
   </ul></li>
 </ul>
 </div>
@@ -126,7 +109,7 @@ when sliding in to pick up a puck.</p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="_sources/puck.rst.txt"
+      <a href="_sources/opencvtorapid.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

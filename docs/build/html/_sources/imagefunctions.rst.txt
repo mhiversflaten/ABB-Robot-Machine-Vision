@@ -18,7 +18,7 @@ image is decoded by ZBar to extract information from QR codes in the image.
 .. py:function:: QR_Scanner(img)
 
     Filters and normalizes the input image. The processed image is decoded using pyzbar_.
-    For every QR code detected, a :ref:`Puck object` is created.
+    For every QR code detected, a :ref:`Puck` object is created.
 
     :param ndarray img: An image
 
