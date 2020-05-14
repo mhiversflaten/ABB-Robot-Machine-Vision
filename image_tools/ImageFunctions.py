@@ -56,6 +56,8 @@ def calculate_focus(cam, working_distance):
 
 
 def approximate_stack(puck, gripper_height):
+    """Aims to approximate the amount of pucks in a stack
+    based on the calculated QR-width of the visible puck"""
 
     if puck.qr_width >= 400:
         approx_working_distance = 100

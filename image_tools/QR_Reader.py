@@ -40,7 +40,7 @@ def QR_Scanner(img):
 
         # Calculate distance between (x1,y1) and (x2,y2) to understand height of pucks:
         qr_width = math.hypot((x2 - x1), (y2 - y1))
-        print("width", qr_width)
+        # print("width", qr_width)
         #width_list.append((puck_number, qr_width))
 
         # Make the puck object and add it to the puck list
@@ -51,7 +51,7 @@ def QR_Scanner(img):
 
 
 def QR_Scanner_visualized(img):
-    """Scan QR codes from image. Returns position, orientation and image with marked QR codes"""
+    """Scan QR codes from image. Returns normalized image with marked QR-code"""
 
     grayscale = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # Make grayscale image for filtering and thresholding
     blur = cv2.bilateralFilter(src=grayscale, d=3, sigmaColor=75, sigmaSpace=75)
