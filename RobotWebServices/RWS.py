@@ -231,7 +231,6 @@ class RWS:
 
     def is_running(self):
         """Checks the execution state of the controller and
-        returns True if it is running and False if not.
         """
 
         execution_state = self.get_execution_state()
@@ -244,9 +243,12 @@ class RWS:
         """Sets the speed ratio of the controller.
         """
 
+        if not 0 < speed_ratio <= 100:
+            print("You have entered a false speed ratio value! Try again.")
+            return
+
         payload = {'speed-ratio': speed_ratio}
-        resp = self.session.post(self.base_url + "/rw/panel/speedratio?action=setspeedratio",
-                                 data=payload)
+        resp = self.session.post(self.base_url + "/rw/panel/speedratio?action=setspeedratio", data=payload)
         if resp.status_code == 204:
             print(f'Set speed ratio to {speed_ratio}%')
         else:
