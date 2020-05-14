@@ -18,6 +18,7 @@ User Guide
    license
    installation
    robotwebservices
+   camera
    imagefunctions
    puck
    help
