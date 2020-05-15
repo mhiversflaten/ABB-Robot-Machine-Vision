@@ -6,7 +6,7 @@ from pyzbar.pyzbar import decode
 from pyzbar.wrapper import ZBarSymbol
 
 import Puck
-import config_independent
+from image_tools import Camera
 from pyueye import ueye
 import time
 import OpenCV_to_RAPID
@@ -131,14 +131,14 @@ def showVideo(cam):
     """Continuously displays the robot's view in an OpenCV imshow window.
     """
     while True:
-        if config_independent.repeatability_test:
+        if Camera.repeatability_test:
             font = cv2.FONT_HERSHEY_SIMPLEX
             bottomLeftCornerOfText = (10, 50)
             fontScale = 1
             fontColor = (255, 255, 255)
             lineType = 2
 
-            cv2.putText(array, 'Number of loops: ' + str(config_independent.number_of_loops),
+            cv2.putText(array, 'Number of loops: ' + str(Camera.number_of_loops),
                         bottomLeftCornerOfText,
                         font,
                         fontScale,
