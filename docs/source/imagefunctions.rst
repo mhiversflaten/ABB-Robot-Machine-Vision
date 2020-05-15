@@ -78,10 +78,23 @@ Capturing Images and Video
     This function should be accurate for working distances up to 620mm.
 
     :param Camera cam: A :ref:`Camera object`
-    :param int working_distance: Distance from camera lens to subject
+    :param int working_distance: Distance from camera lens to subject in millimeters
 
 .. py:function:: findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1)
 
     Finds all pucks in the images taken and puts them in a list.
     The positions of all pucks are then converted to robtargets using
     :py:func:`create_robtarget`.
+
+    If pucks that were previously found are found once again, they will not be re-added
+    to the puck list, so that only new pucks are transformed into robtargets.
+
+    :param Camera cam: A :ref:`Camera object`
+    :param RWS robot: An :ref:`RWS` object
+    :param Puck[] robtarget_pucks: All pucks found previously
+    :param bool cam_comp: True if camera adjustment should be run,
+    False if it has already been run
+    :param int number_of_images: How many images should be taken in
+    the attempt to find all pucks
+
+    :return: A list with all found pucks, without duplicates

@@ -11,6 +11,8 @@ Operating mode should be automatic::
     >>> robot.start_rapid()
     RAPID execution started from main
 
+.. _RWS:
+
 .. py:class:: RWS(base_url, username, password)
 
     .. py:method:: motors_on(self)

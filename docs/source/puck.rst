@@ -1,7 +1,7 @@
-.. _Puck:
-
 Puck Class
 ==========
+
+.. _Puck:
 
 .. py:class:: Puck(number, position, angle, height=30)
 
