@@ -46,16 +46,25 @@ MODULE PythonCom
 
                 TEST WRD
                     CASE 1:
-                    ! Move a chosen puck
+                    !!!!!!!!!!!!!!!!!!!!!!
+                    ! Move a chosen puck !
+                    !!!!!!!!!!!!!!!!!!!!!!
 
                     CASE 3:
-                    ! Stack pucks
+                    !!!!!!!!!!!!!!!
+                    ! Stack pucks !
+                    !!!!!!!!!!!!!!!
 
                     CASE 6:
-                    ! Repeatability test
+                    !!!!!!!!!!!!!!!!!!!!!!
+                    ! Repeatability test !
+                    !!!!!!!!!!!!!!!!!!!!!!
 
                     CASE 7:
-                    ! Focus test / QR-width test
+                    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    ! Focus test / QR-width test !
+                    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
                 ENDTEST
             ENDIF
             WRD:=0;
