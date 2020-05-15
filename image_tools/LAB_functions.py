@@ -134,6 +134,7 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1, p
         #        First, use your capture image function         #
         #########################################################
         # ----------------insert code here--------------------- #
+        # TODO: De skal bruke OpenCV
         image = capture_image(cam=cam, gripper_height=gripper_height)
 
         #########################################################
@@ -216,6 +217,7 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp
     # Converts puck position from pixels to millimeters
     pixel_to_mm(gripper_height=gripper_height, puck=puck, image=image)
 
+    # TODO: De trenger ikke overshoot_comp
     # Compensate for overshoot in 2D image
     overshoot_comp(gripper_height=gripper_height, puck=puck)
 
