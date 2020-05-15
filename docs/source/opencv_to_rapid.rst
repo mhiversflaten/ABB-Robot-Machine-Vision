@@ -5,6 +5,6 @@ OpenCV_to_RAPID.py
 
     Complete a series of transformations to finally create a robtarget of the puck's position from an image.
     These transformations are based on the setup at the University of Stavanger, and with a specific RobotStudio setup
-    (in regards to coordinate systems). This Pack_ file includes this setup.
+    (in regards to coordinate systems). This `Pack and Go`_ file includes this setup.
 
-_Pack: http://www.ux.uis.no/~karlsk/ELE610/UiS_E458_nov18.rspag
+.. _Pack and Go: http://www.ux.uis.no/~karlsk/ELE610/UiS_E458_nov18.rspag

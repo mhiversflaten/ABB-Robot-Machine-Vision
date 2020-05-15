@@ -1,11 +1,11 @@
-.. _Camera object:
-
-Camera class
+Camera Class
 ============
 
-The Camera class contains methods specifically meant for the University of Stavanger.
-These functions have only been tested on a IDS UI-1007XS-C camera, and might not work
-as intended on other models.
+.. py:class:: Camera(cam_ID=0)
+
+    The Camera class contains methods specifically meant for the University of Stavanger.
+    These functions have only been tested on a IDS UI-1007XS-C camera, and might not work
+    as intended on other models.
 
 Quickstart
 ^^^^^^^^^^

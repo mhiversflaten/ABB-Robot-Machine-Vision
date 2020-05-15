@@ -1,7 +1,7 @@
+.. _Puck:
+
 Puck Class
 ==========
-
-.. _Puck:
 
 .. py:class:: Puck(number, position, angle, height=30)
 
@@ -11,7 +11,7 @@ Puck Class
         collisions between the gripper and other pucks
         when sliding in to pick up a puck.
 
-        :param Puck[] puck_list: List of all :ref:`Puck`s
+        :param Puck[] puck_list: List of all :py:class:`Puck` objects
 
         :return: Rotation which yields no collision
         :return: If puck should be gripped forward or backward

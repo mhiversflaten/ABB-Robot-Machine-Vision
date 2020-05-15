@@ -12,9 +12,9 @@ class Camera:
     correctly as intended on other models.
     """
 
-    def __init__(self):
+    def __init__(self, cam_ID = 0):
         # Several parameters are unused, but may be needed in the future
-        self.hCam = ueye.HIDS(0)
+        self.hCam = ueye.HIDS(cam_ID)
         self.sInfo = ueye.SENSORINFO()
         self.cInfo = ueye.CAMINFO()
         self.pcImageMemory = ueye.c_mem_p()
