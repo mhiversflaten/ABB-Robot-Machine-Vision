@@ -1,0 +1,106 @@
+MODULE PythonCom
+    CONST num gripHeight:= 10;
+    CONST num safeHeight:= 60;
+    VAR num WPW:=0;
+    VAR num WRD:=0;
+    VAR bool ready_flag:= FALSE;
+    VAR bool image_processed:= FALSE;
+    CONST num gripHeight:= 10;
+    CONST num safeHeight:= 60;
+    VAR num gripper_camera_offset{2};
+    VAR num gripper_angle:= 0;
+    VAR speeddata vSpeed:= v1000;
+    VAR zonedata zZone:= fine;
+
+    VAR num offset_x;
+    VAR num offset_y;
+    VAR robtarget rob1;
+    PERS robtarget randomTarget;
+
+    VAR robtarget gripper_target;
+    VAR robtarget get_puck_target;
+    VAR robtarget put_puck_target;
+    VAR num puck_angle;
+
+    VAR robtarget puck_target := [[0,0,200],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    CONST robtarget middleOfTable:=[[0,0,0],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+    VAR robtarget overview:=[[0,0,500],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+
+    TASK PERS wobjdata wobjTableN:=[FALSE,TRUE,"",[[150,-500,8],[0.707106781,0,0,-0.707106781]],[[0,0,0],[1,0,0,0]]];
+    PERS tooldata tGripper:=[TRUE,[[0,0,114.25],[0,0,0,1]],[1,[-0.095984607,0.082520613,38.69176324],[1,0,0,0],0,0,0]];
+
+    PROC main()
+
+        ! Sets smooth acceleration, opens gripper and moves to overview position [0,0,500]
+        AccSet 100, 50 \FinePointRamp:=30;
+        closeGripper(FALSE);
+        MoveJ overview,vSpeed,z50,tGripper\WObj:=wobjTableN;
+
+        ready_flag:=TRUE;
+
+        WHILE TRUE DO
+
+            IF WPW <> 0 THEN
+                WRD:=WPW;
+                WPW:=0;
+
+                TEST WRD
+                    CASE 1:
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !  Move a chosen puck  !
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !---insert code here---!
+
+                    CASE 3:
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !     Stack pucks      !
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !---insert code here---!
+
+                    CASE 6:
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !  Repeatability test  !
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !---insert code here---!
+
+                ENDTEST
+            ENDIF
+            WRD:=0;
+        ENDWHILE
+    ENDPROC
+
+
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ! Gather/Pick up puck function is needed !
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !------------insert code here------------!
+
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ! Place puck function is needed !
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !--------insert code here-------!
+
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ! Stack pucks function is needed !
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !--------insert code here--------!
+
+    ! wait for python to finish processing image
+    PROC wait_for_python()
+        WHILE NOT image_processed DO
+        ENDWHILE
+        image_processed:=FALSE;
+    ENDPROC
+
+    ! Function to open / close the gripper
+    PROC closeGripper(bool state)
+        WaitTime 0.1;
+        IF state=TRUE THEN
+          setDO PneumaticGripper, 1;
+        ELSEIF state=FALSE THEN
+          setDO PneumaticGripper, 0;
+        ENDIF
+        WaitTime 0.2;
+    ENDPROC
+
+ENDMODULE
