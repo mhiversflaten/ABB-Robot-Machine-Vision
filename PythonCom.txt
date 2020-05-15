@@ -46,24 +46,22 @@ MODULE PythonCom
 
                 TEST WRD
                     CASE 1:
-                    !!!!!!!!!!!!!!!!!!!!!!
-                    ! Move a chosen puck !
-                    !!!!!!!!!!!!!!!!!!!!!!
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !  Move a chosen puck  !
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !---insert code here---!
 
                     CASE 3:
-                    !!!!!!!!!!!!!!!
-                    ! Stack pucks !
-                    !!!!!!!!!!!!!!!
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !     Stack pucks      !
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !---insert code here---!
 
                     CASE 6:
-                    !!!!!!!!!!!!!!!!!!!!!!
-                    ! Repeatability test !
-                    !!!!!!!!!!!!!!!!!!!!!!
-
-                    CASE 7:
-                    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    ! Focus test / QR-width test !
-                    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !  Repeatability test  !
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !---insert code here---!
 
                 ENDTEST
             ENDIF
@@ -75,14 +73,17 @@ MODULE PythonCom
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ! Gather/Pick up puck function is needed !
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !------------insert code here------------!
 
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ! Place puck function is needed !
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !--------insert code here-------!
 
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ! Stack pucks function is needed !
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !--------insert code here--------!
 
     ! wait for python to finish processing image
     PROC wait_for_python()
