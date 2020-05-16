@@ -58,7 +58,6 @@ while robot.is_running() and i < 25:  # Compare images 25 times
     #   try and capture and check for QR-codes in a loop    #
     #                 (overview - 500mm)                    #
     #########################################################
-    #########################################################
     #           Use OpenCV to capture an image              #
     #         or use your capture image function            #
     #           if you prefer to use uEye API               #
@@ -68,7 +67,6 @@ while robot.is_running() and i < 25:  # Compare images 25 times
     #########################################################
     #          Scan the image with your QR_Scanner          #
     #           Place the QR code in a puck list            #
-    #########################################################
     #########################################################
     #  Reduce noise and increase the contrast in the image  #
     #########################################################
@@ -90,14 +88,50 @@ while robot.is_running() and i < 25:  # Compare images 25 times
 
     #########################################################
     #           Create robtargets for the puck              #
+    #    (Combine all known offsets to make a robtarget)    #
+    #########################################################
+    #  Perform transformations to match RAPID coordinates   #
     #########################################################
     # ----------------insert code here--------------------- #
 
+    # Converts puck position from pixels to millimeters
+    pixel_to_mm(gripper_height=gripper_height, puck=puck, image=image)
 
+    # Compensate for possibly angled camera
+    if not cam_comp:
+        camera_compensation(gripper_height=gripper_height, gripper_rot=gripper_rot, puck=puck)
+
+    # Add the offset from camera to gripper
+    puck.set_position(position=[puck.position[0] + cam_pos[0], puck.position[1] + cam_pos[1]])
+
+    return puck
+
+
+
+
+
+
+
+
+    #########################################################
+    #           Update robtarget and tell RAPID             #
+    #               that image is processed                 #
+    #########################################################
+    # ----------------insert code here--------------------- #
 
     robot.set_robtarget_translation("puck_target", robtarget_pucks[0].get_xyz())
     robot.set_rapid_variable("image_processed", "TRUE")
 
+    #########################################################
+    #    Do the same steps as above to find a puck once     #
+    #    again, the difference being this will be a more    #
+    #   accurate representation of the robtarget because    #
+    #  of the image being grabbed closer to the puck        #
+    #                        tips:                          #
+    #    it might be smart to remove the found puck from    #
+    #      the list to easily identify the "new" puck       #
+    #########################################################
+    # ----------------insert code here--------------------- #
     robtarget_pucks.clear()
 
     robot.wait_for_rapid()

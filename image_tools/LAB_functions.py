@@ -254,3 +254,24 @@ def transform_position(puck):
     #########################################################
     # ----------------insert code here--------------------- #
     puck.set_position(position=[-puck.position[1], -puck.position[0]])
+
+
+def pixel_to_mm(gripper_height, puck, image):
+    """Converts coordinates in image from pixels to millimeters.
+    This depends on the camera's working distance.
+    """
+
+    # As a good approximation we can say that: sensor width / FOV width = focal length / working distance
+    # parameters from the XS camera
+    focal_length = 3.7  # mm (+/- 5 percent)
+    sensor_width = 3.6288
+    resolution_width = image.shape[1]
+
+    working_distance = gripper_height + 70
+
+    fov_width = (working_distance / focal_length) * sensor_width
+
+    pixel_to_mm = fov_width / resolution_width  # mm_width / px_width
+
+    # Convert all positions from pixels to millimeters:
+    puck.set_position(position=[x * pixel_to_mm for x in puck.position])
