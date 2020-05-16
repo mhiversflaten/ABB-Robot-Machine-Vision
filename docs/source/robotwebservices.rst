@@ -64,7 +64,6 @@ Operating mode should be automatic::
         Get the raw value of any variable in RAPID.
 
         :return: A number if RAPID variable is 'num'
-        :rtype: int/double
         :return: A string if RAPID variable is not 'num'
 
     .. py:method:: set_rapid_variable(self, var, value)
@@ -74,7 +73,7 @@ Operating mode should be automatic::
 
         :param str var: Name of variable as declared in RAPID
         :param value: Desired variable value
-        :type value: int, double or str
+        :type value: int, float or str
 
     .. py:method:: set_robtarget_translation(self, var, trans)
 

@@ -1,6 +1,5 @@
-from image_tools import Camera
 import image_tools.ImageFunctions
-from image_tools import ImageFunctions, camera_correction
+from image_tools import ImageFunctions, camera_correction, Camera
 from RobotWebServices import RWS
 import OpenCV_to_RAPID
 import random
@@ -20,8 +19,8 @@ robtarget_pucks = []
 puck_to_RAPID = 0
 angle = 0
 
-# Initialize robot communication, start motors, and execute RAPID program
-norbert = RWS.RWS()
+# Initialize communication with Norbert, start motors, and execute RAPID program
+norbert = RWS.RWS('http://152.94.0.38')  # Norbert's IP address
 norbert.request_mastership()
 norbert.start_RAPID()  # NB! Starts RAPID execution from main
 norbert.wait_for_rapid()
@@ -383,7 +382,6 @@ while norbert.is_running():  # Run script while RAPID execution is running
         norbert.motors_off()
 
     elif userinput == 10000:
-        from image_tools import QR_Reader
         import cv2
         gripper_height = norbert.get_gripper_height()
         img = ImageFunctions.capture_image(cam, gripper_height)

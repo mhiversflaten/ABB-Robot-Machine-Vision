@@ -1,6 +1,5 @@
 import numpy as np
 import configparser
-from image_tools.ImageFunctions import QR_Scanner
 from pyueye import ueye
 from image_tools import ImageFunctions
 import os
@@ -124,10 +123,10 @@ def find_correct_exposure(cam, robot):
 
     abspath = os.path.abspath("image_tools/cam_adjustments.ini")
 
-    exposure_values = []
+    value_pairs = []
     puck_list = []
     # Exposure range (in ms)
-    exposure_low = 1
+    exposure_low = 2
     exposure_high = 66
 
     increment = 2
@@ -138,7 +137,7 @@ def find_correct_exposure(cam, robot):
         ret = ueye.is_Exposure(cam.hCam, ueye.IS_EXPOSURE_CMD_SET_EXPOSURE, newExposure, ueye.sizeof(newExposure))
 
         img = ImageFunctions.capture_image(cam=cam, gripper_height=500)
-        puck_list = QR_Scanner(img)
+        puck_list = ImageFunctions.QR_Scanner(img)
         print("Found puck:", puck_list)
 
         # Checking exposure
@@ -149,17 +148,17 @@ def find_correct_exposure(cam, robot):
 
         # Position returns as None if no QR-code is found
         if puck_list:
-            exposure_values.append((exposure, len(puck_list)))
+            value_pairs.append((exposure, len(puck_list)))
 
     weighted_sum = 0
     pucks_found = 0
-    for value_pair in exposure_values:
+    for value_pair in value_pairs:
         pucks_found += value_pair[1]
         weighted_sum += value_pair[0] * value_pair[1]
 
     exposure = str(int(weighted_sum / pucks_found))
 
-    print(exposure_values[0])
+    print(value_pairs[0])
 
     configfile_name = abspath
 
