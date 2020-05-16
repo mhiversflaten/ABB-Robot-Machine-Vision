@@ -260,12 +260,25 @@ def pixel_to_mm(gripper_height, puck, image):
     """Converts coordinates in image from pixels to millimeters.
     This depends on the camera's working distance.
     """
-
-    # As a good approximation we can say that: sensor width / FOV width = focal length / working distance
-    # parameters from the XS camera
+    ################################################################
+    #          As a good approximation we can say that:            #
+    #  sensor width / FOV width = focal length / working distance  #
+    ################################################################
+    #        Here are some parameters from the XS camera           #
+    ################################################################
     focal_length = 3.7  # mm (+/- 5 percent)
     sensor_width = 3.6288
     resolution_width = image.shape[1]
+
+    #########################################################
+    #      With the help of the values above, and the       #
+    #   explanation in the task, convert the pixel values   #
+    #        to mm to be used in making a robtarget         #
+    #########################################################
+    #   Remember: Update the positions by multiplying the   #
+    #    found conversion with the found pixel position     #
+    #########################################################
+    # ----------------insert code here--------------------- #
 
     working_distance = gripper_height + 70
 

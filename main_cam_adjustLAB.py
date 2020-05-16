@@ -86,41 +86,40 @@ while robot.is_running() and i < 25:  # Compare images 25 times
     #########################################################
     # ----------------insert code here--------------------- #
 
+    ################################################################
+    #               Create robtargets for the puck                 #
+    #        (Combine all known offsets to make a robtarget)       #
+    ################################################################
+    #      Perform transformations to match RAPID coordinates      #
+    ################################################################
+    #          As a good approximation we can say that:            #
+    #  sensor width / FOV width = focal length / working distance  #
+    ################################################################
+    #        Here are some parameters from the XS camera:          #
+    ################################################################
+    focal_length = 3.7  # mm (+/- 5 percent)
+    sensor_width = 3.6288
+    resolution_width = image.shape[1]
+
     #########################################################
-    #           Create robtargets for the puck              #
-    #    (Combine all known offsets to make a robtarget)    #
+    #      With the help of the values above, and the       #
+    #   explanation in the assignment, convert the pixel    #
+    #     values to mm to be used in making a robtarget     #
     #########################################################
-    #  Perform transformations to match RAPID coordinates   #
+    #   Remember: Update the positions by multiplying the   #
+    #    found conversion with the found pixel position     #
     #########################################################
     # ----------------insert code here--------------------- #
 
-    # Converts puck position from pixels to millimeters
-    pixel_to_mm(gripper_height=gripper_height, puck=puck, image=image)
-
-    # Compensate for possibly angled camera
-    if not cam_comp:
-        camera_compensation(gripper_height=gripper_height, gripper_rot=gripper_rot, puck=puck)
-
+    # TODO: How is this done for them (if not using Puck class)? Is this explained in LAB Assignment?
     # Add the offset from camera to gripper
     puck.set_position(position=[puck.position[0] + cam_pos[0], puck.position[1] + cam_pos[1]])
-
-    return puck
-
-
-
-
-
-
-
 
     #########################################################
     #           Update robtarget and tell RAPID             #
     #               that image is processed                 #
     #########################################################
     # ----------------insert code here--------------------- #
-
-    robot.set_robtarget_translation("puck_target", robtarget_pucks[0].get_xyz())
-    robot.set_rapid_variable("image_processed", "TRUE")
 
     #########################################################
     #    Do the same steps as above to find a puck once     #
@@ -132,15 +131,7 @@ while robot.is_running() and i < 25:  # Compare images 25 times
     #      the list to easily identify the "new" puck       #
     #########################################################
     # ----------------insert code here--------------------- #
-    robtarget_pucks.clear()
 
-    robot.wait_for_rapid()
-
-    # Close-up image of puck (working distance = 100mm)
-    while not robtarget_pucks:
-        ImageFunctions.findPucks(cam, robot, robtarget_pucks, cam_comp=True)
-
-    robot.set_rapid_variable("image_processed", "TRUE")
 
     pos_low = robtarget_pucks[0].get_xyz()
     print(f'Low robtarget: ({pos_low[0]:.1f},{pos_low[1]:.1f})')
