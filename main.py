@@ -1,12 +1,11 @@
-import config_independent
 import image_tools.ImageFunctions
-from image_tools import ImageFunctions, camera_correction
+from image_tools import ImageFunctions, camera_correction, Camera
 from RobotWebServices import RWS
 import OpenCV_to_RAPID
 import random
 import threading
 
-cam = config_independent.Camera()
+cam = Camera.Camera()
 cam.init()
 cam.set_parameters()
 cam.allocate_memory()
@@ -20,8 +19,8 @@ robtarget_pucks = []
 puck_to_RAPID = 0
 angle = 0
 
-# Initialize robot communication, start motors, and execute RAPID program
-norbert = RWS.RWS()
+# Initialize communication with Norbert, start motors, and execute RAPID program
+norbert = RWS.RWS('http://152.94.0.38')  # Norbert's IP address
 norbert.request_mastership()
 norbert.start_RAPID()  # NB! Starts RAPID execution from main
 norbert.wait_for_rapid()
@@ -220,7 +219,7 @@ while norbert.is_running():  # Run script while RAPID execution is running
 
         print("Repeatability test started")
         # TODO: Change WPW and randomTarget only every other loop
-        config_independent.repeatability_test = True
+        Camera.repeatability_test = True
 
         i = 1
         # config_independent.number_of_loops = 0
@@ -253,8 +252,8 @@ while norbert.is_running():  # Run script while RAPID execution is running
             # Things that should only happen in one of the two loops should use an incremented variable and modulus
             if i % 2 == 0:
                 # Increment number of loops for video display
-                config_independent.number_of_loops += 1
-                print(config_independent.number_of_loops)
+                Camera.number_of_loops += 1
+                print(Camera.number_of_loops)
             rot = OpenCV_to_RAPID.z_degrees_to_quaternion(angle)
 
             norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
@@ -383,7 +382,6 @@ while norbert.is_running():  # Run script while RAPID execution is running
         norbert.motors_off()
 
     elif userinput == 10000:
-        from image_tools import QR_Reader
         import cv2
         gripper_height = norbert.get_gripper_height()
         img = ImageFunctions.capture_image(cam, gripper_height)

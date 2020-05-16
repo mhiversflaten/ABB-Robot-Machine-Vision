@@ -82,7 +82,8 @@ def gripper_camera_offset(rot):
 
 
 def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp=False, pucks_in_height=False):
-    """Combine all known offsets to make a robtarget on the work object.
+    """Complete a series of transformations to finally
+    create a robtarget of the puck's position from an image.
     """
 
     if pucks_in_height:

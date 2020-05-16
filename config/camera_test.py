@@ -1,7 +1,7 @@
-import config_independent
+from image_tools import Camera
 import cv2
 
-cam = config_independent.Camera()
+cam = Camera.Camera()
 cam.init()
 cam.set_parameters()
 cam.allocate_memory()

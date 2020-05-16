@@ -7,7 +7,6 @@ import json
 import math
 
 # Address used to organize ET elements
-
 namespace = '{http://www.w3.org/1999/xhtml}'
 
 
@@ -17,7 +16,7 @@ class RWS:
     but may hopefully prove useful otherwise as well.
     """
 
-    def __init__(self, base_url='http://152.94.0.38', username='Default User', password='robotics'):
+    def __init__(self, base_url, username='Default User', password='robotics'):
         self.base_url = base_url
         self.username = username
         self.password = password
@@ -63,26 +62,15 @@ class RWS:
         """
 
         resp = self.session.get(self.base_url +
-                                '/rw/motionsystem/mechunits/ROB_1/robtarget/?tool=tGripper&wobj=wobjTableN&coordinate=Wobj')
+                                '/rw/motionsystem/mechunits/ROB_1/robtarget/'
+                                '?tool=tGripper&wobj=wobjTableN&coordinate=Wobj&json=1')
+        json_string = resp.text
+        _dict = json.loads(json_string)
+        data = _dict["_embedded"]["_state"][0]
+        trans = [data["x"], data["y"], data["z"]]
+        rot = [data["q1"], data["q2"], data["q3"], data["q4"]]
 
-        root = ET.fromstring(resp.text)
-
-        if root.findall(".//{0}li[@class='ms-robtargets']".format(namespace)):
-            data = root.findall(".//{0}li[@class='ms-robtargets']/{0}span".format(namespace))
-            # Extract translation data
-            x = int(float(data[0].text))
-            y = int(float(data[1].text))
-            z = int(float(data[2].text))
-            trans = [x, y, z]
-
-            # Extract rotation data
-            a = float(data[3].text)
-            b = float(data[4].text)
-            c = float(data[5].text)
-            d = float(data[6].text)
-            rot = [a, b, c, d]
-
-            return trans, rot
+        return trans, rot
 
     def get_gripper_height(self):
         """Extracts only the height from gripper position.
@@ -307,7 +295,7 @@ class RWS:
         self.set_robtarget_translation("puck_target", trans)
 
 
-def quaternion_to_degrees(quaternion):
+def quaternion_to_radians(quaternion):
     """Convert a Quaternion to a rotation about the z-axis in degrees.
     """
     w, x, y, z = quaternion
@@ -338,8 +326,20 @@ def z_degrees_to_quaternion(rotation_z_degrees):
 
 
 def gripper_camera_offset(rot):
+    """Finds the offset between the camera and the gripper by using the gripper's orientation.
+        """
+
     r = 55  # Distance between gripper and camera
-    rotation_z_radians = quaternion_to_degrees(rot)
+
+    # Check if input is quaternion
+    if isinstance(rot, tuple):
+        if len(rot) == 4 and (isinstance(rot[0], int) or isinstance(rot[0], float)):
+            rotation_z_radians = quaternion_to_radians(rot)
+        else:
+            return
+    else:
+        # If input is not Quaternion, it should be int or float (an angle)
+        rotation_z_radians = rot
 
     offset_x = r * math.cos(rotation_z_radians)
     offset_y = r * math.sin(rotation_z_radians)

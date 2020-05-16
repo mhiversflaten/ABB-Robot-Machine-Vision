@@ -9,7 +9,7 @@ number_of_loops = 0
 class Camera:
     """The Camera class contains methods specifically meant for the University of Stavanger.
     These functions have only been tested on a IDS UI-1007XS-C camera, and might not work
-    correctly as intended on other models.
+    as intended on other models.
     """
 
     def __init__(self, cam_ID = 0):
