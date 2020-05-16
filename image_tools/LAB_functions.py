@@ -14,6 +14,16 @@ import time
 import OpenCV_to_RAPID
 
 
+def quaternion_to_radians(quaternion):
+    """Complete function to convert a Quaternion to a rotation about the z-axis in degrees.
+    """
+    w, x, y, z = quaternion
+    t1 = +2.0 * (w * z + x * y)
+    t2 = +1.0 - 2.0 * (y * y + z * z)
+    rotation_z = math.atan2(t1, t2)
+
+    return rotation_z
+
 def camera_adjustment(cam, robot):
     """Calculates the slope which represents how much the lens of the camera is angled.
     This is done by comparing two images taken from different heights.
@@ -131,7 +141,9 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1, p
     for _ in range(number_of_images):
 
         #########################################################
-        #        First, use your capture image function         #
+        #        First, use OpenCV to capture an image          #
+        #         or use your capture image function            #
+        #           if you prefer to use uEye API               #
         #########################################################
         # ----------------insert code here--------------------- #
         # TODO: De skal bruke OpenCV
@@ -171,6 +183,7 @@ def capture_image(cam, gripper_height):
     #        Calculate the working distance to pass         #
     #           into the calculate_focus function           #
     #             and finally capture an image              #
+    #                 (if using uEye API)                   #
     #########################################################
     # ----------------insert code here--------------------- #
 
@@ -204,14 +217,14 @@ def QR_Scanner(img):
     return puck_list
 
 
-def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp=False, pucks_in_height=False):
+def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp=False):
     """Combine all known offsets to make a robtarget on the work object.
     """
 
-    if pucks_in_height:
-        working_distance = ImageFunctions.approximate_stack(puck, gripper_height)
-
-    # Transform position depending on how the gripper is rotated
+    #########################################################
+    #  Transform position depending on rotation of gripper  #
+    #########################################################
+    # ----------------insert code here--------------------- #
     transform_position(gripper_rot=gripper_rot, puck=puck)
 
     # Converts puck position from pixels to millimeters
@@ -229,3 +242,15 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp
     puck.set_position(position=[puck.position[0] + cam_pos[0], puck.position[1] + cam_pos[1]])
 
     return puck
+
+
+def transform_position(puck):
+    """Transform coordinate system given by image in OpenCV to coordinate system of work object in RAPID by
+    swapping x & y coordinates and rotate by the same amount that the camera has been rotated.
+    """
+
+    #########################################################
+    #  Perform transformations to match RAPID coordinates   #
+    #########################################################
+    # ----------------insert code here--------------------- #
+    puck.set_position(position=[-puck.position[1], -puck.position[0]])
