@@ -1,7 +1,6 @@
 import os
 
 robtarget_pucks = []
-puck_to_RAPID = 0
 
 #########################################################
 #      First, use OpenCV to initialize the camera       #
@@ -129,10 +128,6 @@ while robot.is_running() and i < 25:  # Compare images 25 times
     #        (will be used later to calculate slope)        #
     #########################################################
     # ----------------insert code here--------------------- #
-    pos_low = robtarget_pucks[0].get_xyz()
-    print(f'Low robtarget: ({pos_low[0]:.1f},{pos_low[1]:.1f})')
-    robot.wait_for_rapid()
-    robtarget_pucks.clear()
 
     #########################################################
     #    Find puck (grab image) from a higher position      #
