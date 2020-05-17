@@ -1,12 +1,11 @@
 import os
+import numpy as np
 
 def camera_adjustment(cam, robot):
     """Calculates the slope which represents how much the lens of the camera is angled.
     This is done by comparing two images taken from different heights.
     """
     print("---Running camera_adjustment---")
-
-    abspath = os.path.abspath("image_tools/cam_adjustments.ini")
 
     adjustment_file = open('camera_adjustment_XS.txt', 'w')
 
