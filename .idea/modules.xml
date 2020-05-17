@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ABB-Klosser.iml" filepath="$PROJECT_DIR$/.idea/ABB-Klosser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ABB-Robot-Machine-Vision.iml" filepath="$PROJECT_DIR$/.idea/ABB-Robot-Machine-Vision.iml" />
     </modules>
   </component>
 </project>

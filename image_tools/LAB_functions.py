@@ -3,26 +3,7 @@ import configparser
 from image_tools import ImageFunctions
 import os
 import math
-import cv2
 import numpy as np
-from pyzbar.pyzbar import decode
-from pyzbar.wrapper import ZBarSymbol
-import Puck
-from image_tools import Camera
-from pyueye import ueye
-import time
-import OpenCV_to_RAPID
-
-
-def quaternion_to_radians(quaternion):
-    """Complete function to convert a Quaternion to a rotation about the z-axis in degrees.
-    """
-    w, x, y, z = quaternion
-    t1 = +2.0 * (w * z + x * y)
-    t2 = +1.0 - 2.0 * (y * y + z * z)
-    rotation_z = math.atan2(t1, t2)
-
-    return rotation_z
 
 def camera_adjustment(cam, robot):
     """Calculates the slope which represents how much the lens of the camera is angled.
@@ -133,11 +114,6 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1, p
     which can be sent to RobotWare.
     """
 
-    trans, gripper_rot = robot.get_gripper_position()
-    gripper_height = robot.get_gripper_height()
-
-    cam_pos = OpenCV_to_RAPID.get_camera_position(trans=trans, rot=gripper_rot)
-
     for _ in range(number_of_images):
 
         #########################################################
@@ -146,31 +122,17 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1, p
         #           if you prefer to use uEye API               #
         #########################################################
         # ----------------insert code here--------------------- #
-        # TODO: De skal bruke OpenCV
-        image = capture_image(cam=cam, gripper_height=gripper_height)
 
         #########################################################
         #          Scan the image with your QR_Scanner          #
-        #      Place the QR codes in a temporary puck list      #
+        #           Place the QR codes in a puck list           #
         #########################################################
         # ----------------insert code here--------------------- #
-        temp_puck_list = QR_Scanner(image)
-
-        # Check if the QR codes that were found have already been located previously.
-        # If so, remove them from the temporary list.
-        for puck in robtarget_pucks:
-            if any(puck == x for x in temp_puck_list):
-                temp_puck_list.remove(puck)
 
         #########################################################
-        #         Create robtargets for every new puck          #
+        #    Create robtargets for the new puck (or several)    #
         #########################################################
         # ----------------insert code here--------------------- #
-        for puck in temp_puck_list:
-            puck = OpenCV_to_RAPID.create_robtarget(gripper_height=gripper_height, gripper_rot=gripper_rot,
-                                                    cam_pos=cam_pos, image=image, puck=puck, cam_comp=cam_comp,
-                                                    pucks_in_height=pucks_in_height)
-            robtarget_pucks.append(puck)
 
     return robtarget_pucks
 
@@ -222,22 +184,17 @@ def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp
     """
 
     #########################################################
-    #  Transform position depending on rotation of gripper  #
+    #       Transform positions (create a function)         #
     #########################################################
     # ----------------insert code here--------------------- #
     transform_position(gripper_rot=gripper_rot, puck=puck)
 
-    # Converts puck position from pixels to millimeters
-    pixel_to_mm(gripper_height=gripper_height, puck=puck, image=image)
+    #########################################################
+    #      Convert from pixel to mm (create a function)     #
+    #########################################################
+    # ----------------insert code here--------------------- #
 
-    # TODO: De trenger ikke overshoot_comp
-    # Compensate for overshoot in 2D image
-    overshoot_comp(gripper_height=gripper_height, puck=puck)
-
-    # Compensate for possibly angled camera
-    if not cam_comp:
-        camera_compensation(gripper_height=gripper_height, gripper_rot=gripper_rot, puck=puck)
-
+    # TODO: How is this done for them (if not using Puck class)? Is this explained in LAB Assignment?
     # Add the offset from camera to gripper
     puck.set_position(position=[puck.position[0] + cam_pos[0], puck.position[1] + cam_pos[1]])
 

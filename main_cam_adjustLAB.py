@@ -82,7 +82,6 @@ while robot.is_running() and i < 25:  # Compare images 25 times
     #        (Combine all known offsets to make a robtarget)       #
     ################################################################
     #      Perform transformations to match RAPID coordinates      #
-    ################################################################
     #          As a good approximation we can say that:            #
     #  sensor width / FOV width = focal length / working distance  #
     ################################################################
