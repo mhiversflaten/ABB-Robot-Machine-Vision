@@ -63,7 +63,6 @@ while robot.is_running():  # Run script while RAPID execution is running
         #                        tips:                          #
         #    it might be smart to remove the found puck from    #
         #      the list to easily identify the "new" puck       #
-        #      if you want to be able to pick it up again       #
         #########################################################
         # ----------------insert code here--------------------- #
 
@@ -74,35 +73,20 @@ while robot.is_running():  # Run script while RAPID execution is running
         # ----------------insert code here--------------------- #
 
         #########################################################
-        #      Use the coordinated grabbed and transfer to      #
-        #      RAPID to be able to move closer to the puck      #
-        #                        tips:                          #
-        #    it might be smart to remove the found puck from    #
-        #      the list to easily identify the "new" puck       #
-        #      if you want to be able to pick it up again       #
+        #     Capture images until the puck is found again      #
+        #  this time with a close-up image for better accuracy  #
         #########################################################
         # ----------------insert code here--------------------- #
 
-        # Capture images until the puck is found again in the close-up image
-        while not any(pucknr == x.number for x in robtarget_pucks):
-            ImageFunctions.findPucks(cam, norbert, robtarget_pucks)
+        #########################################################
+        #    Extract the  coordinates again, and transfer to    #
+        #         RAPID to be able to pick up the puck          #
+        #                       tips:                           #
+        #    it might be smart to remove the found puck from    #
+        #      the list to easily identify the "new" puck       #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
-        # Extract the selected puck from the puck list -> puck_to_RAPID
-        for puck in robtarget_pucks:
-            if puck.number == pucknr:
-                puck_to_RAPID = puck
-                break
-
-        norbert.set_rapid_variable("gripper_angle", rotation)
-        offset_x, offset_y = OpenCV_to_RAPID.gripper_camera_offset(rot)
-        if forward_grip:
-            norbert.set_rapid_array("gripper_camera_offset", (offset_x, offset_y))
-        else:
-            norbert.set_rapid_array("gripper_camera_offset", (-offset_x, -offset_y))
-        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
-        norbert.set_rapid_variable("image_processed", "TRUE")  # Robot may pick and place selected puck
-
-        robtarget_pucks.remove(puck_to_RAPID)  # Remove puck so that it may be added to the list again later
     elif userinput == 0:
         print("Exiting Python program and turning off robot motors")
         robot.stop_RAPID()
