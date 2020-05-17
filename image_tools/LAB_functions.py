@@ -1,9 +1,4 @@
-import numpy as np
-import configparser
-from image_tools import ImageFunctions
 import os
-import math
-import numpy as np
 
 def camera_adjustment(cam, robot):
     """Calculates the slope which represents how much the lens of the camera is angled.
@@ -27,47 +22,54 @@ def camera_adjustment(cam, robot):
 
         #########################################################
         # First, find the puck that will be used for comparison #
+        #                 (create a function)                   #
+        #       make sure to tell RAPID that the image is       #
+        # processed after you have found and created robtargets #
         #########################################################
         # ----------------insert code here--------------------- #
 
-        while not robtarget_pucks:
-            ImageFunctions.findPucks(cam, robot, robtarget_pucks, cam_comp=True)
-        print("xyz:", robtarget_pucks[0].get_xyz())
+        #########################################################
+        #  Second, find the puck once again while closer to it  #
+        #           (use the created function again)            #
+        #########################################################
+        #  Retrieve the translation of the "low" robtarget puck #
+        #        (will be used later to calculate slope)        #
+        #########################################################
+        #       make sure to tell RAPID that the image is       #
+        # processed after you have found and created robtargets #
+        #                        tips:                          #
+        #    it might be smart to remove the found puck from    #
+        #      the list to easily identify the "new" puck       #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
-        robot.set_robtarget_translation("puck_target", robtarget_pucks[0].get_xyz())
-        robot.set_rapid_variable("image_processed", "TRUE")
+        #########################################################
+        #    Find puck (grab image) from a higher position      #
+        #       above the puck and convert to robtarget         #
+        #             (as done in previous steps)               #
+        #                        tips:                          #
+        #    it might be smart to remove the found puck from    #
+        #      the list to easily identify the "new" puck       #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
-        robtarget_pucks.clear()
+        #########################################################
+        # Retrieve the translation of the "high" robtarget puck #
+        #        (will be used later to calculate slope)        #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
-        robot.wait_for_rapid()
+        ###########################################################
+        #       Calculate the delta height, as well as the        #
+        #             delta in both x and y position              #
+        # (Compare the "high" robtarget with the "low" robtarget) #
+        ###########################################################
+        # -----------------insert code here---------------------- #
 
-        # Close-up image of puck (working distance = 100mm)
-        while not robtarget_pucks:
-            ImageFunctions.findPucks(cam, robot, robtarget_pucks, cam_comp=True)
-
-        robot.set_rapid_variable("image_processed", "TRUE")
-
-        pos_low = robtarget_pucks[0].get_xyz()
-        print(f'Low robtarget: ({pos_low[0]:.1f},{pos_low[1]:.1f})')
-
-        robot.wait_for_rapid()
-
-        robtarget_pucks.clear()
-
-        # Image of puck from a higher position (working distance = 540)
-        while not robtarget_pucks:
-            ImageFunctions.findPucks(cam, robot, robtarget_pucks, cam_comp=True)
-
-        pos_high = robtarget_pucks[0].get_xyz()
-        print(f'High robtarget: ({pos_high[0]:5.1f},{pos_high[1]:5.1f})')
-
-        delta_h = 540 - 100  # Heights are set in RAPID script
-        delta_x = pos_high[0] - pos_low[0]
-        delta_y = pos_high[1] - pos_low[1]
-        print(f'Delta: ({delta_x:5.1f}, {delta_y:5.1f})')
-
-        slope_x = delta_x / delta_h
-        slope_y = delta_y / delta_h
+        #########################################################
+        #       Find the slope in both x and y direction        #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
         # Write all slope values to .txt-file
         if robot.is_running():
@@ -75,38 +77,24 @@ def camera_adjustment(cam, robot):
 
     adjustment_file.close()
 
-    # Get all slope values and find the average
+    #########################################################
+    #    Use the slope values in the adjustment.txt file    #
+    #      and calculate the average slope in x and y       #
+    #########################################################
+    #        These slopes is what you will need to          #
+    #   "calibrate" the camera for more accurate picking    #
+    #########################################################
+    # ----------------insert code here--------------------- #
+
+    # This gathers the content from the txt file, and removes the file after
+    # If you do not want it removed, simply comment out the os.remove line
     contents = np.genfromtxt(r'camera_adjustment_XS.txt', delimiter=',')
     os.remove('camera_adjustment_XS.txt')
 
-    sum_slope_x = 0
-    sum_slope_y = 0
-    for content in contents:
-        sum_slope_x += content[0]
-        sum_slope_y += content[1]
-
-        # TODO: Find out why absolute value was used previously:
-        """
-        sum_slope_x += abs(content[0])
-        sum_slope_y += abs(content[1])"""
-
-    average_slope_x = sum_slope_x / len(contents)
-    average_slope_y = sum_slope_y / len(contents)
-
-    configfile_name = abspath
-
-    Config = configparser.ConfigParser()
-    Config.read(configfile_name)
-
-    cfgfile = open(configfile_name, 'w')
-
-    # Add content to the file
-    Config.set('SLOPE', 'slopex', f'{average_slope_x:.4f}')
-    Config.set('SLOPE', 'slopey', f'{average_slope_y:.4f}')
-    Config.write(cfgfile)
-
-    cfgfile.close()
-
+    #########################################################
+    #       Print or return the found average slopes        #
+    # these will be used to correct the camera for any tilt #
+    #########################################################
 
 def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1, pucks_in_height=False):
     """Finds all pucks in the frame of the camera by capturing an image and scanning the image for QR codes.
