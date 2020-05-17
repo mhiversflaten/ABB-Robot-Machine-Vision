@@ -16,9 +16,7 @@
 while robot.is_running():  # Run script while RAPID execution is running
     print("""
         Choose what to do:
-        1: *for you to choose*
-        2: *for you to choose*
-        3: *for you to choose*
+        1: Pick and place a single puck
         0: Exit
         """)
 
@@ -34,66 +32,56 @@ while robot.is_running():  # Run script while RAPID execution is running
 
         print("Pick and place a single puck")
 
-        norbert.set_rapid_variable("WPW", 1)  # Start same CASE in RAPID
-        norbert.wait_for_rapid()  # Robot goes to overview position
+        #########################################################
+        #     Start wanted case in RAPID and wait for RAPID     #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
-        # Capture X amount of images to ensure that all pucks are found
-        robtarget_pucks = ImageFunctions.findPucks(cam, norbert, robtarget_pucks, number_of_images=5)
+        #########################################################
+        #         Use or create a findPucks function to         #
+        #              find and create robtargets               #
+        #   If several pucks are to be found, try and capture   #
+        #  X amount of images to ensure all pucks are detected  #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
-        if not robtarget_pucks:
-            print('Could not find any pucks! Check exposure and focus values before trying again.')
-            continue
+        #########################################################
+        #               Figure out how to choose a              #
+        #              specified puck by user input             #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
-        # Sort pucks in ascending order
-        robtarget_pucks.sort(key=lambda x: x.number)
+        #########################################################
+        #       Extract the selected puck from the puck         #
+        #      list you created and retrieve its coordinates    #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
-        print("Found pucks: ", end='')
-        print(*robtarget_pucks, sep=', ')
+        #########################################################
+        #      Use the coordinates grabbed and transfer to      #
+        #      RAPID to be able to move closer to the puck      #
+        #                        tips:                          #
+        #    it might be smart to remove the found puck from    #
+        #      the list to easily identify the "new" puck       #
+        #      if you want to be able to pick it up again       #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
-        puck_numbers = []
-        for puck in robtarget_pucks:
-            puck_numbers.append(puck.number)
+        #########################################################
+        #       Choose where the puck should be moved to        #
+        # It can be a predefined position, or a user input one  #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
-        # Select puck that should be moved
-        while True:
-            print('Which puck should be moved? Options: "', end='')
-            print(*puck_numbers, sep='", "', end='"')
-            try:
-                pucknr = int(input(': '))
-            except ValueError:
-                print('Input must be an integer. Try again.')
-                continue
-            if pucknr in puck_numbers:  # Success
-                break
-            else:
-                print('Wrong input, please try again.')
-                continue
-
-        # Extract the selected puck from the puck list -> puck_to_RAPID
-        for puck in robtarget_pucks:
-            if puck.number == pucknr:
-                puck_to_RAPID = puck
-                break
-
-        rotation, forward_grip = puck_to_RAPID.check_collision(robtarget_pucks)
-        rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation)
-        norbert.set_rapid_variable("gripper_angle", rotation)
-        norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
-
-        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
-        norbert.set_rapid_variable("image_processed", "TRUE")  # Robot may move toward selected puck
-
-        robtarget_pucks.remove(puck_to_RAPID)  # Remove puck so that it may be added to the list again later
-
-        print('\nWhere should the puck be moved to? \nEnter x, y and z coordinates, '
-              'or leave empty to move to middle of work area.\n')
-
-        x = input("x: ")
-        y = input("y: ")
-        z = input("z: ")
-        norbert.set_robtarget_translation("put_puck_target", [x, y, z])
-
-        norbert.wait_for_rapid()  # Robot moves to close-up image position
+        #########################################################
+        #      Use the coordinated grabbed and transfer to      #
+        #      RAPID to be able to move closer to the puck      #
+        #                        tips:                          #
+        #    it might be smart to remove the found puck from    #
+        #      the list to easily identify the "new" puck       #
+        #      if you want to be able to pick it up again       #
+        #########################################################
+        # ----------------insert code here--------------------- #
 
         # Capture images until the puck is found again in the close-up image
         while not any(pucknr == x.number for x in robtarget_pucks):
@@ -115,7 +103,6 @@ while robot.is_running():  # Run script while RAPID execution is running
         norbert.set_rapid_variable("image_processed", "TRUE")  # Robot may pick and place selected puck
 
         robtarget_pucks.remove(puck_to_RAPID)  # Remove puck so that it may be added to the list again later
-
     elif userinput == 0:
         print("Exiting Python program and turning off robot motors")
         robot.stop_RAPID()
