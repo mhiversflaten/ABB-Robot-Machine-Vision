@@ -49,7 +49,7 @@ class Camera:
 
         # ...and set new exposure value from .ini-file
         config = configparser.ConfigParser()
-        config.read('image_tools/cam_adjustments.ini')
+        config.read('../image_tools/cam_adjustments.ini')
         exposure = float(config['EXPOSURE']['exposure'])
         newExposure = ueye.DOUBLE(exposure)
         ret = ueye.is_Exposure(self.hCam, ueye.IS_EXPOSURE_CMD_SET_EXPOSURE, newExposure, ueye.sizeof(newExposure))

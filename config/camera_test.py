@@ -1,5 +1,9 @@
-from image_tools import Camera
+from image_tools import Camera, ImageFunctions
+# importing required libraries of opencv
 import cv2
+
+# importing library for plotting
+from matplotlib import pyplot as plt
 
 cam = Camera.Camera()
 cam.init()
@@ -7,16 +11,17 @@ cam.set_parameters()
 cam.allocate_memory()
 cam.capture_video()
 
-fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-out = cv2.VideoWriter('output.avi', -1, 15.0, (640, 480))
+#img = ImageFunctions.capture_image(cam, 60)
+#img = ImageFunctions.QR_Scanner_visualized(img)
+img = cv2.imread("image.png")
+img = ImageFunctions.QR_Scanner_visualized(img)
+cv2.imwrite("bilateral.jpg", img)
+histr = cv2.calcHist([img], [0], None, [256], [0, 256])
 
-while True:
-    img = cam.get_image()
-    out.write(img)
-    cv2.imshow("test", img)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        cv2.destroyAllWindows()
-        break
+# show the plotting graph of an image
+plt.plot(histr)
+plt.show()
+#cv2.imshow("test", img)
+cv2.waitKey(0)
 
-out.release()
 cam.exit_camera()

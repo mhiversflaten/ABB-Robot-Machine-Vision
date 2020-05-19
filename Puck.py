@@ -89,8 +89,8 @@ class Puck:
         # Collision area/path (rectangle):
         x1 = - 95
         x2 = 30
-        y1 = - 67.5
-        y2 = 67.5
+        y1 = - 70 # -67.5
+        y2 = 70 # 67.5
 
         while True in collision_list:  # While there is still at least one collision
 

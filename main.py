@@ -175,6 +175,7 @@ while norbert.is_running():  # Run script while RAPID execution is running
 
             rotation, forward_grip = puck_to_RAPID.check_collision(robtarget_pucks)
             rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation)
+            puck_to_RAPID.angle -= rotation
 
             norbert.set_rapid_variable("gripper_angle", rotation)
             norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
