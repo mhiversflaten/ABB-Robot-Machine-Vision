@@ -68,7 +68,9 @@ class RWS:
         _dict = json.loads(json_string)
         data = _dict["_embedded"]["_state"][0]
         trans = [data["x"], data["y"], data["z"]]
+        trans = [float(i) for i in trans]
         rot = [data["q1"], data["q2"], data["q3"], data["q4"]]
+        rot = [float(i) for i in rot]
 
         return trans, rot
 

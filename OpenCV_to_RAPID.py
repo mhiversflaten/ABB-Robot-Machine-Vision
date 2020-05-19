@@ -68,7 +68,7 @@ def gripper_camera_offset(rot):
     r = 55  # Distance between gripper and camera
 
     # Check if input is quaternion
-    if isinstance(rot, tuple):
+    if isinstance(rot, list):
         if len(rot) == 4 and (isinstance(rot[0], int) or isinstance(rot[0], float)):
             rotation_z_radians = quaternion_to_radians(rot)
     else:
