@@ -196,7 +196,15 @@ class RWS:
         if resp.status_code == 204:
             print("RAPID execution started from main")
         else:
-            print("Could not start RAPID, maybe motors are turned off")
+            opmode = self.get_operation_mode()
+            ctrlstate = self.get_controller_state()
+
+            print(f"""
+            Could not start RAPID. Possible causes:
+            * Operating mode might not be AUTO. opmode: {opmode}.
+            * Motors might be turned off. ctrlstate: {ctrlstate}.
+            * RAPID might have write access. 
+            """)
 
     def stop_RAPID(self):
         """Stops RAPID execution.
@@ -228,6 +236,26 @@ class RWS:
             return True
         else:
             return False
+
+    def get_operation_mode(self):
+        """Gets the operation mode of the controller.
+        """
+
+        resp = self.session.get(self.base_url + "/rw/panel/opmode?json=1")
+        json_string = resp.text
+        _dict = json.loads(json_string)
+        data = _dict["_embedded"]["_state"][0]["opmode"]
+        return data
+
+    def get_controller_state(self):
+        """Gets the controller state.
+        """
+
+        resp = self.session.get(self.base_url + "/rw/panel/ctrlstate?json=1")
+        json_string = resp.text
+        _dict = json.loads(json_string)
+        data = _dict["_embedded"]["_state"][0]["ctrlstate"]
+        return data
 
     def set_speed_ratio(self, speed_ratio):
         """Sets the speed ratio of the controller.
@@ -282,7 +310,6 @@ class RWS:
         else:
             print('Could not set speeddata. Check that the variable name is correct')
 
-    # TODO: Check if this function works as intended
     def send_puck(self, puck_xyz, puck_angle, rotation_z=0, forward_grip=True):
         """Sets gripper angle, camera offset and puck target values chosen.
         If collision check, the variable rotation_z and forward grip may be updated

@@ -5,6 +5,12 @@ import OpenCV_to_RAPID
 import random
 import threading
 
+# Initialize communication with Norbert, start motors, and execute RAPID program
+norbert = RWS.RWS('http://152.94.0.38')  # Norbert's IP address
+norbert.request_mastership()
+norbert.start_RAPID()  # NB! Starts RAPID execution from main
+
+# Initialize uEye XS camera
 cam = Camera.Camera()
 cam.init()
 cam.set_parameters()
@@ -19,11 +25,7 @@ robtarget_pucks = []
 puck_to_RAPID = 0
 angle = 0
 
-# Initialize communication with Norbert, start motors, and execute RAPID program
-norbert = RWS.RWS('http://152.94.0.38')  # Norbert's IP address
-norbert.request_mastership()
-norbert.start_RAPID()  # NB! Starts RAPID execution from main
-norbert.wait_for_rapid()
+norbert.wait_for_rapid()  # Wait for robot to be in standard position (overview)
 
 while norbert.is_running():  # Run script while RAPID execution is running
     print("""
