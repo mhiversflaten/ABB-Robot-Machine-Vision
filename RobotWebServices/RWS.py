@@ -283,18 +283,20 @@ class RWS:
             print('Could not set speeddata. Check that the variable name is correct')
 
     # TODO: Check if this function works as intended
-    def send_puck(self, trans, rot=0, forward_grip=True):
+    def send_puck(self, puck_xyz, puck_angle, rotation_z=0, forward_grip=True):
         """Sets gripper angle, camera offset and puck target values chosen.
-        If collision check, the variable rot and forward grip may be updated
+        If collision check, the variable rotation_z and forward grip may be updated
         """
+        rotation_angle = puck_angle - rotation_z
 
-        self.set_rapid_variable("gripper_angle", rot)
-        offset_x, offset_y = gripper_camera_offset(rot)
+        self.set_rapid_variable("gripper_angle", rotation_z)
+        offset_x, offset_y = gripper_camera_offset(rotation_z)
         if forward_grip:
             self.set_rapid_array("gripper_camera_offset", (offset_x, offset_y))
         else:
             self.set_rapid_array("gripper_camera_offset", (-offset_x, -offset_y))
-        self.set_robtarget_translation("puck_target", trans)
+        self.set_robtarget_translation("puck_target", puck_xyz)
+        self.set_rapid_variable("puck_angle", rotation_angle)
 
 
 def quaternion_to_radians(quaternion):
@@ -329,7 +331,8 @@ def z_degrees_to_quaternion(rotation_z_degrees):
 
 def gripper_camera_offset(rot):
     """Finds the offset between the camera and the gripper by using the gripper's orientation.
-        """
+    Input must be Quaternion or rotation about the z-axis in degrees.
+    """
 
     r = 55  # Distance between gripper and camera
 
@@ -341,9 +344,10 @@ def gripper_camera_offset(rot):
             return
     else:
         # If input is not Quaternion, it should be int or float (an angle)
-        rotation_z_radians = rot
 
-    offset_x = r * math.cos(rotation_z_radians)
-    offset_y = r * math.sin(rotation_z_radians)
+        rotation_z_degrees = rot
+
+    offset_x = r * math.cos(math.radians(rotation_z_degrees))
+    offset_y = r * math.sin(math.radians(rotation_z_degrees))
 
     return offset_x, offset_y

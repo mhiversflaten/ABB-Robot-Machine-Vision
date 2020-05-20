@@ -96,11 +96,8 @@ while norbert.is_running():  # Run script while RAPID execution is running
                 break
 
         rotation, forward_grip = puck_to_RAPID.check_collision(robtarget_pucks)
-        rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation)
-        norbert.set_rapid_variable("gripper_angle", rotation)
-        norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
+        norbert.send_puck(puck_to_RAPID.get_xyz(), puck_to_RAPID.angle, rotation)
 
-        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
         norbert.set_rapid_variable("image_processed", "TRUE")  # Robot may move toward selected puck
 
         robtarget_pucks.remove(puck_to_RAPID)  # Remove puck so that it may be added to the list again later
@@ -125,13 +122,9 @@ while norbert.is_running():  # Run script while RAPID execution is running
                 puck_to_RAPID = puck
                 break
 
-        norbert.set_rapid_variable("gripper_angle", rotation)
-        offset_x, offset_y = OpenCV_to_RAPID.gripper_camera_offset(rot)
-        if forward_grip:
-            norbert.set_rapid_array("gripper_camera_offset", (offset_x, offset_y))
-        else:
-            norbert.set_rapid_array("gripper_camera_offset", (-offset_x, -offset_y))
-        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
+        rotation, forward_grip = puck_to_RAPID.check_collision(robtarget_pucks)
+        norbert.send_puck(puck_to_RAPID.get_xyz(), puck_to_RAPID.angle, rotation, forward_grip)
+
         norbert.set_rapid_variable("image_processed", "TRUE")  # Robot may pick and place selected puck
 
         robtarget_pucks.remove(puck_to_RAPID)  # Remove puck so that it may be added to the list again later
@@ -174,13 +167,8 @@ while norbert.is_running():  # Run script while RAPID execution is running
                     break
 
             rotation, forward_grip = puck_to_RAPID.check_collision(robtarget_pucks)
-            rot = OpenCV_to_RAPID.z_degrees_to_quaternion(rotation)
-            puck_to_RAPID.angle -= rotation
+            norbert.send_puck(puck_to_RAPID.get_xyz(), puck_to_RAPID.angle, rotation)
 
-            norbert.set_rapid_variable("gripper_angle", rotation)
-            norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
-            norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
-            norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
             norbert.set_rapid_variable("image_processed", "TRUE")
 
             robtarget_pucks.remove(puck_to_RAPID)  # Remove puck so that it may be added to the list again later
@@ -197,14 +185,9 @@ while norbert.is_running():  # Run script while RAPID execution is running
                     puck_to_RAPID = puck
                     break
 
-            #norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
-            norbert.set_rapid_variable("gripper_angle", rotation)
-            offset_x, offset_y = OpenCV_to_RAPID.gripper_camera_offset(rot)
-            if forward_grip:
-                norbert.set_rapid_array("gripper_camera_offset", (offset_x, offset_y))
-            else:
-                norbert.set_rapid_array("gripper_camera_offset", (-offset_x, -offset_y))
-            norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
+            rotation, forward_grip = puck_to_RAPID.check_collision(robtarget_pucks)
+            norbert.send_puck(puck_to_RAPID.get_xyz(), puck_to_RAPID.angle, rotation, forward_grip)
+
             norbert.set_rapid_variable("image_processed", "TRUE")
 
             robtarget_pucks.remove(puck_to_RAPID)  # Remove the puck from the list as we're done with it
@@ -255,12 +238,9 @@ while norbert.is_running():  # Run script while RAPID execution is running
                 # Increment number of loops for video display
                 Camera.number_of_loops += 1
                 print(Camera.number_of_loops)
-            rot = OpenCV_to_RAPID.z_degrees_to_quaternion(angle)
 
-            norbert.set_rapid_variable("puck_angle", puck_to_RAPID.angle)
-            norbert.set_robtarget_rotation_quaternion("puck_target", rot)
-            norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
-            norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
+            norbert.send_puck(puck_to_RAPID.get_xyz(), puck_to_RAPID.angle)
+
             norbert.set_rapid_variable("image_processed", "TRUE")
 
             # Remove the used puck from the list so it may be added once again next loop
