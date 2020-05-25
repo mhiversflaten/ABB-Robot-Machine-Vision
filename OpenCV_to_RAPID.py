@@ -34,7 +34,7 @@ def transform_position(gripper_rot, puck):
     puck.set_position(position=[-puck.position[1], -puck.position[0]])
 
     # Convert from quaternion to Euler angle (we only need z-axis)
-    rotation_z_radians = -quaternion_to_radians(gripper_rot)
+    rotation_z_radians = quaternion_to_radians(gripper_rot)
     rotation_z_degrees = math.degrees(rotation_z_radians)
     # TODO: Check if rotation is positive or negative for a given orientation
 
@@ -43,12 +43,13 @@ def transform_position(gripper_rot, puck):
     Also, adjust the angle of all pucks by using the orientation of the gripper:"""
 
     puck.set_position(position=
-                      [puck.position[0] * math.cos(rotation_z_radians) + puck.position[1] * math.sin(
+                      [puck.position[0] * math.cos(rotation_z_radians) - puck.position[1] * math.sin(
                           rotation_z_radians),
-                       -puck.position[0] * math.sin(rotation_z_radians) + puck.position[1] * math.cos(
+                       puck.position[0] * math.sin(rotation_z_radians) + puck.position[1] * math.cos(
                            rotation_z_radians)])
 
-    puck.set_angle(angle=puck.angle - rotation_z_degrees)
+    # The angle found by the QR scanner needs to take gripper rotation into consideration
+    puck.set_angle(angle=puck.angle + rotation_z_degrees)
 
 
 def get_camera_position(trans, rot):
@@ -81,13 +82,10 @@ def gripper_camera_offset(rot):
     return offset_x, offset_y
 
 
-def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp=False, pucks_in_height=False):
+def create_robtarget(gripper_height, gripper_rot, cam_pos, image, puck, cam_comp=False):
     """Complete a series of transformations to finally
     create a robtarget of the puck's position from an image.
     """
-
-    if pucks_in_height:
-        working_distance = ImageFunctions.approximate_stack(puck, gripper_height)
 
     # Transform position depending on how the gripper is rotated
     transform_position(gripper_rot=gripper_rot, puck=puck)

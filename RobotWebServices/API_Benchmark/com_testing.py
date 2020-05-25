@@ -17,7 +17,7 @@ class UserBehavior(TaskSet):
     def executionstate(self):
         """Get the state of the controller"""
 
-        self.client.get('/rw/rapid/execution?json=1', auth=HTTPDigestAuth(username='Default User', password='robotics'))
+        self.client.get('/rw/rapid/execution', auth=HTTPDigestAuth(username='Default User', password='robotics'))
 
     @task(1)
     def setrapidvariable(self):
@@ -36,7 +36,7 @@ class UserBehavior(TaskSet):
 
         locustvar = "locustvar"
         payload = {'value': 6}
-        self.client.get('/rw/rapid/symbol/data/RAPID/T_ROB1/' + locustvar + ';value?json=1',
+        self.client.get('/rw/rapid/symbol/data/RAPID/T_ROB1/' + locustvar + ';value',
                         auth=HTTPDigestAuth(username='Default User', password='robotics'), data=payload)
 
     @task(1)

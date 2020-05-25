@@ -156,7 +156,7 @@ while norbert.is_running():  # Run script while RAPID execution is running
 
         # Tell RAPID how many pucks were found
         norbert.set_rapid_variable("length", len(robtarget_pucks))
-        norbert.set_rapid_variable("image_processed", "TRUE")  # Start the for loop in RAPID
+        norbert.set_rapid_variable("image_processed", "TRUE")  # Start the for-loop in RAPID
 
         for _ in range(len(robtarget_pucks)):
 
@@ -316,60 +316,10 @@ while norbert.is_running():  # Run script while RAPID execution is running
             img = ImageFunctions.capture_image(cam, gripper_height)
             image_tools.ImageFunctions.QR_Scanner(img)
 
-    elif userinput == 11:
-        """Picking pucks from stacks"""
-        norbert.set_rapid_variable("WPW", 12)
-        norbert.wait_for_rapid()
-
-        while not robtarget_pucks:
-            ImageFunctions.findPucks(cam, norbert, robtarget_pucks, number_of_images=1, pucks_in_height=True)
-
-        for _ in range(len(robtarget_pucks)):
-
-            pucknr = min(int(x.number) for x in robtarget_pucks)
-
-            for puck in robtarget_pucks:
-                if puck.number == pucknr:
-                    puck_to_RAPID = puck
-                    break
-
-        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
-        norbert.set_rapid_variable("image_processed", "TRUE")
-        norbert.wait_for_rapid()
-        robtarget_pucks.remove(puck_to_RAPID)
-
-        while not robtarget_pucks:
-            ImageFunctions.findPucks(cam, norbert, robtarget_pucks, number_of_images=1, pucks_in_height=True)
-
-        for _ in range(len(robtarget_pucks)):
-
-            pucknr = min(int(x.number) for x in robtarget_pucks)
-
-            for puck in robtarget_pucks:
-                if puck.number == pucknr:
-                    puck_to_RAPID = puck
-                    break
-        print("height", puck_to_RAPID.height)
-
-        rot = OpenCV_to_RAPID.z_degrees_to_quaternion(0)
-        norbert.set_rapid_array("gripper_camera_offset", OpenCV_to_RAPID.gripper_camera_offset(rot))
-
-        norbert.set_robtarget_translation("puck_target", puck_to_RAPID.get_xyz())
-        norbert.set_rapid_variable("image_processed", "TRUE")
-        norbert.wait_for_rapid()
-        robtarget_pucks.remove(puck_to_RAPID)
-
     elif userinput == 0:
         print("Exiting Python program and turning off robot motors")
         norbert.stop_RAPID()
         norbert.motors_off()
-
-    elif userinput == 10000:
-        import cv2
-        gripper_height = norbert.get_gripper_height()
-        img = ImageFunctions.capture_image(cam, gripper_height)
-        img = image_tools.ImageFunctions.QR_Scanner_visualized(img)
-        cv2.imwrite('Scanned_puck.png', img)
 
     else:
         print("The chosen option is not valid. Try again.")
