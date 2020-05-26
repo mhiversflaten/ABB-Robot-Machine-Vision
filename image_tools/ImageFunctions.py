@@ -131,6 +131,9 @@ def showVideo(cam):
     """Continuously displays the robot's view in an OpenCV imshow window.
     """
     while True:
+        array = cam.get_image()
+        array = QR_Scanner_visualized(array)
+
         if Camera.repeatability_test:
             font = cv2.FONT_HERSHEY_SIMPLEX
             bottomLeftCornerOfText = (10, 50)
@@ -145,9 +148,6 @@ def showVideo(cam):
                         fontColor,
                         lineType)
 
-        array = cam.get_image()
-        array = QR_Scanner_visualized(array)
-        # array = cv2.resize(array,(0,0),fx=0.5, fy=0.5)
         cv2.imshow("Continuous video display", array)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
