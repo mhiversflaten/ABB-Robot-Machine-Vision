@@ -1,0 +1,49 @@
+MODULE Procedures
+
+    TASK PERS wobjdata wobjTableN:=[FALSE,TRUE,"",[[150,-500,8],[0.707106781,0,0,-0.707106781]],[[0,0,0],[1,0,0,0]]];
+    PERS tooldata tGripper:=[TRUE,[[0,0,114.25],[0,0,0,1]],[1,[-0.095984607,0.082520613,38.69176324],[1,0,0,0],0,0,0]];
+
+
+    PROC wait_for_python()
+        ! wait for python to finish processing image
+        WHILE NOT image_processed DO
+        ENDWHILE
+        image_processed:=FALSE;
+    ENDPROC
+
+
+    ! Pick up puck
+    PROC getPuckSmoothly(robtarget puck_position)
+
+        MoveL Offs(puck_position, -gripper_camera_offset{1}, -gripper_camera_offset{2}, gripHeight),vSpeed,z50,tGripper\WObj:=wobjTableN;
+	    MoveL Offs(puck_position, 0, 0, gripHeight),v400,fine,tGripper\WObj:=wobjTableN;
+        closeGripper(TRUE);
+        MoveL Offs(puck_position, 0, 0, gripHeight + 30),vSpeed,z5,tGripper\WObj:=wobjTableN;
+
+    ENDPROC
+
+
+    ! Place puck
+    PROC putPuckSmoothly(robtarget toTarget, num angle)
+
+        toTarget.rot := OrientZYX(-angle, 0, 180);
+        MoveJ Offs(toTarget, 0, 0, gripHeight + 30),vSpeed,z10,tGripper\WObj:=wobjTableN;
+        MoveJ Offs(toTarget, 0, 0, gripHeight + 10),vSpeed,z10,tGripper\WObj:=wobjTableN;
+        MoveL Offs(toTarget, 0, 0, gripHeight),v200,fine,tGripper\WObj:=wobjTableN;
+        closeGripper(FALSE);
+	    MoveJ Offs(toTarget, 0, 0, safeHeight),vSpeed,z5,tGripper\WObj:=wobjTableN;
+
+    ENDPROC
+
+
+    PROC closeGripper(bool state)
+        WaitTime 0.1;
+        IF state=TRUE THEN
+          setDO PneumaticGripper, 1;
+        ELSEIF state=FALSE THEN
+          setDO PneumaticGripper, 0;
+        ENDIF
+        WaitTime 0.2;
+    ENDPROC
+
+ENDMODULE

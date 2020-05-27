@@ -1,0 +1,86 @@
+MODULE PythonCom
+
+    VAR num WPW:=0;  ! What Python Wants
+    VAR num WRD:=0;  ! What RAPID Does
+    VAR bool ready_flag:= FALSE;  ! RAPID's ready flag
+    VAR bool image_processed:= FALSE;  ! Python's ready flag
+    CONST num gripHeight:= 10;
+    CONST num safeHeight:= 60;  ! Close-up image height
+
+    ! Where the selected puck is located
+    VAR robtarget puck_target := [[0,0,200],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+
+    VAR robtarget put_puck_target;  ! Target used to place puck
+    VAR num puck_angle;  ! Angle puck should be rotated (optional)
+
+    CONST robtarget middleOfTable:=[[0,0,0],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+
+    ! Overview image position
+    VAR robtarget overview:=[[0,0,500],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+
+    TASK PERS wobjdata wobjTableN:=[FALSE,TRUE,"",[[150,-500,8],[0.707106781,0,0,-0.707106781]],[[0,0,0],[1,0,0,0]]];
+    PERS tooldata tGripper:=[TRUE,[[0,0,114.25],[0,0,0,1]],[1,[-0.095984607,0.082520613,38.69176324],[1,0,0,0],0,0,0]];
+
+    PROC main()
+
+        closeGripper(FALSE);
+        MoveJ overview,v100,z10,tGripper\WObj:=wobjTableN;
+
+        ready_flag:=TRUE;
+
+        WHILE TRUE DO
+
+            IF WPW <> 0 THEN
+                WRD:=WPW;
+                WPW:=0;
+
+                TEST WRD
+
+                    CASE 1:
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !  Move a chosen puck  !
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !---insert code here---!
+
+                    CASE 2:
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !     Stack pucks      !
+                    !!!!!!!!!!!!!!!!!!!!!!!!
+                    !---insert code here---!
+
+                ENDTEST
+            ENDIF
+            WRD:=0;
+        ENDWHILE
+    ENDPROC
+
+
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ! Gather/Pick up puck function is needed !
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !------------insert code here------------!
+
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ! Place puck function is needed !
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !--------insert code here-------!
+
+    ! wait for python to finish processing image
+    PROC wait_for_python()
+        WHILE NOT image_processed DO
+        ENDWHILE
+        image_processed:=FALSE;
+    ENDPROC
+
+    ! Function to open / close the gripper
+    PROC closeGripper(bool state)
+        WaitTime 0.1;
+        IF state=TRUE THEN
+          setDO PneumaticGripper, 1;
+        ELSEIF state=FALSE THEN
+          setDO PneumaticGripper, 0;
+        ENDIF
+        WaitTime 0.2;
+    ENDPROC
+
+ENDMODULE
