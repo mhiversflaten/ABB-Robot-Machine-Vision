@@ -219,7 +219,7 @@ while norbert.is_running():  # Run script while RAPID execution is running
 
             # Set a random target to place the puck in
             random_target = [random.randint(-50, 150), random.randint(-150, 150), 0]
-            norbert.set_robtarget_translation("randomTarget", random_target)
+            norbert.set_robtarget_translation("put_puck_target", random_target)
 
             # Take up to 10 images of the work area
             image_counter = 0

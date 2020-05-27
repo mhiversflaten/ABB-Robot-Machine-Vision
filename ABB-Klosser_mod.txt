@@ -1,63 +1,35 @@
 MODULE Module1
-    VAR num WPW:=0;
-    VAR num WRD:=0;
-    VAR bool ready_flag:= FALSE;
-    VAR bool image_processed:= FALSE;
+    VAR num WPW:=0;  ! What Python Wants
+    VAR num WRD:=0;  ! What RAPID Does
+    VAR bool ready_flag:= FALSE;  ! RAPID's ready flag
+    VAR bool image_processed:= FALSE;  ! Python's ready flag
     CONST num gripHeight:= 10;
-    CONST num safeHeight:= 60; 
-    VAR num gripper_camera_offset{2};
-    VAR num gripper_angle:= 0;
-    VAR speeddata vSpeed:= v1000;
-    VAR zonedata zZone:= fine;
+    CONST num safeHeight:= 60;  ! Close-up image height
+    VAR num gripper_camera_offset{2};  ! Offsets for close-up image
+    VAR num gripper_angle:= 0;  ! Gripper orientation for close-up image and picking
+    VAR speeddata vSpeed:= v1000;  ! Speeddata generally used throughout the module
+    VAR zonedata zZone:= fine;  ! Zonedata generally used throughout the module
     
-    VAR num length;
+    VAR num length;  ! Used to determine number of loops in stack pucks (WPW=2)
 
-
-    ! Lage arrays for posisjon og orientering av alle pucker samlet.
-    ! Brukes i stackPucks
-    PERS robtarget puck_positions{30};
-    PERS num angles{30};
-    PERS num numberOfPucks:= 30;
-    
-    VAR triggdata slipp;
-    
+    ! Where the selected puck is located
     VAR robtarget puck_target := [[0,0,200],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-    VAR num offset_x;
-    VAR num offset_y;
-    VAR robtarget rob1;
-    PERS robtarget randomTarget;
-    PERS num image_height:=0;
-    
-    VAR robtarget gripper_target;
-    VAR robtarget get_puck_target;
-    VAR robtarget put_puck_target;
-    VAR num puck_angle;
 
-    VAR bool finished:=FALSE;
+    VAR robtarget put_puck_target;  ! Target used to place puck
+    VAR num puck_angle;  ! Angle puck should be rotated
 
     CONST robtarget middleOfTable:=[[0,0,0],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
+
+    ! Overview image position
     VAR robtarget overview:=[[0,0,60],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-    VAR robtarget focustarget:=[[0,0,500],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-    PERS robtarget puck_position:=[[-72.1875,35.9722,0],[0,1,0,0],[-1,0,0,0],[9E+9,9E+9,9E+9,9E+9,9E+9,9E+9]];
-    CONST robtarget testDist:=[[70,150,10],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-    CONST robtarget overview_part1:=[[0,0,500],[0,0.707106781,-0.707106781,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
 
     TASK PERS wobjdata wobjTableN:=[FALSE,TRUE,"",[[150,-500,8],[0.707106781,0,0,-0.707106781]],[[0,0,0],[1,0,0,0]]];
     PERS tooldata tGripper:=[TRUE,[[0,0,114.25],[0,0,0,1]],[1,[-0.095984607,0.082520613,38.69176324],[1,0,0,0],0,0,0]];
-    
-    CONST robtarget Target_60:=[[-86.867057946,441.301176976,912.5550923],[0.558791189,-0.251151105,-0.090047636,-0.785217774],[-1,-1,0,3],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-    CONST robtarget Target_50:=[[-420.301104886,-35.661665053,930.419426084],[0.55737407,0.258337239,0.091522215,-0.783721699],[-1,-1,0,3],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-    
-    CONST robtarget cinematic:=[[171.986689749,50.438126737,271.498391462],[0.106536626,-0.680456487,-0.095621918,-0.718669163],[-1,0,0,1],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-    TASK PERS wobjdata wobj1:=[FALSE,TRUE,"",[[112.028,-552.564,46.0331],[0.0384757,0.965828,0.256282,0.00395037]],[[0,0,0],[1,0,0,0]]];
-    TASK PERS wobjdata wobj2:=[FALSE,TRUE,"",[[358.806,-706.891,9.4084],[0.999993,-0.00268486,-0.00275756,-0.000113979]],[[0,0,0],[1,0,0,0]]];
-    
         
     
     PROC main()
         AccSet 100, 50 \FinePointRamp:=30;
         closeGripper(FALSE);
-        !overview.rot:=OrientZYX(120, 0, 180);
         MoveJ overview,vSpeed,z50,tGripper\WObj:=wobjTableN;
 
         ready_flag:=TRUE;
@@ -86,13 +58,8 @@ MODULE Module1
                     getPuckSmoothly puck_target;
                     
                     putPuckSmoothly put_puck_target, puck_angle;
-                    
-                                            
-                    
+
                     CASE 2:
-                    
-                    
-                    CASE 3:
                     ! Stack pucks
                     MoveJ overview,vSpeed,fine,tGripper\WObj:=wobjTableN;
                     ready_flag:=TRUE;
@@ -101,55 +68,26 @@ MODULE Module1
                     
                     FOR i FROM 0 TO length-1 DO
                         
-                    
-                    wait_for_python;
-                    ! Move to close-up image position. gripper_camera_offset ensures that the camera is perfectly above the subject.
-                    puck_target.rot := OrientZYX(gripper_angle, 0, 180);
-                    MoveJ Offs(puck_target, -gripper_camera_offset{1}, -gripper_camera_offset{2}, safeHeight),vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    !MoveL Offs(puck_target, -55, 0, safeHeight),vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    !ready_flag:=TRUE;
-                    
-                    wait_for_python;
-                    
-                    puck_target.rot := OrientZYX(gripper_angle, 0, 180);
-                    !MoveJ Offs(puck_target, -gripper_camera_offset{1}, -gripper_camera_offset{2}, safeHeight),vSpeed,z10,tGripper\WObj:=wobjTableN;
-                    getPuckSmoothly puck_target;
-                    
-                    MoveL Offs(puck_target, 0, 0, i*30 + gripHeight + 30),vSpeed,z5,tGripper\WObj:=wobjTableN;
-                    
-                    putPuckSmoothly Offs(middleOfTable, 0, 150, i*30), puck_angle;
-                    
-                    ready_flag:=TRUE;
-                    
+                        wait_for_python;
+                        ! Move to close-up image position. gripper_camera_offset ensures that the camera is perfectly above the subject.
+                        puck_target.rot := OrientZYX(gripper_angle, 0, 180);
+                        MoveJ Offs(puck_target, -gripper_camera_offset{1}, -gripper_camera_offset{2}, safeHeight),vSpeed,fine,tGripper\WObj:=wobjTableN;
+                        ready_flag:=TRUE;
+
+                        wait_for_python;
+
+                        puck_target.rot := OrientZYX(gripper_angle, 0, 180);
+                        getPuckSmoothly puck_target;
+
+                        MoveL Offs(puck_target, 0, 0, i*30 + gripHeight + 30),vSpeed,z5,tGripper\WObj:=wobjTableN;
+
+                        putPuckSmoothly Offs(middleOfTable, 0, 150, i*30), puck_angle;
+
+                        ready_flag:=TRUE;
+
                     ENDFOR
 
-                    CASE 4:
-                    
-                    ready_flag:=TRUE;
-                    
-                    wait_for_python;
-                    
-                    MoveL Offs(puck_target, -55, 0, 200),vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    
-                    ready_flag:=TRUE;
-                    
-                    CASE 5:
-
-                    MoveL overview,vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    
-                    wait_for_python;
-                    
-                    MoveL Offs(puck_target, -55, 0, safeHeight),vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    
-                    wait_for_python;
-                    
-                    MoveL Offs(puck_target, -55, 0, 500),vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    
-                    CASE 6:
+                    CASE 3:
                     ! Repeatability test
                     MoveJ overview,vSpeed,fine,tGripper\WObj:=wobjTableN;
                     ready_flag:=TRUE;
@@ -162,87 +100,11 @@ MODULE Module1
                     ready_flag:=TRUE;
                     
                     wait_for_python;
-                    
-                    !rob1 := CRobT(\Tool:=tGripper \Wobj:=wobjTableN);
-                    
-                    !getPuckSmoothly Offs(rob1, offset_x+50, offset_y, -120);
+
                     getPuckSmoothly puck_target;
-                    
-                    putPuckSmoothly randomTarget, puck_angle;
-                    
-                    CASE 7:
-                    ! Focus values
-                    MoveL focustarget,vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    
-                    CASE 9:
-                    MoveL overview,vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    
-                    wait_for_python;
-                    
-                    ! Move to close-up image position. gripper_camera_offset ensures that the camera is perfectly above the subject.
-                    MoveL Offs(puck_target, -gripper_camera_offset{1}, -gripper_camera_offset{2}, safeHeight),vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    
-                    wait_for_python;
-                    
-                    MoveL Offs(puck_target, -gripper_camera_offset{1}, -gripper_camera_offset{2}, safeHeight),vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    
-                    
-                    
-                    CASE 100:
-                    ! Move gripper somewhere
-                    
-                    MoveL gripper_target,vSpeed,zZone,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    
-                    CASE 101:
-                    ! Pick up a puck
-                    
-                    getPuckSmoothly puck_target;
-                    ready_flag:=TRUE;
-                    
-                    CASE 102:
-                    ! Place a puck
                     
                     putPuckSmoothly put_puck_target, puck_angle;
-                    ready_flag:=TRUE;
                     
-                    CASE 103:
-                    ! Throw puck
-                    MoveJ overview,vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    wait_for_python;
-                    
-                    MoveL Offs(puck_target, -55, 0, safeHeight),vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    
-                    wait_for_python;
-                    
-                    !rob1 := CRobT(\Tool:=tGripper \Wobj:=wobjTableN);
-                    
-                    !getPuckSmoothly Offs(rob1, offset_x+50, offset_y, -120);
-                    getPuckSmoothly puck_target;
-                    
-                    MoveJ Target_50,v500,z20,tGripper\WObj:=wobjTableN;
-                    TriggIO slipp, 0.3 \Time \DOp:= PneumaticGripper, 0;
-                    TriggJ Target_60,v500,slipp,fine,tGripper\WObj:=wobjTableN;
-                    
-                    CASE 12:
-                    ! Height
-                    MoveJ overview,vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    wait_for_python;
-
-                    MoveJ Offs(puck_target, -55, 0, 10),vSpeed,fine,tGripper\WObj:=wobjTableN;
-                    ready_flag:=TRUE;
-                    wait_for_python;
-                    
-                    getPuckSmoothly puck_target;
-                    
-                    
-            
                 ENDTEST
             ENDIF
             WRD:=0;
@@ -251,7 +113,8 @@ MODULE Module1
         ENDWHILE 
         
     ENDPROC
-    
+
+
     PROC wait_for_python()
         ! wait for python to finish processing image
         WHILE NOT image_processed DO
@@ -260,48 +123,30 @@ MODULE Module1
     ENDPROC
     
     
-    ! Plukke opp puck
+    ! Pick up puck
     PROC getPuckSmoothly(robtarget puck_position)
-        
-        !MoveJ Offs(puck_position, -100, 0, safeHeight),vSpeed,z50,tGripper\WObj:=wobjTableN; 
-        !MoveL Offs(puck_position, -50, 0, safeHeight),vSpeed,z100,tGripper\WObj:=wobjTableN;
+
         MoveL Offs(puck_position, -gripper_camera_offset{1}, -gripper_camera_offset{2}, gripHeight),vSpeed,z50,tGripper\WObj:=wobjTableN;
 	    MoveL Offs(puck_position, 0, 0, gripHeight),v400,fine,tGripper\WObj:=wobjTableN;
         closeGripper(TRUE);
-	    !MoveL Offs(puck_position, 0, 0, gripHeight),v100,fine,tGripper\WObj:=wobjTableN;
         MoveL Offs(puck_position, 0, 0, gripHeight + 30),vSpeed,z5,tGripper\WObj:=wobjTableN;
         
     ENDPROC
+
     
-    ! Plassere puck
+    ! Place puck
     PROC putPuckSmoothly(robtarget toTarget, num angle)
         
         toTarget.rot := OrientZYX(-angle, 0, 180);
         MoveJ Offs(toTarget, 0, 0, gripHeight + 30),vSpeed,z10,tGripper\WObj:=wobjTableN;
         MoveJ Offs(toTarget, 0, 0, gripHeight + 10),vSpeed,z10,tGripper\WObj:=wobjTableN;
-        !MoveJ Offs(toTarget, 0, 0, gripHeight+50),vSpeed,fine,tGripper\WObj:=wobjTableN;
         MoveL Offs(toTarget, 0, 0, gripHeight),v200,fine,tGripper\WObj:=wobjTableN;
         closeGripper(FALSE);        
 	    MoveJ Offs(toTarget, 0, 0, safeHeight),vSpeed,z5,tGripper\WObj:=wobjTableN;
         
     ENDPROC
     
-    PROC stackPucks()
-        
-        FOR puckNum FROM 1 TO numberOfPucks DO
-            MoveJ Offs(puck_positions{puckNum}, 0, 0, safeHeight), vSpeed, z50, tGripper\WObj:=wobjTableN;
-            ready_flag:=TRUE;
-            !WHILE NOT image_processed DO ! vent på Python
-            !ENDWHILE
-            !image_processed:= FALSE;
-            getPuckSmoothly puck_positions{puckNum};
-            putPuckSmoothly Offs(middleOfTable, 0, 0, 30*(puckNum-1)), angles{puckNum};
-            
-        ENDFOR
-        ! Flytt over puck og sett ready_flag:=1; Ta bilde og fortsett:
-        ! movePuckToMiddle puck_position;    
-    ENDPROC
-    
+
     PROC closeGripper(bool state)
         WaitTime 0.1;
         IF state=TRUE THEN
