@@ -10,15 +10,17 @@
 #########################################################
 #       Second, initialize robot communication,         #
 #       start motors and execute RAPID program          #
+#                 (Create RWS object)                   #
 #########################################################
 # ----------------insert code here--------------------- #
 
-while robot.is_running():  # Run script while RAPID execution is running
+while True:  # Run script indefinitely
     print("""
         Choose what to do:
         1: Pick and place a single puck
         0: Exit
         """)
+    # Program may be extended
 
     userinput = int(input('\nWhat should RAPID do?: '))
 
@@ -38,56 +40,56 @@ while robot.is_running():  # Run script while RAPID execution is running
         # ----------------insert code here--------------------- #
 
         #########################################################
-        #         Use or create a findPucks function to         #
-        #              find and create robtargets               #
-        #   If several pucks are to be found, try and capture   #
-        #  X amount of images to ensure all pucks are detected  #
+        #  Capture image, process it and scan it for QR codes   #
+        #     Do this several times if no QR code is found      #
         #########################################################
         # ----------------insert code here--------------------- #
 
         #########################################################
-        #               Figure out how to choose a              #
-        #              specified puck by user input             #
+        #    Create a robtarget from the QR codes' position     #
         #########################################################
         # ----------------insert code here--------------------- #
 
         #########################################################
-        #       Extract the selected puck from the puck         #
-        #      list you created and retrieve its coordinates    #
+        #               Send the robtarget to RAPID             #
         #########################################################
         # ----------------insert code here--------------------- #
 
         #########################################################
-        #      Use the coordinates grabbed and transfer to      #
-        #      RAPID to be able to move closer to the puck      #
-        #                        tips:                          #
-        #    it might be smart to remove the found puck from    #
-        #      the list to easily identify the "new" puck       #
+        #    Tell RAPID to move to a close-up image position    #
+        #               (Update flag variable)                  #
         #########################################################
         # ----------------insert code here--------------------- #
 
         #########################################################
-        #       Choose where the puck should be moved to        #
-        # It can be a predefined position, or a user input one  #
+        #       Wait for robot to reach close-up position       #
+        #  Capture image, process it and scan it for QR codes   #
+        #     Do this several times if no QR code is found      #
         #########################################################
         # ----------------insert code here--------------------- #
 
         #########################################################
-        #     Capture images until the puck is found again      #
-        #  this time with a close-up image for better accuracy  #
+        #         Create a (more accurate) robtarget            #
+        #            from the QR codes' position                #
         #########################################################
         # ----------------insert code here--------------------- #
 
         #########################################################
-        #    Extract the  coordinates again, and transfer to    #
-        #         RAPID to be able to pick up the puck          #
-        #                       tips:                           #
-        #    it might be smart to remove the found puck from    #
-        #      the list to easily identify the "new" puck       #
+        #               Send the robtarget to RAPID             #
+        #########################################################
+        # ----------------insert code here--------------------- #
+
+        #########################################################
+        #           Tell RAPID to pick up and place puck        #
+        #               (Update flag variable)                  #
         #########################################################
         # ----------------insert code here--------------------- #
 
     elif userinput == 0:
         print("Exiting Python program and turning off robot motors")
-        robot.stop_RAPID()
-        robot.motors_off()
+        #########################################################
+        #   Start RAPID execution and switch off robot motors   #
+        #                (Use RWS functions)                    #
+        #########################################################
+        # ----------------insert code here--------------------- #
+        break

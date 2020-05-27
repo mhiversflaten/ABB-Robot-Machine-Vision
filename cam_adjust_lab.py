@@ -1,4 +1,5 @@
 import os
+import numpy as np
 
 robtarget_pucks = []
 
@@ -12,6 +13,7 @@ robtarget_pucks = []
 #########################################################
 #       Second, initialize robot communication,         #
 #       start motors and execute RAPID program          #
+#                 (Create RWS object)                   #
 #########################################################
 # ----------------insert code here--------------------- #
 
@@ -32,7 +34,7 @@ adjustment_file = open('camera_adjustment_XS.txt', 'w')
 # ----------------insert code here--------------------- #
 
 i = 0
-while robot.is_running() and i < 25:  # Compare images 25 times
+while i < 5:  # Compare images 5 times
     i += 1
 
     #########################################################
@@ -40,106 +42,62 @@ while robot.is_running() and i < 25:  # Compare images 25 times
     #  remember to wait for RAPID after entering the case   #
     #########################################################
     # ----------------insert code here--------------------- #
-    robot.set_rapid_variable("WPW", 5)  # Start camera adjustment procedure in RAPID
-    robot.wait_for_rapid()
 
     #########################################################
-    #    Find the puck that will be used for comparison     #
-    #      If you find it difficult to detect a puck,       #
-    #   try and capture and check for QR-codes in a loop    #
-    #                 (overview position)                   #
-    #########################################################
-    #           Use OpenCV to capture an image              #
-    #         or use your capture image function            #
-    #           if you prefer to use uEye API               #
+    #  Capture image, process it and scan it for QR codes   #
+    #     Do this several times if no QR code is found      #
     #########################################################
     # ----------------insert code here--------------------- #
 
     #########################################################
-    #          Scan the image with your QR_Scanner          #
-    #           Place the QR code in a puck list            #
-    #########################################################
-    #  Reduce noise and increase the contrast in the image  #
+    #    Create a robtarget from the QR codes' position     #
     #########################################################
     # ----------------insert code here--------------------- #
 
     #########################################################
-    #              Decode the processed image               #
-    #  You can also sort them in ascending order if wanted  #
+    #               Send the robtarget to RAPID             #
     #########################################################
     # ----------------insert code here--------------------- #
 
     #########################################################
-    #  Make a loop to go through all QR codes, and extract  #
-    #   two corner points to be able to find the center.    #
-    #   Remember to update the Puck object and append the   #
-    #               puck to the puck_list                   #
-    #########################################################
-    # ----------------insert code here--------------------- #
-
-    ################################################################
-    #               Create robtargets for the puck                 #
-    #        (Combine all known offsets to make a robtarget)       #
-    ################################################################
-    #      Perform transformations to match RAPID coordinates      #
-    #          As a good approximation we can say that:            #
-    #  sensor width / FOV width = focal length / working distance  #
-    ################################################################
-    #        Here are some parameters from the XS camera:          #
-    ################################################################
-    focal_length = 3.7  # mm (+/- 5 percent)
-    sensor_width = 3.6288
-    resolution_width = image.shape[1]
-
-    #########################################################
-    #      With the help of the values above, and the       #
-    #   explanation in the assignment, convert the pixel    #
-    #     values to mm to be used in making a robtarget     #
-    #########################################################
-    #   Remember: Update the positions by multiplying the   #
-    #    found conversion with the found pixel position     #
-    #########################################################
-    # ----------------insert code here--------------------- #
-
-    # TODO: How is this done for them (if not using Puck class)? Is this explained in LAB Assignment?
-    # Add the offset from camera to gripper
-    puck.set_position(position=[puck.position[0] + cam_pos[0], puck.position[1] + cam_pos[1]])
-
-    #########################################################
-    #           Update robtarget and tell RAPID             #
-    #               that image is processed                 #
+    #    Tell RAPID to move to a close-up image position    #
+    #               (Update flag variable)                  #
     #########################################################
     # ----------------insert code here--------------------- #
 
     #########################################################
-    #    Do the same steps as above to find a puck once     #
-    #    again, the difference being this will be a more    #
-    #   accurate representation of the robtarget because    #
-    #  of the image being grabbed closer to the puck        #
-    #                        tips:                          #
-    #    it might be smart to remove the found puck from    #
-    #      the list to easily identify the "new" puck       #
+    #       Wait for robot to reach close-up position       #
+    #  Capture image, process it and scan it for QR codes   #
+    #     Do this several times if no QR code is found      #
     #########################################################
     # ----------------insert code here--------------------- #
 
     #########################################################
-    #  Retrieve the translation of the "low" robtarget puck #
+    #                Create a robtarget                     #
+    #            from the QR codes' position                #
+    #########################################################
+    # ----------------insert code here--------------------- #
+
+    #########################################################
+    #      Save the translation of the "low" robtarget      #
     #        (will be used later to calculate slope)        #
     #########################################################
     # ----------------insert code here--------------------- #
 
     #########################################################
-    #    Find puck (grab image) from a higher position      #
-    #       above the puck and convert to robtarget         #
-    #             (as done in previous steps)               #
-    #                        tips:                          #
-    #    it might be smart to remove the found puck from    #
-    #      the list to easily identify the "new" puck       #
+    #     Tell RAPID to go straight up to new height        #
+    #               (Update flag variable)                  #
     #########################################################
     # ----------------insert code here--------------------- #
 
     #########################################################
-    # Retrieve the translation of the "high" robtarget puck #
+    #  Again, capture an image and calculate the robtarget  #
+    #             (as done in previous steps)               #
+    #########################################################
+    # ----------------insert code here--------------------- #
+
+    #########################################################
+    #   Save the translation of the "high" robtarget puck   #
     #        (will be used later to calculate slope)        #
     #########################################################
     # ----------------insert code here--------------------- #
@@ -155,21 +113,14 @@ while robot.is_running() and i < 25:  # Compare images 25 times
     #       Find the slope in both x and y direction        #
     #########################################################
     # ----------------insert code here--------------------- #
+    slope_x = None
+    slope_y = None
 
     # Write all slope values to .txt-file
-    if robot.is_running():
-        adjustment_file.write(f'{slope_x:.4f},{slope_y:.4f}\n')
+    adjustment_file.write(f'{slope_x:.4f},{slope_y:.4f}\n')
 
 adjustment_file.close()
 
-#########################################################
-#    Use the slope values in the adjustment.txt file    #
-#      and calculate the average slope in x and y       #
-#########################################################
-#        These slopes is what you will need to          #
-#   "calibrate" the camera for more accurate picking    #
-#########################################################
-# ----------------insert code here--------------------- #
 contents = np.genfromtxt(r'camera_adjustment_XS.txt', delimiter=',')
 os.remove('camera_adjustment_XS.txt')
 
@@ -181,3 +132,5 @@ for content in contents:
 
 average_slope_x = sum_slope_x / len(contents)
 average_slope_y = sum_slope_y / len(contents)
+"""These slopes is what you will need to compensate for 
+the camera position error for more accurate picking."""
