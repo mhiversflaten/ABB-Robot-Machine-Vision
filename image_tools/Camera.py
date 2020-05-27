@@ -36,18 +36,19 @@ class Camera:
         if nRet != ueye.IS_SUCCESS:
             print("is_ResetToDefault ERROR")
 
-    def set_parameters(self):
+    def set_parameters(self, disable_exposure=True):
         # Change image format
         # formatID = ueye.UINT(5)  # Change image format to 2048x1536
         formatID = ueye.UINT(8)  # Change image format to 1280x960
         nRet = ueye.is_ImageFormat(self.hCam, ueye.IMGFRMT_CMD_SET_FORMAT, formatID, ueye.sizeof(formatID))
 
-        # Disable auto exposure...
-        dblEnable = ueye.DOUBLE(0)
-        dblDummy = ueye.DOUBLE(0)
-        ueye.is_SetAutoParameter(self.hCam, ueye.IS_SET_ENABLE_AUTO_SENSOR_GAIN_SHUTTER, dblEnable, dblDummy)
+        if disable_exposure:
+            # Disable auto exposure
+            dblEnable = ueye.DOUBLE(0)
+            dblDummy = ueye.DOUBLE(0)
+            ueye.is_SetAutoParameter(self.hCam, ueye.IS_SET_ENABLE_AUTO_SENSOR_GAIN_SHUTTER, dblEnable, dblDummy)
 
-        # ...and set new exposure value from .ini-file
+        # Set new exposure value from .ini-file
         config = configparser.ConfigParser()
         config.read('image_tools/cam_adjustments.ini')
         exposure = float(config['EXPOSURE']['exposure'])

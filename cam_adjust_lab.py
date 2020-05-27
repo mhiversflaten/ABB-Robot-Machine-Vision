@@ -12,7 +12,7 @@ robtarget_pucks = []
 
 #########################################################
 #       Second, initialize robot communication,         #
-#       start motors and execute RAPID program          #
+#              and execute RAPID program                #
 #                 (Create RWS object)                   #
 #########################################################
 # ----------------insert code here--------------------- #
