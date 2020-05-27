@@ -201,8 +201,8 @@ class RWS:
 
             print(f"""
             Could not start RAPID. Possible causes:
-            * Operating mode might not be AUTO. opmode: {opmode}.
-            * Motors might be turned off. ctrlstate: {ctrlstate}.
+            * Operating mode might not be AUTO. Current opmode: {opmode}.
+            * Motors might be turned off. Current ctrlstate: {ctrlstate}.
             * RAPID might have write access. 
             """)
 

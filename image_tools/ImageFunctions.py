@@ -120,8 +120,7 @@ def findPucks(cam, robot, robtarget_pucks, cam_comp=False, number_of_images=1, p
         # Create robtargets for every new puck
         for puck in temp_puck_list:
             puck = OpenCV_to_RAPID.create_robtarget(gripper_height=gripper_height, gripper_rot=gripper_rot,
-                                                    cam_pos=cam_pos, image=image, puck=puck, cam_comp=cam_comp,
-                                                    pucks_in_height=pucks_in_height)
+                                                    cam_pos=cam_pos, image=image, puck=puck, cam_comp=cam_comp)
             robtarget_pucks.append(puck)
 
     return robtarget_pucks
@@ -212,6 +211,6 @@ def QR_Scanner_visualized(img):
 
     for QR_Code in sorted_data:  # Go through all QR codes
         polygon = np.int32([QR_Code.polygon])  # Convert from int64 to int32, polylines only accepts int32
-        #cv2.polylines(normalized_img, polygon, True, color=(0, 0, 255), thickness=10)  # Draw lines around QR-codes
+        cv2.polylines(normalized_img, polygon, True, color=(0, 0, 255), thickness=10)  # Draw lines around QR-codes
 
     return normalized_img

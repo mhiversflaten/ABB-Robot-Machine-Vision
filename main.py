@@ -35,12 +35,9 @@ while norbert.is_running():  # Run script while RAPID execution is running
         3: Repeatability test
         4: Find correct exposure
         5: Camera adjustment
-        6: Focus testing
-        7: Change speeddata
-        8: Change zonedata
-        9: Change speed ratio 
-        10: QR Width
-        11: Picking pucks from stacks
+        6: Change speeddata
+        7: Change zonedata
+        8: Change speed ratio 
         0: Exit
         """)
 
@@ -140,7 +137,7 @@ while norbert.is_running():  # Run script while RAPID execution is running
         """
 
         print("Stack pucks")
-        norbert.set_rapid_variable("WPW", 3)
+        norbert.set_rapid_variable("WPW", 2)
         norbert.wait_for_rapid()  # Robot goes to overview position
 
         # Capture X amount of images to ensure all pucks are found
@@ -213,7 +210,7 @@ while norbert.is_running():  # Run script while RAPID execution is running
         while norbert.is_running():
 
             # Start Repeatability test CASE in RAPID
-            norbert.set_rapid_variable("WPW", 6)
+            norbert.set_rapid_variable("WPW", 3)
             # Robot goes to overview position and close-up image position every other loop:
             norbert.wait_for_rapid()
 
@@ -257,28 +254,12 @@ while norbert.is_running():  # Run script while RAPID execution is running
         camera_correction.camera_adjustment(cam, norbert)
 
     elif userinput == 6:
-        """Focus testing"""
-        i = 0
-        updated_z = 560
-        while norbert.is_running() and updated_z > -50:
-            updated_z = 550 - i * 15
-            i += 1
-            # Start focus values test in RAPID
-            norbert.set_robtarget_translation("focustarget", [0, 0, updated_z])
-            norbert.set_rapid_variable("WPW", 7)
-            norbert.wait_for_rapid()
-
-            gripper_height = norbert.get_gripper_height()
-            # Capture image
-            ImageFunctions.capture_image(cam, gripper_height)
-
-    elif userinput == 7:
         """Changes speeddata of vSpeed in RAPID"""
 
         new_speed = int(input("Enter new speed data:"))
         norbert.set_speeddata('vSpeed', new_speed)
 
-    elif userinput == 8:
+    elif userinput == 7:
         """Changes zonedata of zZone in RAPID"""
 
         print("Enter new zone data.")
@@ -290,31 +271,12 @@ while norbert.is_running():  # Run script while RAPID execution is running
 
         norbert.set_zonedata('zZone', new_zonedata)
 
-    elif userinput == 9:
+    elif userinput == 8:
         """Change speed ratio of the robot controller"""
 
         new_speed_ratio = int(input("Enter new speed ratio:"))
 
         norbert.set_speed_ratio(new_speed_ratio)
-
-    elif userinput == 10:
-        """Find all corner distances (px) for the QR-codes with different gripper height"""
-
-        i = 0
-        updated_z = 60  # Starting at gripper height
-        while norbert.is_running() and updated_z < 500:
-            updated_z = 60 + i * 5
-            print(updated_z)
-            i += 1
-            # Start focus values test in RAPID (using focustarget because it is already in RAPID program
-            norbert.set_robtarget_translation("focustarget", [0, 0, updated_z])
-            norbert.set_rapid_variable("WPW", 7)
-            norbert.wait_for_rapid()
-
-            gripper_height = norbert.get_gripper_height()
-            # Capture image
-            img = ImageFunctions.capture_image(cam, gripper_height)
-            image_tools.ImageFunctions.QR_Scanner(img)
 
     elif userinput == 0:
         print("Exiting Python program and turning off robot motors")

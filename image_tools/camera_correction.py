@@ -119,8 +119,6 @@ def find_correct_exposure(cam, robot):
     # TODO: Use several pucks to determine the best exposure times.
     #  Input amount of pucks and grade exposure values based on how many of the pucks are found each time
 
-    robot.set_rapid_variable("WPW", 10)
-
     abspath = os.path.abspath("image_tools/cam_adjustments.ini")
 
     value_pairs = []

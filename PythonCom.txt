@@ -1,4 +1,5 @@
-MODULE Module1
+MODULE PythonCom
+
     VAR num WPW:=0;  ! What Python Wants
     VAR num WRD:=0;  ! What RAPID Does
     VAR bool ready_flag:= FALSE;  ! RAPID's ready flag
@@ -9,7 +10,7 @@ MODULE Module1
     VAR num gripper_angle:= 0;  ! Gripper orientation for close-up image and picking
     VAR speeddata vSpeed:= v1000;  ! Speeddata generally used throughout the module
     VAR zonedata zZone:= fine;  ! Zonedata generally used throughout the module
-    
+
     VAR num length;  ! Used to determine number of loops in stack pucks (WPW=2)
 
     ! Where the selected puck is located
@@ -22,48 +23,48 @@ MODULE Module1
 
     ! Overview image position
     VAR robtarget overview:=[[0,0,500],[0,1,0,0],[-1,0,0,0],[9E+09,9E+09,9E+09,9E+09,9E+09,9E+09]];
-    
+
     PROC main()
         AccSet 100, 50 \FinePointRamp:=30;
         closeGripper(FALSE);
         MoveJ overview,vSpeed,z50,tGripper\WObj:=wobjTableN;
 
         ready_flag:=TRUE;
-        
-        WHILE TRUE DO        
-            
+
+        WHILE TRUE DO
+
             IF WPW <> 0 THEN
                 WRD:=WPW;
                 WPW:=0;
-            
+
                 TEST WRD
                     CASE 1:
                     ! Move a chosen puck
                     MoveJ overview,vSpeed,fine,tGripper\WObj:=wobjTableN;
                     ready_flag:=TRUE;
-                    
+
                     wait_for_python;
-                    
+
                     puck_target.rot := OrientZYX(gripper_angle, 0, 180);
                     MoveJ Offs(puck_target, -gripper_camera_offset{1}, -gripper_camera_offset{2}, safeHeight),vSpeed,fine,tGripper\WObj:=wobjTableN;
                     ready_flag:=TRUE;
-                    
+
                     wait_for_python;
                     puck_target.rot := OrientZYX(gripper_angle, 0, 180);
                     MoveJ Offs(puck_target, -gripper_camera_offset{1}, -gripper_camera_offset{2}, safeHeight),vSpeed,z10,tGripper\WObj:=wobjTableN;
                     getPuckSmoothly puck_target;
-                    
+
                     putPuckSmoothly put_puck_target, puck_angle;
 
                     CASE 2:
                     ! Stack pucks
                     MoveJ overview,vSpeed,fine,tGripper\WObj:=wobjTableN;
                     ready_flag:=TRUE;
-                    
+
                     wait_for_python;
-                    
+
                     FOR i FROM 0 TO length-1 DO
-                        
+
                         wait_for_python;
                         ! Move to close-up image position. gripper_camera_offset ensures that the camera is perfectly above the subject.
                         puck_target.rot := OrientZYX(gripper_angle, 0, 180);
@@ -87,27 +88,42 @@ MODULE Module1
                     ! Repeatability test
                     MoveJ overview,vSpeed,fine,tGripper\WObj:=wobjTableN;
                     ready_flag:=TRUE;
-                    
+
                     wait_for_python;
-                    
+
                     ! Move to close-up image position. gripper_camera_offset ensures that the camera is perfectly above the subject.
                     puck_target.rot := OrientZYX(140, 0, 180);
                     MoveJ Offs(puck_target, -gripper_camera_offset{1}, -gripper_camera_offset{2}, safeHeight),vSpeed,fine,tGripper\WObj:=wobjTableN;
                     ready_flag:=TRUE;
-                    
+
                     wait_for_python;
 
                     getPuckSmoothly puck_target;
-                    
+
                     putPuckSmoothly put_puck_target, puck_angle;
-                    
+
+                    CASE 5:
+                    ! Camera adjustment
+                    MoveL overview,vSpeed,fine,tGripper\WObj:=wobjTableN;
+                    ready_flag:=TRUE;
+
+                    wait_for_python;
+
+                    MoveL Offs(puck_target, -55, 0, safeHeight),vSpeed,fine,tGripper\WObj:=wobjTableN;
+                    ready_flag:=TRUE;
+
+                    wait_for_python;
+
+                    MoveL Offs(puck_target, -55, 0, 500),vSpeed,fine,tGripper\WObj:=wobjTableN;
+                    ready_flag:=TRUE;
+
                 ENDTEST
             ENDIF
             WRD:=0;
-            
-            
-        ENDWHILE 
-        
+
+
+        ENDWHILE
+
     ENDPROC
-    
+
 ENDMODULE
