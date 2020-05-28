@@ -15,7 +15,7 @@ $ pip install
 
 ::
 
-    pip install RWS-UiS
+    pip install rwsuis
 
 Get the source code
 ^^^^^^^^^^^^^^^^^^^

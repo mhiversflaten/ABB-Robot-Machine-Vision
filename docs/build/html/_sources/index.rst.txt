@@ -25,9 +25,8 @@ User Guide
    help
 
 
-Indices and tables
-==================
+Indices
+=======
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`

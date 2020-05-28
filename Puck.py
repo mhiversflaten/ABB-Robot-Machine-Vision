@@ -11,16 +11,13 @@ class Puck:
     puck number
     puck position (x,y)
     puck angle
-    puck QR width
     puck height
     """
 
-    def __init__(self, number, position, angle, qr_width, height=30):
-        self.number = number
+    def __init__(self, number, position, angle, height=30):
         self.set_number(number)
         self.set_position(position)
         self.set_angle(angle)
-        self.qr_width = qr_width
         self.set_height(height)
 
     def __eq__(self, other):
@@ -89,8 +86,8 @@ class Puck:
         # Collision area/path (rectangle):
         x1 = - 95
         x2 = 30
-        y1 = - 70 # -67.5
-        y2 = 70 # 67.5
+        y1 = - 70  # -67.5
+        y2 = 70  # 67.5
 
         while True in collision_list:  # While there is still at least one collision
 

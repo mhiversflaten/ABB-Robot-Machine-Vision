@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Need Help?" href="help.html" />
-    <link rel="prev" title="OpenCV_to_RAPID.py" href="opencvtorapid.html" />
+    <link rel="prev" title="OpenCV_to_RAPID.py" href="opencv_to_rapid.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -38,6 +38,50 @@
 <dt id="Puck">
 <em class="property">class </em><code class="sig-name descname">Puck</code><span class="sig-paren">(</span><em class="sig-param">number</em>, <em class="sig-param">position</em>, <em class="sig-param">angle</em>, <em class="sig-param">height=30</em><span class="sig-paren">)</span><a class="headerlink" href="#Puck" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
+<dt id="Puck.set_position">
+<code class="sig-name descname">set_position</code><span class="sig-paren">(</span><em class="sig-param">position</em><span class="sig-paren">)</span><a class="headerlink" href="#Puck.set_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates <a class="reference internal" href="#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>position</strong> (<em>float</em><em>[</em><em>]</em>) – New <a class="reference internal" href="#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> position [x,y]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Puck.set_angle">
+<code class="sig-name descname">set_angle</code><span class="sig-paren">(</span><em class="sig-param">angle</em><span class="sig-paren">)</span><a class="headerlink" href="#Puck.set_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates <a class="reference internal" href="#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> angle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>angle</strong> (<em>float</em><em>[</em><em>]</em>) – New <a class="reference internal" href="#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> angle</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Puck.set_height">
+<code class="sig-name descname">set_height</code><span class="sig-paren">(</span><em class="sig-param">height</em><span class="sig-paren">)</span><a class="headerlink" href="#Puck.set_height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates <a class="reference internal" href="#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> height.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>height</strong> (<em>float</em><em>[</em><em>]</em>) – New <a class="reference internal" href="#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> height</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="Puck.get_xyz">
+<code class="sig-name descname">get_xyz</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Puck.get_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets true position of <a class="reference internal" href="#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> ([x,y,z] on the work object).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> position [x,y,z]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="Puck.check_collision">
 <code class="sig-name descname">check_collision</code><span class="sig-paren">(</span><em class="sig-param">puck_list</em><span class="sig-paren">)</span><a class="headerlink" href="#Puck.check_collision" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds an angle of rotation for the gripper which avoids
@@ -81,9 +125,8 @@ when sliding in to pick up a puck.</p>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="robotwebservices.html">Robot Web Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="camera.html">Camera class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="imagefunctions.html">Image Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="opencvtorapid.html">OpenCV_to_RAPID.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="opencv_to_rapid.html">OpenCV_to_RAPID.py</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Puck Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="help.html">Need Help?</a></li>
 </ul>
@@ -92,7 +135,7 @@ when sliding in to pick up a puck.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="opencvtorapid.html" title="previous chapter">OpenCV_to_RAPID.py</a></li>
+      <li>Previous: <a href="opencv_to_rapid.html" title="previous chapter">OpenCV_to_RAPID.py</a></li>
       <li>Next: <a href="help.html" title="next chapter">Need Help?</a></li>
   </ul></li>
 </ul>

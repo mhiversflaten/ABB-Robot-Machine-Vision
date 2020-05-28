@@ -14,7 +14,7 @@ RWS Class
 ^^^^^^^^^
 
 Take full control of ABB robots through HTTP requests, made easy with the RWS class.
-Operating mode should be automatic.
+Robot operating mode should be automatic.
 
 ::
 
@@ -102,6 +102,13 @@ Operating mode should be automatic.
 
         :param str var: Name of robtarget variable as declared in RAPID
         :param int rotation_z_degrees: Rotation in degrees
+
+    .. py:method:: set_robtarget_rotation_quaternion(self, var, rotation_quaternion)
+
+        Updates the orientation of a robtarget variable in RAPID by a Quaternion.
+
+        :param str var: Name of robtarget variable as declared in RAPID
+        :param tuple rotation_quaternion: Wanted robtarget orientation. Must be a Quaternion (tuple of length 4)
 
     .. py:method:: get_robtarget_variables(self, var)
 

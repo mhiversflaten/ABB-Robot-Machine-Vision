@@ -39,7 +39,7 @@ is pip installable and includes all functions provided in this section.</p>
 <div class="section" id="rws-class">
 <span id="rws"></span><h2>RWS Class<a class="headerlink" href="#rws-class" title="Permalink to this headline">¶</a></h2>
 <p>Take full control of ABB robots through HTTP requests, made easy with the RWS class.
-Operating mode should be automatic.</p>
+Robot operating mode should be automatic.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span> <span class="o">=</span> <span class="n">RWS</span><span class="o">.</span><span class="n">RWS</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;robot_IP&#39;</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;pass&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">request_mastership</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">motors_on</span><span class="p">()</span>
@@ -167,6 +167,20 @@ in RAPID by rotation about the z-axis in degrees.
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>var</strong> (<em>str</em>) – Name of robtarget variable as declared in RAPID</p></li>
 <li><p><strong>rotation_z_degrees</strong> (<em>int</em>) – Rotation in degrees</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="RWS.set_robtarget_rotation_quaternion">
+<code class="sig-name descname">set_robtarget_rotation_quaternion</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em>, <em class="sig-param">rotation_quaternion</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS.set_robtarget_rotation_quaternion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the orientation of a robtarget variable in RAPID by a Quaternion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong> (<em>str</em>) – Name of robtarget variable as declared in RAPID</p></li>
+<li><p><strong>rotation_quaternion</strong> (<em>tuple</em>) – Wanted robtarget orientation. Must be a Quaternion (tuple of length 4)</p></li>
 </ul>
 </dd>
 </dl>

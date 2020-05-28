@@ -47,7 +47,7 @@ OpenCV_to_RAPID.py
 
     Compensate for an angled camera view. Different cameras will be
     angled differently both internally and externally when mounted to a surface.
-    The slope values must first be calculated by running camera_adjustment.py.
+    The slope values must first be calculated by running *camera_adjustment*.
     Works with any camera orientation.
 
     :param float gripper_height: Height of gripper above work object
