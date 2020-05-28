@@ -1,8 +1,22 @@
+.. _RobotWebServices:
+
 Robot Web Services
 ==================
 
+This section covers the communication between Python and *RobotWare*. A package, rwsuis_,
+is pip installable and includes all functions provided in this section.
+
+.. _rwsuis: https://pypi.org/project/rwsuis/
+
+.. _RWS:
+
+RWS Class
+^^^^^^^^^
+
 Take full control of ABB robots through HTTP requests, made easy with the RWS class.
-Operating mode should be automatic::
+Robot operating mode should be automatic.
+
+::
 
     >>> robot = RWS.RWS(base_url='robot_IP', username='user', password='pass')
     >>> robot.request_mastership()
@@ -10,8 +24,6 @@ Operating mode should be automatic::
     Robot motors turned on
     >>> robot.start_rapid()
     RAPID execution started from main
-
-.. _RWS:
 
 .. py:class:: RWS(base_url, username, password)
 
@@ -91,6 +103,13 @@ Operating mode should be automatic::
         :param str var: Name of robtarget variable as declared in RAPID
         :param int rotation_z_degrees: Rotation in degrees
 
+    .. py:method:: set_robtarget_rotation_quaternion(self, var, rotation_quaternion)
+
+        Updates the orientation of a robtarget variable in RAPID by a Quaternion.
+
+        :param str var: Name of robtarget variable as declared in RAPID
+        :param tuple rotation_quaternion: Wanted robtarget orientation. Must be a Quaternion (tuple of length 4)
+
     .. py:method:: get_robtarget_variables(self, var)
 
         Gets translational and rotational data of a robtarget variable in RAPID
@@ -98,8 +117,7 @@ Operating mode should be automatic::
         :param str var: Name of robtarget variable as declared in RAPID
 
         :return: Translational data of robtarget [x,y,z]
-        :return: Rotational data of robtarget (Quaternion: [w,x,y,z])
-        See quaternion_to_euler.
+        :return: Rotational data of robtarget (Quaternion: [w,x,y,z]).
 
     .. py:method:: get_gripper_position(self)
 
@@ -107,8 +125,7 @@ Operating mode should be automatic::
         with respect to the work object 'wobjTableN'.
 
         :return: Translational data of gripper [x,y,z]
-        :return: Rotational data of gripper (Quaternion: [w,x,y,z]).
-        See quaternion_to_euler
+        :return: Rotational data of gripper (Quaternion: [w,x,y,z])
 
     .. py:method:: get_gripper_height(self)
 

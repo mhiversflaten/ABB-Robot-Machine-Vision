@@ -1,21 +1,20 @@
 Installation
 ============
 
-This documentation covers two different packages; IDS-XS-TOOLS-UiS_ & RWS-UiS_.
+This documentation covers the source code used in a demonstration program at the University of Stavanger.
+This includes a pip installable package, rwsuis_, which is covered in :ref:`RobotWebServices`.
 
-.. _IDS-XS-TOOLS-UiS: https://pypi.org/project/IDS-XS-TOOLS-UiS/
-.. _RWS-UiS: https://pypi.org/project/RWS-UiS/
+.. _rwsuis: https://pypi.org/project/rwsuis/
 
-Here are the different ways of acquiring the software packages.
+Here are the different ways of acquiring the software.
 
 $ pip install
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
 
-| To install the packages, simply run these commands in your terminal of choice:
+| To install the rwsuis_ package, simply run this command in your terminal of choice:
 
 ::
 
-    pip install IDS-XS-TOOLS-UiS
     pip install RWS-UiS
 
 Get the source code
@@ -26,5 +25,3 @@ Get the source code
 ::
 
     git clone https://github.com/prinsWindy/ABB-Robot-Machine-Vision.git
-
-

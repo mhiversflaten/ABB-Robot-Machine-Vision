@@ -8,33 +8,38 @@ These tools utilize IDS's Python bindings for the uEye API: PyuEye_.
 .. _PyuEye: https://pypi.org/project/pyueye/
 .. _uEye cameras: https://en.ids-imaging.com/
 
-Scanning QR Codes
-^^^^^^^^^^^^^^^^^
+Camera Class
+^^^^^^^^^^^^
 
-.. py:function:: QR_Scanner(img)
+.. py:class:: Camera(cam_ID=0)
 
-    Filters and normalizes the input image. The processed image is decoded using pyzbar_.
-    For every QR code detected, a :py:class:`Puck` object is created.
+    The Camera class contains methods specifically meant for the University of Stavanger.
+    These functions have only been tested on a IDS UI-1007XS-C camera, and might not work
+    as intended on other models.
 
-    :param ndarray img: An image
+Quickstart
+**********
 
-    :return: A list of :py:class:`Puck` objects
+.. code-block:: python
 
-The QR scanner function uses software from ZBar_ through pyzbar_. The image passed to the
-function is first filtered and transformed into a normalized grayscale image. The grayscale
-image is decoded by ZBar to extract information from QR codes in the image.
+    # Initialization
+    cam = Camera()
+    cam.init()
+    cam.set_parameters()
+    cam.allocate_memory()
+    cam.capture_video()
 
-.. py:function:: QR_Scanner_visualized(img)
+    # Show video
+    img = cam.get_image()
+    cv2.imshow("Quickstart", img)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        cv2.destroyAllWindows()
+        break
 
-    Filters and normalizes the input image. The processed image is decoded using pyzbar_.
-    QR codes found in the image are marked with red squares for display.
+    cam.exit_camera()
 
-    :param ndarray img: An image
-
-    :return: Image for display
-
-.. _ZBar: http://zbar.sourceforge.net/
-.. _pyzbar: https://pypi.org/project/pyzbar/
+The parameters set are not currently configurable through method inputs.
+They are specifically set for laboratory work at the University of Stavanger.
 
 
 Capturing Images and Video
@@ -98,3 +103,32 @@ Capturing Images and Video
         the attempt to find all pucks
 
     :return: A list with all found pucks, without duplicates
+
+
+Scanning QR Codes
+^^^^^^^^^^^^^^^^^
+
+.. py:function:: QR_Scanner(img)
+
+    Filters and normalizes the input image. The processed image is decoded using pyzbar_.
+    For every QR code detected, a :py:class:`Puck` object is created.
+
+    :param ndarray img: An image
+
+    :return: A list of :py:class:`Puck` objects
+
+The QR scanner function uses software from ZBar_ through pyzbar_. The image passed to the
+function is first filtered and transformed into a normalized grayscale image. The grayscale
+image is decoded by ZBar to extract information from QR codes in the image.
+
+.. py:function:: QR_Scanner_visualized(img)
+
+    Filters and normalizes the input image. The processed image is decoded using pyzbar_.
+    QR codes found in the image are marked with red squares for display.
+
+    :param ndarray img: An image
+
+    :return: Image for display
+
+.. _ZBar: http://zbar.sourceforge.net/
+.. _pyzbar: https://pypi.org/project/pyzbar/

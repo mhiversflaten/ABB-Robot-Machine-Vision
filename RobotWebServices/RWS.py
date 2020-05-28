@@ -1,6 +1,5 @@
 from requests.auth import HTTPDigestAuth
 from requests import Session
-import xml.etree.ElementTree as ET
 import ast
 import time
 import json

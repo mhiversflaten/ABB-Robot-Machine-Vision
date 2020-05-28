@@ -7,4 +7,59 @@ OpenCV_to_RAPID.py
     These transformations are based on the setup at the University of Stavanger, and with a specific RobotStudio setup
     (in regards to coordinate systems). This `Pack and Go`_ file includes this setup.
 
+    :param float gripper_height: Height of gripper above work object
+    :param tuple gripper_rot: Orientation of gripper, must be a Quaternion (tuple of length 4)
+    :param float[] cam_pos: Camera position [x,y]
+    :param ndarray image: An image
+    :param Puck puck: A :py:class:`Puck` object
+    :param bool cam_comp: Running camera_adjustment?
+
+    :return: A :py:class:`Puck` object with robtarget as position
+
 .. _Pack and Go: http://www.ux.uis.no/~karlsk/ELE610/UiS_E458_nov18.rspag
+
+.. py:function:: transform_position(gripper_rot, puck)
+
+    Transform coordinate system given by image in OpenCV to coordinate system of work object in RAPID.
+    Swap x & y coordinates and rotate by the same amount that the camera has been rotated.
+
+    :param tuple gripper_rot: Orientation of gripper, must be a Quaternion (tuple of length 4)
+    :param Puck puck: A :py:class:`Puck` object
+
+.. py:function:: pixel_to_mm(gripper_height, puck, image)
+
+    Converts coordinates in image from pixels to millimeters.
+    This depends on the camera's working distance.
+
+    :param float gripper_height: Height of gripper above work object
+    :param Puck puck: A :py:class:`Puck` object
+    :param ndarray image: An image
+
+.. py:function:: overshoot_comp(gripper_height, puck)
+
+    Compensate for the overshoot phenomenon which occurs when trying to pinpoint
+    the location of a 3D object in a 2D image.
+
+    :param float gripper_height: Height of gripper above work object
+    :param Puck puck: A :py:class:`Puck` object
+
+.. py:function:: camera_compensation(gripper_height, gripper_rot, puck)
+
+    Compensate for an angled camera view. Different cameras will be
+    angled differently both internally and externally when mounted to a surface.
+    The slope values must first be calculated by running camera_adjustment.py.
+    Works with any camera orientation.
+
+    :param float gripper_height: Height of gripper above work object
+    :param tuple gripper_rot: Orientation of gripper, must be a Quaternion (tuple of length 4)
+    :param Puck puck: A :py:class:`Puck` object
+
+.. py:function:: get_camera_position(trans, rot)
+
+    Uses the offset between the gripper and camera to find the camera's position.
+    `Robot Web Services`_
+
+    :param float[] trans: Position of gripper
+    :param tuple rot: Orientation of gripper, must be a Quaternion (tuple of length 4)
+
+    :returns: Position of camera

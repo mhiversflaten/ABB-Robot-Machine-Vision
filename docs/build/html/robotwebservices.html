@@ -14,7 +14,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Camera class" href="camera.html" />
+    <link rel="next" title="Image Tools" href="imagefunctions.html" />
     <link rel="prev" title="Installation" href="installation.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -33,9 +33,13 @@
           <div class="body" role="main">
             
   <div class="section" id="robot-web-services">
-<h1>Robot Web Services<a class="headerlink" href="#robot-web-services" title="Permalink to this headline">¶</a></h1>
+<span id="robotwebservices"></span><h1>Robot Web Services<a class="headerlink" href="#robot-web-services" title="Permalink to this headline">¶</a></h1>
+<p>This section covers the communication between Python and <em>RobotWare</em>. A package, <a class="reference external" href="https://pypi.org/project/rwsuis/">rwsuis</a>,
+is pip installable and includes all functions provided in this section.</p>
+<div class="section" id="rws-class">
+<span id="rws"></span><h2>RWS Class<a class="headerlink" href="#rws-class" title="Permalink to this headline">¶</a></h2>
 <p>Take full control of ABB robots through HTTP requests, made easy with the RWS class.
-Operating mode should be automatic:</p>
+Operating mode should be automatic.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span> <span class="o">=</span> <span class="n">RWS</span><span class="o">.</span><span class="n">RWS</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;robot_IP&#39;</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;pass&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">request_mastership</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">motors_on</span><span class="p">()</span>
@@ -44,7 +48,7 @@ Operating mode should be automatic:</p>
 <span class="go">RAPID execution started from main</span>
 </pre></div>
 </div>
-<span class="target" id="rws"></span><dl class="class">
+<dl class="class">
 <dt id="RWS">
 <em class="property">class </em><code class="sig-name descname">RWS</code><span class="sig-paren">(</span><em class="sig-param">base_url</em>, <em class="sig-param">username</em>, <em class="sig-param">password</em><span class="sig-paren">)</span><a class="headerlink" href="#RWS" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
@@ -117,11 +121,8 @@ Prints a message to the console stating whether or not the request was successfu
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A number if RAPID variable is ‘num’</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int/double</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A string if RAPID variable is not ‘num’</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string if RAPID variable is not ‘num’</p>
 </dd>
 </dl>
 </dd></dl>
@@ -135,7 +136,7 @@ Unless the variable is ‘num’, value has to be a string.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>var</strong> (<em>str</em>) – Name of variable as declared in RAPID</p></li>
-<li><p><strong>value</strong> (<em>int</em><em>, </em><em>double</em><em> or </em><em>str</em>) – Desired variable value</p></li>
+<li><p><strong>value</strong> (<em>int</em><em>, </em><em>float</em><em> or </em><em>str</em>) – Desired variable value</p></li>
 </ul>
 </dd>
 </dl>
@@ -183,10 +184,9 @@ in RAPID by rotation about the z-axis in degrees.
 <dd class="field-even"><p>Translational data of robtarget [x,y,z]</p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Rotational data of robtarget (Quaternion: [w,x,y,z])</p>
+<dd class="field-odd"><p>Rotational data of robtarget (Quaternion: [w,x,y,z]).</p>
 </dd>
 </dl>
-<p>See quaternion_to_euler.</p>
 </dd></dl>
 
 <dl class="method">
@@ -199,10 +199,9 @@ with respect to the work object ‘wobjTableN’.</p>
 <dd class="field-odd"><p>Translational data of gripper [x,y,z]</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Rotational data of gripper (Quaternion: [w,x,y,z]).</p>
+<dd class="field-even"><p>Rotational data of gripper (Quaternion: [w,x,y,z])</p>
 </dd>
 </dl>
-<p>See quaternion_to_euler</p>
 </dd></dl>
 
 <dl class="method">
@@ -295,6 +294,7 @@ Returns True if running and False if stopped.</p>
 </dd></dl>
 
 </div>
+</div>
 
 
           </div>
@@ -316,10 +316,12 @@ Returns True if running and False if stopped.</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Robot Web Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="camera.html">Camera class</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Robot Web Services</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rws-class">RWS Class</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="imagefunctions.html">Image Tools</a></li>
-<li class="toctree-l1"><a class="reference internal" href="opencvtorapid.html">OpenCV_to_RAPID.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="opencv_to_rapid.html">OpenCV_to_RAPID.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="puck.html">Puck Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="help.html">Need Help?</a></li>
 </ul>
@@ -329,7 +331,7 @@ Returns True if running and False if stopped.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
-      <li>Next: <a href="camera.html" title="next chapter">Camera class</a></li>
+      <li>Next: <a href="imagefunctions.html" title="next chapter">Image Tools</a></li>
   </ul></li>
 </ul>
 </div>

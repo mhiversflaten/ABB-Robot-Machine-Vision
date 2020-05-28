@@ -6,7 +6,8 @@
 ABB Robot with Machine Vision
 =============================
 
-This software is mainly directed toward engineering students at the University of Stavanger.
+This software is mainly directed toward engineering
+students and staff at the University of Stavanger.
 It was first created as a Bachelor thesis work.
 
 User Guide
@@ -18,7 +19,6 @@ User Guide
    license
    installation
    robotwebservices
-   camera
    imagefunctions
    opencv_to_rapid
    puck

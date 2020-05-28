@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="OpenCV_to_RAPID.py" href="opencv_to_rapid.html" />
-    <link rel="prev" title="Camera Class" href="camera.html" />
+    <link rel="prev" title="Robot Web Services" href="robotwebservices.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -37,6 +37,126 @@
 <p>The image tools included in the ABB-Robot-Machine-Vision package are mainly
 directed toward <a class="reference external" href="https://en.ids-imaging.com/">uEye cameras</a>.
 These tools utilize IDS’s Python bindings for the uEye API: <a class="reference external" href="https://pypi.org/project/pyueye/">PyuEye</a>.</p>
+<div class="section" id="camera-class">
+<h2>Camera Class<a class="headerlink" href="#camera-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Camera">
+<em class="property">class </em><code class="sig-name descname">Camera</code><span class="sig-paren">(</span><em class="sig-param">cam_ID=0</em><span class="sig-paren">)</span><a class="headerlink" href="#Camera" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Camera class contains methods specifically meant for the University of Stavanger.
+These functions have only been tested on a IDS UI-1007XS-C camera, and might not work
+as intended on other models.</p>
+</dd></dl>
+
+<div class="section" id="quickstart">
+<h3>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialization</span>
+<span class="n">cam</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">()</span>
+<span class="n">cam</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">cam</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">()</span>
+<span class="n">cam</span><span class="o">.</span><span class="n">allocate_memory</span><span class="p">()</span>
+<span class="n">cam</span><span class="o">.</span><span class="n">capture_video</span><span class="p">()</span>
+
+<span class="c1"># Show video</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">()</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;Quickstart&quot;</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+    <span class="k">break</span>
+
+<span class="n">cam</span><span class="o">.</span><span class="n">exit_camera</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The parameters set are not currently configurable through method inputs.
+They are specifically set for laboratory work at the University of Stavanger.</p>
+</div>
+</div>
+<div class="section" id="capturing-images-and-video">
+<h2>Capturing Images and Video<a class="headerlink" href="#capturing-images-and-video" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="capture_image">
+<code class="sig-name descname">capture_image</code><span class="sig-paren">(</span><em class="sig-param">cam</em>, <em class="sig-param">gripper_height</em><span class="sig-paren">)</span><a class="headerlink" href="#capture_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manually adjusts the camera focus through <a class="reference internal" href="#calculate_focus" title="calculate_focus"><code class="xref py py-func docutils literal notranslate"><span class="pre">calculate_focus()</span></code></a>.
+Captures a single image through PyuEye functions.
+Focus is manually adjusted depending on the working distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cam</strong> (<a class="reference internal" href="#Camera" title="Camera"><em>Camera</em></a>) – A <a class="reference internal" href="#Camera" title="Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> object</p></li>
+<li><p><strong>gripper_height</strong> (<em>int</em>) – The height of the gripper above the work object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="showVideo">
+<code class="sig-name descname">showVideo</code><span class="sig-paren">(</span><em class="sig-param">cam</em><span class="sig-paren">)</span><a class="headerlink" href="#showVideo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Continuously displays the robot’s view in an OpenCV imshow window.
+The video uses <a class="reference internal" href="#QR_Scanner_visualized" title="QR_Scanner_visualized"><code class="xref py py-func docutils literal notranslate"><span class="pre">QR_Scanner_visualized()</span></code></a> to visualize the scanned QR codes.
+<a class="reference internal" href="#showVideo" title="showVideo"><code class="xref py py-func docutils literal notranslate"><span class="pre">showVideo()</span></code></a> works well in threads:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show video feed in separate thread</span>
+<span class="n">cam_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">ImageFunctions</span><span class="o">.</span><span class="n">showVideo</span><span class="p">,</span>
+             <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">cam</span><span class="p">,),</span> <span class="n">daemon</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">cam_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Single images can still be retrieved through
+<a class="reference internal" href="#capture_image" title="capture_image"><code class="xref py py-func docutils literal notranslate"><span class="pre">capture_image()</span></code></a> while the thread is active.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cam</strong> (<a class="reference internal" href="#Camera" title="Camera"><em>Camera</em></a>) – A <a class="reference internal" href="#Camera" title="Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="calculate_focus">
+<code class="sig-name descname">calculate_focus</code><span class="sig-paren">(</span><em class="sig-param">cam</em>, <em class="sig-param">working_distance</em><span class="sig-paren">)</span><a class="headerlink" href="#calculate_focus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the correct focus value for a specific IDS XS
+camera with some working distance.
+The focus value is found by comparing the working distance to a characteristic.
+This characteristic is <em>unique</em> to the XS camera with serial code 4102885308.
+This function should be accurate for working distances up to 620mm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cam</strong> (<a class="reference internal" href="#Camera" title="Camera"><em>Camera</em></a>) – A <a class="reference internal" href="#Camera" title="Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> object</p></li>
+<li><p><strong>working_distance</strong> (<em>int</em>) – Distance from camera lens to subject in millimeters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="findPucks">
+<code class="sig-name descname">findPucks</code><span class="sig-paren">(</span><em class="sig-param">cam</em>, <em class="sig-param">robot</em>, <em class="sig-param">robtarget_pucks</em>, <em class="sig-param">cam_comp=False</em>, <em class="sig-param">number_of_images=1</em><span class="sig-paren">)</span><a class="headerlink" href="#findPucks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds all pucks in the images taken and puts them in a list.
+The positions of all pucks are then converted to robtargets using
+<a class="reference internal" href="opencv_to_rapid.html#create_robtarget" title="create_robtarget"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_robtarget()</span></code></a>.</p>
+<p>If pucks that were previously found are found once again, they will not be re-added
+to the puck list, so that only new pucks are transformed into robtargets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cam</strong> (<a class="reference internal" href="#Camera" title="Camera"><em>Camera</em></a>) – A <a class="reference internal" href="#Camera" title="Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> object</p></li>
+<li><p><strong>robot</strong> (<a class="reference internal" href="robotwebservices.html#RWS" title="RWS"><em>RWS</em></a>) – An <a class="reference internal" href="robotwebservices.html#RWS" title="RWS"><code class="xref py py-class docutils literal notranslate"><span class="pre">RWS</span></code></a> object</p></li>
+<li><p><strong>robtarget_pucks</strong> (<a class="reference internal" href="puck.html#Puck" title="Puck"><em>Puck</em></a><em>[</em><em>]</em>) – All pucks found previously</p></li>
+<li><p><strong>cam_comp</strong> (<em>bool</em>) – True if camera adjustment should be run,
+False if it has already been run</p></li>
+<li><p><strong>number_of_images</strong> (<em>int</em>) – How many images should be taken in
+the attempt to find all pucks</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list with all found pucks, without duplicates</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="scanning-qr-codes">
 <h2>Scanning QR Codes<a class="headerlink" href="#scanning-qr-codes" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
@@ -73,93 +193,6 @@ QR codes found in the image are marked with red squares for display.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="capturing-images-and-video">
-<h2>Capturing Images and Video<a class="headerlink" href="#capturing-images-and-video" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="capture_image">
-<code class="sig-name descname">capture_image</code><span class="sig-paren">(</span><em class="sig-param">cam</em>, <em class="sig-param">gripper_height</em><span class="sig-paren">)</span><a class="headerlink" href="#capture_image" title="Permalink to this definition">¶</a></dt>
-<dd><p>Manually adjusts the camera focus through <a class="reference internal" href="#calculate_focus" title="calculate_focus"><code class="xref py py-func docutils literal notranslate"><span class="pre">calculate_focus()</span></code></a>.
-Captures a single image through PyuEye functions.
-Focus is manually adjusted depending on the working distance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cam</strong> (<a class="reference internal" href="camera.html#Camera" title="Camera"><em>Camera</em></a>) – A <a class="reference internal" href="camera.html#Camera" title="Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> object</p></li>
-<li><p><strong>gripper_height</strong> (<em>int</em>) – The height of the gripper above the work object</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An image</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="showVideo">
-<code class="sig-name descname">showVideo</code><span class="sig-paren">(</span><em class="sig-param">cam</em><span class="sig-paren">)</span><a class="headerlink" href="#showVideo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Continuously displays the robot’s view in an OpenCV imshow window.
-The video uses <a class="reference internal" href="#QR_Scanner_visualized" title="QR_Scanner_visualized"><code class="xref py py-func docutils literal notranslate"><span class="pre">QR_Scanner_visualized()</span></code></a> to visualize the scanned QR codes.
-<a class="reference internal" href="#showVideo" title="showVideo"><code class="xref py py-func docutils literal notranslate"><span class="pre">showVideo()</span></code></a> works well in threads:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show video feed in separate thread</span>
-<span class="n">cam_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">ImageFunctions</span><span class="o">.</span><span class="n">showVideo</span><span class="p">,</span>
-             <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">cam</span><span class="p">,),</span> <span class="n">daemon</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">cam_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Single images can still be retrieved through
-<a class="reference internal" href="#capture_image" title="capture_image"><code class="xref py py-func docutils literal notranslate"><span class="pre">capture_image()</span></code></a> while the thread is active.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cam</strong> (<a class="reference internal" href="camera.html#Camera" title="Camera"><em>Camera</em></a>) – A <a class="reference internal" href="camera.html#Camera" title="Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="calculate_focus">
-<code class="sig-name descname">calculate_focus</code><span class="sig-paren">(</span><em class="sig-param">cam</em>, <em class="sig-param">working_distance</em><span class="sig-paren">)</span><a class="headerlink" href="#calculate_focus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the correct focus value for a specific IDS XS
-camera with some working distance.
-The focus value is found by comparing the working distance to a characteristic.
-This characteristic is <em>unique</em> to the XS camera with serial code 4102885308.
-This function should be accurate for working distances up to 620mm.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cam</strong> (<a class="reference internal" href="camera.html#Camera" title="Camera"><em>Camera</em></a>) – A <a class="reference internal" href="camera.html#Camera" title="Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> object</p></li>
-<li><p><strong>working_distance</strong> (<em>int</em>) – Distance from camera lens to subject in millimeters</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="findPucks">
-<code class="sig-name descname">findPucks</code><span class="sig-paren">(</span><em class="sig-param">cam</em>, <em class="sig-param">robot</em>, <em class="sig-param">robtarget_pucks</em>, <em class="sig-param">cam_comp=False</em>, <em class="sig-param">number_of_images=1</em><span class="sig-paren">)</span><a class="headerlink" href="#findPucks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds all pucks in the images taken and puts them in a list.
-The positions of all pucks are then converted to robtargets using
-<a class="reference internal" href="opencv_to_rapid.html#create_robtarget" title="create_robtarget"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_robtarget()</span></code></a>.</p>
-<p>If pucks that were previously found are found once again, they will not be re-added
-to the puck list, so that only new pucks are transformed into robtargets.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cam</strong> (<a class="reference internal" href="camera.html#Camera" title="Camera"><em>Camera</em></a>) – A <a class="reference internal" href="camera.html#Camera" title="Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Camera</span></code></a> object</p></li>
-<li><p><strong>robot</strong> (<a class="reference internal" href="robotwebservices.html#RWS" title="RWS"><em>RWS</em></a>) – An <a class="reference internal" href="robotwebservices.html#RWS" title="RWS"><code class="xref py py-class docutils literal notranslate"><span class="pre">RWS</span></code></a> object</p></li>
-<li><p><strong>robtarget_pucks</strong> (<a class="reference internal" href="puck.html#Puck" title="Puck"><em>Puck</em></a><em>[</em><em>]</em>) – All pucks found previously</p></li>
-<li><p><strong>cam_comp</strong> (<em>bool</em>) – True if camera adjustment should be run,
-False if it has already been run</p></li>
-<li><p><strong>number_of_images</strong> (<em>int</em>) – How many images should be taken in
-the attempt to find all pucks</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list with all found pucks, without duplicates</p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
 </div>
 
 
@@ -183,10 +216,10 @@ the attempt to find all pucks</p></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="robotwebservices.html">Robot Web Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="camera.html">Camera Class</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Image Tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#scanning-qr-codes">Scanning QR Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#camera-class">Camera Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#capturing-images-and-video">Capturing Images and Video</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scanning-qr-codes">Scanning QR Codes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="opencv_to_rapid.html">OpenCV_to_RAPID.py</a></li>
@@ -198,7 +231,7 @@ the attempt to find all pucks</p></li>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="camera.html" title="previous chapter">Camera Class</a></li>
+      <li>Previous: <a href="robotwebservices.html" title="previous chapter">Robot Web Services</a></li>
       <li>Next: <a href="opencv_to_rapid.html" title="next chapter">OpenCV_to_RAPID.py</a></li>
   </ul></li>
 </ul>

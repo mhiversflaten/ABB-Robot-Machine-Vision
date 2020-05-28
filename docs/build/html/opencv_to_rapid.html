@@ -40,6 +40,103 @@
 <dd><p>Complete a series of transformations to finally create a robtarget of the puck’s position from an image.
 These transformations are based on the setup at the University of Stavanger, and with a specific RobotStudio setup
 (in regards to coordinate systems). This <a class="reference external" href="http://www.ux.uis.no/~karlsk/ELE610/UiS_E458_nov18.rspag">Pack and Go</a> file includes this setup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gripper_height</strong> (<em>float</em>) – Height of gripper above work object</p></li>
+<li><p><strong>gripper_rot</strong> (<em>tuple</em>) – Orientation of gripper, must be a Quaternion (tuple of length 4)</p></li>
+<li><p><strong>cam_pos</strong> (<em>float</em><em>[</em><em>]</em>) – Camera position [x,y]</p></li>
+<li><p><strong>image</strong> (<em>ndarray</em>) – An image</p></li>
+<li><p><strong>puck</strong> (<a class="reference internal" href="puck.html#Puck" title="Puck"><em>Puck</em></a>) – A <a class="reference internal" href="puck.html#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> object</p></li>
+<li><p><strong>cam_comp</strong> (<em>bool</em>) – Running camera_adjustment?</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A <a class="reference internal" href="puck.html#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> object with robtarget as position</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="transform_position">
+<code class="sig-name descname">transform_position</code><span class="sig-paren">(</span><em class="sig-param">gripper_rot</em>, <em class="sig-param">puck</em><span class="sig-paren">)</span><a class="headerlink" href="#transform_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform coordinate system given by image in OpenCV to coordinate system of work object in RAPID.
+Swap x &amp; y coordinates and rotate by the same amount that the camera has been rotated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gripper_rot</strong> (<em>tuple</em>) – Orientation of gripper, must be a Quaternion (tuple of length 4)</p></li>
+<li><p><strong>puck</strong> (<a class="reference internal" href="puck.html#Puck" title="Puck"><em>Puck</em></a>) – A <a class="reference internal" href="puck.html#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pixel_to_mm">
+<code class="sig-name descname">pixel_to_mm</code><span class="sig-paren">(</span><em class="sig-param">gripper_height</em>, <em class="sig-param">puck</em>, <em class="sig-param">image</em><span class="sig-paren">)</span><a class="headerlink" href="#pixel_to_mm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts coordinates in image from pixels to millimeters.
+This depends on the camera’s working distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gripper_height</strong> (<em>float</em>) – Height of gripper above work object</p></li>
+<li><p><strong>puck</strong> (<a class="reference internal" href="puck.html#Puck" title="Puck"><em>Puck</em></a>) – A <a class="reference internal" href="puck.html#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> object</p></li>
+<li><p><strong>image</strong> (<em>ndarray</em>) – An image</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="overshoot_comp">
+<code class="sig-name descname">overshoot_comp</code><span class="sig-paren">(</span><em class="sig-param">gripper_height</em>, <em class="sig-param">puck</em><span class="sig-paren">)</span><a class="headerlink" href="#overshoot_comp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compensate for the overshoot phenomenon which occurs when trying to pinpoint
+the location of a 3D object in a 2D image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gripper_height</strong> (<em>float</em>) – Height of gripper above work object</p></li>
+<li><p><strong>puck</strong> (<a class="reference internal" href="puck.html#Puck" title="Puck"><em>Puck</em></a>) – A <a class="reference internal" href="puck.html#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="camera_compensation">
+<code class="sig-name descname">camera_compensation</code><span class="sig-paren">(</span><em class="sig-param">gripper_height</em>, <em class="sig-param">gripper_rot</em>, <em class="sig-param">puck</em><span class="sig-paren">)</span><a class="headerlink" href="#camera_compensation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compensate for an angled camera view. Different cameras will be
+angled differently both internally and externally when mounted to a surface.
+The slope values must first be calculated by running camera_adjustment.py.
+Works with any camera orientation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gripper_height</strong> (<em>float</em>) – Height of gripper above work object</p></li>
+<li><p><strong>gripper_rot</strong> (<em>tuple</em>) – Orientation of gripper, must be a Quaternion (tuple of length 4)</p></li>
+<li><p><strong>puck</strong> (<a class="reference internal" href="puck.html#Puck" title="Puck"><em>Puck</em></a>) – A <a class="reference internal" href="puck.html#Puck" title="Puck"><code class="xref py py-class docutils literal notranslate"><span class="pre">Puck</span></code></a> object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="get_camera_position">
+<code class="sig-name descname">get_camera_position</code><span class="sig-paren">(</span><em class="sig-param">trans</em>, <em class="sig-param">rot</em><span class="sig-paren">)</span><a class="headerlink" href="#get_camera_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the offset between the gripper and camera to find the camera’s position.
+<a href="#id1"><span class="problematic" id="id2">`Robot Web Services`_</span></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trans</strong> (<em>float</em><em>[</em><em>]</em>) – Position of gripper</p></li>
+<li><p><strong>rot</strong> (<em>tuple</em>) – Orientation of gripper, must be a Quaternion (tuple of length 4)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Position of camera</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -65,7 +162,6 @@ These transformations are based on the setup at the University of Stavanger, and
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="robotwebservices.html">Robot Web Services</a></li>
-<li class="toctree-l1"><a class="reference internal" href="camera.html">Camera class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="imagefunctions.html">Image Tools</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">OpenCV_to_RAPID.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="puck.html">Puck Class</a></li>
